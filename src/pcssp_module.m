@@ -6,6 +6,10 @@ classdef pcssp_module < SCDDSclass_algo
     methods
         
         function fpstruct = getfpindatadict(obj)
+            % TO DO: check use of
+            % Simulink.data.evalinGlobal(obj,'paramname') for this
+            
+            
             if(~isempty(obj.fpinits)) % only try when fixed params are defined
                 for ii=1:numel(obj.fpinits) % loop over all FP inits
                     fpstruct = [];
