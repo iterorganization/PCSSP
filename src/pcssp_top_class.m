@@ -1,17 +1,29 @@
 classdef pcssp_top_class < SCDDSclass_expcode
     
     properties (SetAccess = protected)
-        mainname        = 'top'   % Main slx model name
+        mainname        = 'topmain'   % Main slx model name
         definednodes    = 1;       % defined node
     end
     
     methods
-        function obj=pcssp_top_class(varargin)
+        function obj=pcssp_top_class(mainname,varargin)
             % Constructor
-            obj@SCDDSclass_expcode(varargin{:});
+            if ~isempty(varargin)
+                code = varargin{1};
+            else
+                code = 1;
+            end
             
-            % override algonameprefix
+            obj@SCDDSclass_expcode(mainname,code);
+%             override algonameprefix
             obj.algonameprefix  = 'pcssp'; % Algorithm name prefix
+%             obj.mainname = 'RTF';
+%             obj.mainslxname = varargin{1}; % overwrite main slx name
+%             obj.ddname = [varargin{1} '.sldd'];
+            
+          
+            
+
         end
         
         function build(obj)
