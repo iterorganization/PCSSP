@@ -1,7 +1,7 @@
 classdef pcssp_top_class < SCDDSclass_expcode
     
     properties (SetAccess = protected)
-        mainname        = 'topmain'   % Main slx model name
+        mainname        = 'top'   % Main slx model name
         definednodes    = 1;       % defined node
     end
     
