@@ -1,9 +1,12 @@
 %% Main simulation script for model referenced PCSSP with data dicts
 % T. Ravensbergen March 2023
+% To run this example, first run pcssp_add_paths in the root directory of
+% the repository
 
 clear; clc; bdclose all;
 
 % force close all zombie sldd
+% sldds are completely empty containers and filled with parameters from scratch
 Simulink.data.dictionary.closeAll('-discard')
 
 
