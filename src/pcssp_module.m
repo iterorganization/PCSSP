@@ -28,70 +28,58 @@ classdef pcssp_module < SCDDSclass_algo
         end
         
         
-        function update_model_mask_params(obj,tp)
+        function set_tp_model_mask(obj,param,param_name)
+            
+            arguments
+                obj
+                param (1,1) Simulink.Parameter
+                param_name (1,:) char
+            end
+            
             % function to parametrize referenced models via a model mask
             
-            % this function takes the tp Simulink.Parameter and grabs the fp
-            % from the obj. It then creates Simulink.Parameters and sticks
-            % them in the model workspace of the wrapper. If the parameters
+            % this function takes the Simulink.Parameter and its desired
+            % mask name as input.
+            % It then creates a Simulink.Bus object and sticks
+            % the param in the model workspace of the wrapper. If the parameters
             % are already there, the function checks whether they need
             % updating and does so accordingly.
             
             % open points: 
             % - requires model to be loaded
-            % - only works for one TP/FP with one model in the wrapper
+            % - only works for one param with one model in the wrapper
             % - Should be combined with the obj.setup to make sure the
             %   instance parameters are updated?
-            % - Buses seem to be not necessary. I am not sure what changed
+            % -
             
-            % create empty tp if it does not exist
-            if nargin < 2
-                tp = Simulink.Parameter(0);
-            end
-            
-            % grab FP structures from obj (assume there's one for now)
-            fpinits = obj.fpinits;
-            
-            % for now assume only one FP exists
-            fphandle = str2func(fpinits{1}{1});
-            fp_val = fphandle(obj);
-            
-            % (!!) create buses TBD (!!)
-            % Create bus objects.
-            % businfoFP = Simulink.Bus.createObject(fp_val);
-            % businfoTP = Simulink.Bus.createObject(tp_val);
-            
-            % write bus to sldd of wrapper here
-            
-            % create Simulink.Parameter objects
-            fp = Simulink.Parameter(fp_val);
-            % tp.DataType = ['Bus:' 'blabla'];
-            % fp.DataType = ['Bus:' 'blabla'];
-            
-            
+           
             % grab model WS
             hws = get_param(obj.modelname, 'modelworkspace');
             
-            % only update Tp/FP params in model workspace when (1) the params are not
+            % only update param in model workspace when (1) the param is not
             % there or (2) outdated/dirty. The isequaln command is insensitive to
             % ordering within the structures
             
-            
-            
-            if ~hws.hasVariable('tp') || ~hws.hasVariable('fp') % params absent
+            if ~hws.hasVariable(param_name) % params absent
                 
+                % Create bus objects in sldd
+%                 dictionaryObj = Simulink.data.dictionary.open(obj.getdatadictionary);
+                
+                % seems that the bus must live in the base WS. Commented
+                % out for now
+%                 businfoTP = Simulink.Bus.createObject(param.Value,[],[],dictionaryObj);
+%                 param.DataType = ['Bus: ' businfoTP.busName];
 
-                hws.assignin('tp', tp);
-                hws.assignin('fp', fp);
+                hws.assignin(param_name, param);
                 
-                % set params as model argument
-                set_param(obj.modelname,'ParameterArgumentNames','tp,fp')
+                % set param as model argument
+                set_param(obj.modelname,'ParameterArgumentNames',param_name)
                 
-            elseif ~isequaln(hws.getVariable('tp').Value, tp.Value) % TP outdated
-                hws.assignin('tp', tp);
+            elseif ~isequaln(hws.getVariable(param_name).Value, param.Value) % TP outdated
+                hws.assignin(param_name, param);
                 
-            elseif ~isequaln(hws.getVariable('fp').Value, fp_val) % FP outdated
-                hws.assignin('fp', fp);
+            else 
+                fprintf('parameter %s already up-to-date in model WS. Skipping',param_name)
                 
             end
             
