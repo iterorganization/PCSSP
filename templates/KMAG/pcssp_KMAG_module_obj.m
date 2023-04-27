@@ -14,7 +14,12 @@ obj=obj.settiming(0,2e-3,10.0);
 obj=obj.addfpinitfcn('pcssp_KMAG_loadfp','pcssp_KMAG_fp');
 
 %% Tunable parameters structure name
-obj=obj.addtunparamstruct('pcssp_KMAG_tp', @()pcssp_KMAG_loadtp());
+% obj=obj.addtunparamstruct('pcssp_KMAG_tp', @()pcssp_KMAG_loadtp());
+obj = obj.addtunparamstruct('pcssp_KMAG_Ke',@()pcssp_KMAG_load_Ke);
+obj = obj.addtunparamstruct('pcssp_KMAG_P',@()pcssp_KMAG_load_P);
+obj = obj.addtunparamstruct('pcssp_KMAG_I',@()pcssp_KMAG_load_I);
+obj = obj.addtunparamstruct('pcssp_KMAG_D',@()pcssp_KMAG_load_D);
+obj = obj.addtunparamstruct('pcssp_KMAG_N',@()pcssp_KMAG_load_N);
 
 
 %% Buses
