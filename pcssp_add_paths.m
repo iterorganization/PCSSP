@@ -16,7 +16,11 @@ run(fullfile(corepath,'scdds_core_paths'));
 %% Set paths for generated code
 % set code generation and cache file location
 gencodes = fullfile(fileparts(mfilename('fullpath')),'gencodes');
-assert(logical(exist(gencodes,'dir')),'folder %s does not exist',gencodes)
+if ~logical(exist(gencodes,'dir'))
+    fprintf('folder %s does not exist, generating it',gencodes);
+    mkdir(gencodes);
+end
+
 fprintf('setting Simulink Cache and CodeGen folders in %s\n',gencodes)
 CacheFolder   = fullfile(gencodes,'CacheFolder');
 CodeGenFolder = fullfile(gencodes,'CodeGenFolder');
