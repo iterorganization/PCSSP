@@ -63,10 +63,8 @@ classdef test_PCSSP_KMAG < matlab.unittest.TestCase
             
             KMAG_logged = load('KMAG_logged');
             
-            
             % get an empty input Dataset from the input ports of the model
             ds = createInputDataset(testCase.obj.getname);
-            
             
             % directly write timeseries objects to structures matching the input buses
             % of the model
@@ -89,6 +87,7 @@ classdef test_PCSSP_KMAG < matlab.unittest.TestCase
             
             l = tiledlayout(4,3,'TileSpacing','compact','Padding','compact');
             
+            % get logged signals from stored baseline and current sim
             usim = out.logsout{1}.Values.u.Data;
             ulog = KMAG_logged.KMAG_logged.getElement('output').Values.u.Data;
             
@@ -96,27 +95,66 @@ classdef test_PCSSP_KMAG < matlab.unittest.TestCase
                 h1 = nexttile;
                 plot(out.logsout{1}.Values.u.Time,usim(:,ii)); hold on
                 plot(KMAG_logged.KMAG_logged.getElement('output').Values.u.Time,...
-                    ulog(:,ii));     
-                
+                    ulog(:,ii));         
             end
 
-            
+            % compare signals within some tolerance
             testCase.verifyThat(out.logsout{1}.Values.u,MatchesSignal(KMAG_logged.KMAG_logged.getElement('output').Values.u,...
                                 'reltol',0.01,'WithOptions',opts));
             
+        end
+        
+        function SIL_MIL_comparison(testCase)
+            
+            import Simulink.sdi.constraints.MatchesSignal;
+            import Simulink.sdi.constraints.MatchesSignalOptions;
+            opts = MatchesSignalOptions('IgnoringExtraData',true);
+            
+            %% load and prep test data
+            
+            KMAG_logged = load('KMAG_logged');
+            
+            %% prepare wrapper
+            
+            wrapper = pcssp_wrapper('pcssp_KMAG_wrapper');
+            wrapper.timing.dt = testCase.obj.gettiming.dt;
+            wrapper = wrapper.addalgo(testCase.obj);
+            load_system(wrapper.name);
+            
+            SCDconf_setConf('configurationSettingsCODEgcc');
+            
+            
+            % get an empty input Dataset from the input ports of the model
+            ds = createInputDataset(wrapper.name);
+            
+            % directly write timeseries objects to structures matching the input buses
+            % of the model
+            ds{1}.extFF = KMAG_logged.KMAG_logged.getElement('extFF').Values;
+            ds{2}.ref = KMAG_logged.KMAG_logged.getElement('Ref').Values;
+            ds{3}.y = KMAG_logged.KMAG_logged.getElement('y').Values;
+            ds = setElement(ds,4,KMAG_logged.KMAG_logged.getElement('enable'));
+            
+            Simin = Simulink.SimulationInput('pcssp_KMAG_wrapper');
+            Simin = Simin.setExternalInput(ds);
+            
+            % overwrite start/stop time to match reference simulation UMC_demo
+            Simin = Simin.setModelParameter('StartTime','-40','StopTime','-34');
+            
+            % run as SIL
+            Simin = Simin.setModelParameter('SimulationMode','Software-in-the-loop (SIL)');
+            
+            
+            %% simulate
+            out = sim(Simin);
+
+            % compare signals within some tolerance
+            testCase.verifyThat(out.logsout{1}.Values.u,MatchesSignal(KMAG_logged.KMAG_logged.getElement('output').Values.u,...
+                                'reltol',0.01,'WithOptions',opts)); 
         end
         
         
     end
 end
 
-% %% wrap 
-% wrapper_KMAG = pcssp_wrapper('pcssp_KMAG_wrapper');
-% wrapper_KMAG.timing.dt = obj_KMAG.gettiming.dt;
-% wrapper_KMAG = wrapper_KMAG.addalgo(obj_KMAG);
-% 
-% %% build
-% 
-% wrapper_KMAG.build;
 
 
