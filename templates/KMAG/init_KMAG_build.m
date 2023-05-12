@@ -1,10 +1,14 @@
+%% Main script to generate code for the KMAG PCSSP module
+% T. Ravensbergen with help from G. deTommasi 2023
+
+clear; clc; bdclose all;
+% force close all zombie sldd
+Simulink.data.dictionary.closeAll('-discard')
+
 obj_KMAG = pcssp_KMAG_module_obj();
 
-wrapper_KMAG = pcssp_wrapper('pcssp_KMAG_wrapper');
-
-wrapper_KMAG.timing.dt = obj_KMAG.gettiming.dt;
-
-wrapper_KMAG = wrapper_KMAG.addalgo(obj_KMAG);
+obj_KMAG.init;
+obj_KMAG.setup;
 
 %% build
-
+obj_KMAG.build;
