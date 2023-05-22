@@ -1,11 +1,11 @@
 function cs = configurationSettingsCODEgcc()
-% MATLAB function for configuration set generated on 12-May-2023 14:40:57
-% MATLAB version: 9.11.0.1769968 (R2021b)
+% MATLAB function for configuration set generated on 12-May-2023 11:51:15
+% MATLAB version: 9.9.0.1538559 (R2020b) Update 3
 
 cs = Simulink.ConfigSet;
 
-% Original configuration set version: 21.1.0
-if cs.versionCompare('21.1.0') < 0
+% Original configuration set version: 20.1.0
+if cs.versionCompare('20.1.0') < 0
     error('Simulink:MFileVersionViolation', 'The version of the target configuration set is older than the original configuration set.');
 end
 
@@ -40,10 +40,9 @@ cs.set_param('StopTime', '4');   % Stop time
 cs.set_param('SampleTimeConstraint', 'Unconstrained');   % Periodic sample time constraint
 cs.set_param('SolverType', 'Fixed-step');   % Type
 cs.set_param('SolverName', 'FixedStepDiscrete');   % Solver
-cs.set_param('FixedStep', 'auto');   % Fixed-step size (fundamental sample time)
 cs.set_param('ConcurrentTasks', 'off');   % Allow tasks to execute concurrently on target
+cs.set_param('FixedStep', 'auto');   % Fixed-step size (fundamental sample time)
 cs.set_param('EnableMultiTasking', 'off');   % Treat each discrete rate as a separate task
-cs.set_param('AllowMultiTaskInputOutput', 'off');   % Allow multiple tasks to access inputs and outputs
 cs.set_param('PositivePriorityOrder', 'off');   % Higher priority value indicates higher task priority
 cs.set_param('AutoInsertRateTranBlk', 'off');   % Automatically handle rate transition for data transfer
 
@@ -73,7 +72,6 @@ cs.set_param('DefaultParameterBehavior', 'Inlined');   % Default parameter behav
 cs.set_param('UseDivisionForNetSlopeComputation', 'off');   % Use division for fixed-point net slope computation
 cs.set_param('GainParamInheritBuiltInType', 'off');   % Gain parameters inherit a built-in integer type that is lossless
 cs.set_param('UseFloatMulNetSlope', 'on');   % Use floating-point multiplication to handle net slope corrections
-cs.set_param('InheritOutputTypeSmallerThanSingle', 'off');   % Inherit floating-point output type smaller than single precision
 cs.set_param('DefaultUnderspecifiedDataType', 'double');   % Default for underspecified data type
 cs.set_param('UseSpecifiedMinMax', 'off');   % Optimize using the specified minimum and maximum values
 cs.set_param('InlineInvariantSignals', 'off');   % Inline invariant signals
@@ -238,26 +236,25 @@ cs.set_param('SupportModelReferenceSimTargetCustomCode', 'off');   % Include cus
 
 % Simulation Target
 cs.set_param('SimCustomSourceCode', '');   % Source file
-cs.set_param('SimUserSources', '');   % Source files
 cs.set_param('SimCustomHeaderCode', 'int mydef;');   % Header file
 cs.set_param('SimCustomInitializer', '');   % Initialize function
 cs.set_param('SimCustomTerminator', '');   % Terminate function
 cs.set_param('SimReservedNameArray', []);   % Reserved names
+cs.set_param('SimUserSources', '');   % Source files
 cs.set_param('SimUserIncludeDirs', '');   % Include directories
 cs.set_param('SimUserLibraries', '');   % Libraries
 cs.set_param('SimUserDefines', '');   % Defines
 cs.set_param('SFSimEnableDebug', 'off');   % Allow setting breakpoints during simulation
 cs.set_param('SFSimEcho', 'off');   % Echo expressions without semicolons
-cs.set_param('SimCtrlC', 'off');   % Break on Ctrl-C
-cs.set_param('SimIntegrity', 'off');   % Enable memory integrity checks
+cs.set_param('SimCtrlC', 'off');   % Ensure responsiveness
+cs.set_param('SimIntegrity', 'off');   % Ensure memory integrity
 cs.set_param('SimParseCustomCode', 'off');   % Import custom code
 cs.set_param('SimGenImportedTypeDefs', 'off');   % Generate typedefs for imported bus and enumeration types
 cs.set_param('CompileTimeRecursionLimit', 50);   % Compile-time recursion limit for MATLAB functions
 cs.set_param('EnableRuntimeRecursion', 'on');   % Enable run-time recursion for MATLAB functions
-cs.set_param('EnableImplicitExpansion', 'on');   % Enable implicit expansion in MATLAB functions
 cs.set_param('MATLABDynamicMemAlloc', 'off');   % Dynamic memory allocation in MATLAB functions
-cs.set_param('LegacyBehaviorForPersistentVarInContinuousTime', 'off');   % Enable continuous-time MATLAB functions to write to initialized persistent variables
-cs.set_param('SimHardwareAcceleration', 'generic');   % Hardware acceleration
+cs.set_param('CustomCodeFunctionArrayLayout', []);   % Exception by function...
+cs.set_param('DefaultCustomCodeFunctionArrayLayout', 'NotSpecified');   % Default function array layout
 cs.set_param('GPUAcceleration', 'off');   % GPU acceleration
 cs.set_param('SimTargetLang', 'C');   % Language
 
@@ -331,6 +328,7 @@ cs.set_param('CustomSymbolStrFcnArg', 'rt$I$N$M');   % Subsystem method argument
 cs.set_param('CustomSymbolStrBlkIO', 'rtb_$N$M');   % Local block output variables
 cs.set_param('CustomSymbolStrTmpVar', '$N$M');   % Local temporary variables
 cs.set_param('CustomSymbolStrMacro', '$R$N$M');   % Constant macros
+cs.set_param('CustomSymbolStrUtil', '$N$C');   % Shared utilities identifier format
 cs.set_param('CustomSymbolStrEmxType', 'emxArray_$M$N');   % EMX array types identifier format
 cs.set_param('CustomSymbolStrEmxFcn', 'emx$M$N');   % EMX array utility functions identifier format
 cs.set_param('CustomUserTokenString', '');   % Custom token text
@@ -352,7 +350,7 @@ cs.set_param('ReservedNameArray', []);   % Reserved names
 cs.set_param('EnumMemberNameClash', 'error');   % Duplicate enumeration member names
 cs.set_param('TargetLibSuffix', '');   % Suffix applied to target library name
 cs.set_param('TargetPreCompLibLocation', '');   % Precompiled library location
-cs.set_param('TargetLangStandard', 'C99 (ISO)');   % Language standard
+cs.set_param('TargetLangStandard', 'C99 (ISO)');   % Standard math library
 cs.set_param('CodeReplacementLibrary', 'None');   % Code replacement library
 cs.set_param('UtilityFuncGeneration', 'Auto');   % Shared code placement
 cs.set_param('MultiwordTypeDef', 'System defined');   % Multiword type definitions
@@ -385,13 +383,20 @@ cs.set_param('ERTHeaderFileRootName', '$R$E');   % Header files
 cs.set_param('ERTSourceFileRootName', '$R$E');   % Source files
 cs.set_param('ERTFilePackagingFormat', 'Modular');   % File packaging format
 cs.set_param('ERTDataFileRootName', '$R_data');   % Data files
-cs.set_param('InstructionSetExtensions', {'None'});   % Leverage target hardware instruction set extensions
 cs.set_param('GlobalDataDefinition', 'Auto');   % Data definition
 cs.set_param('GlobalDataReference', 'Auto');   % Data declaration
 cs.set_param('ExtMode', 'off');   % External mode
 cs.set_param('ExtModeTransport', 0);   % Transport layer
 cs.set_param('ExtModeMexFile', 'ext_comm');   % MEX-file name
 cs.set_param('ExtModeStaticAlloc', 'off');   % Static memory allocation
+cs.set_param('MemSecPackage', '--- None ---');   % Memory sections package for model data and functions
+cs.set_param('MemSecFuncSharedUtil', 'Default');   % Memory section for shared utility functions
+cs.set_param('MemSecFuncInitTerm', 'Default');   % Memory section for initialize/terminate functions
+cs.set_param('MemSecFuncExecute', 'Default');   % Memory section for execution functions
+cs.set_param('MemSecDataParameters', 'Default');   % Memory section for parameters
+cs.set_param('MemSecDataInternal', 'Default');   % Memory section for internal data
+cs.set_param('MemSecDataIO', 'Default');   % Memory section for inputs/outputs
+cs.set_param('MemSecDataConstants', 'Default');   % Memory section for constants
 cs.set_param('EnableUserReplacementTypes', 'off');   % Replace data type names in the generated code
 cs.set_param('ConvertIfToSwitch', 'on');   % Convert if-elseif-else patterns to switch-case statements
 cs.set_param('ERTCustomFileTemplate', 'example_file_process.tlc');   % File customization template
@@ -404,6 +409,7 @@ cs.set_param('EnableDataOwnership', 'off');   % Use owner from data object for d
 cs.set_param('ExtModeIntrfLevel', 'Level1');   % External mode interface level
 cs.set_param('ExtModeMexArgs', '');   % MEX-file arguments
 cs.set_param('ExtModeTesting', 'off');   % External mode testing
+cs.set_param('GenerateASAP2', 'off');   % ASAP2 interface
 cs.set_param('IndentSize', '2');   % Indent size
 cs.set_param('IndentStyle', 'K&R');   % Indent style
 cs.set_param('NewlineStyle', 'Default');   % Newline style
@@ -450,5 +456,5 @@ try
   cs.attachComponent(cs_componentCC);
 
 catch ME
-  warning('Simulink:ConfigSet:AttachComponentError', '%s', ME.message);
+  warning('Simulink:ConfigSet:AttachComponentError', ME.message);
 end
