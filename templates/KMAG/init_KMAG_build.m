@@ -12,8 +12,20 @@ obj_KMAG = pcssp_KMAG_module_obj();
 obj_KMAG.init;
 obj_KMAG.setup;
 
+%% input size struct
+size.extFF = [11 1];
+size.Ref = [10 1];
+size.y = [10 1];
+size.enable = 1;
+
 %% build
 obj_KMAG.build;
+
+%% build wrapper
+
+wrapper = pcssp_wrapper('pcssp_KMAG_wrapper');
+wrapper.timing.dt = obj_KMAG.gettiming.dt;
+wrapper = wrapper.addalgo(obj_KMAG);
 
 %% prep logged data for RTF export
 if writedata
