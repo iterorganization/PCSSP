@@ -23,7 +23,6 @@ obj_TF = pcssp_TF_obj();
 node = pcssp_node_class(1);
 node = node.addalgo(obj_TF);
 node = node.addalgo(obj_PID);
-node.linkalgodd(topm.algonameprefix); % force linkage of connected algo dds
 
 
 %% Setting node into main expcode obj

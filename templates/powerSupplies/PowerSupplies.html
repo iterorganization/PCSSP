@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p style="margin:0; padding:0;"> <b>PURPOSE: </b>Simulates the input-output dynamics of the power supplies that feed all the axisymmetric coils/circuit, i.e. CS, PF, VS1 and VS3.<BR> The coils are sorted as CS3U CS2U CS1 CS2L CS3L P1 P2 P3 P4 P5 P6.
+</p><br>
+
+<b> CONFIGURATION INPUT (config struct): </b>
+<p style="margin:0; padding:0;">
+nMConverters = Number of converters for the CS/PF power supplies<br>
+VMCpositiveSR = CS/PF power supplies postive slew rates (V/s)<br>
+VMCnegativeSR = CS/PF power supplies negative slew rates (V/s)<br>
+VMCtaud = CS/PF power supplies pure delay (s)<br>
+currentLim = CS/PF power supplies current limits (A)<br>
+voltageLim = CS/PF power supplies (symmetric) voltage limits (V)<br>
+nVS1Converters = Number of converters for the VS1 power supply<br>
+VS1positiveSR = VS1 power supply postive slew rate (V/s)<br>
+VS1negativeSR = VS1 power supply negative slew rate (V/s)<br>
+VS1taud = VS1 power supply pure delay (s)<br>
+VS3filterNum = Numerator of the VS3 power supply dynamical model <br>
+VS3filterDen = 'Denominator of the VS3 power supply dynamical model<br>
+VS3taud = VS3 power supply pure delay (s) <br>
+VS3Vup  = VS3 upper voltage limit (V) <br>
+VS3Vlow = VS3 lower voltage limit (V) <br>
+</p><br>
+
+<b> INITIALIZATION INPUT (init struct): </b>
+<p style="margin:0; padding:0;"> 
+</p> <br>
+
+
+<b> INPUT SIGNALS: </b>
+<p style="margin:0; padding:0;">
+CPSF_volt_cmd = commands to the CS/PF power supplies (V)<br>
+VS1_volt_cmd = command to the VS1 power supply (V)<br>
+VS3_volt_cmd = command to the VS3 power supply (V)<br>
+CSPF_curr_meas = currents in yhe CS/PF coils (A)<br>
+</p><br>
+
+<b> OUTPUT SIGNALS: </b>
+<p style="margin:0; padding:0;">
+VCSPF = voltages applied to the CS/PF coils (V)<br>
+VS1 = voltage applied to the VS1 circuit (V)<br>
+VS3 = voltage applied to the VS3 circuit (V)<br>
+</p><br>
+
+<b> CODE GENERATION COMPATIBLE: yes/no </b>
+<p style="margin:0; padding:0;">
+YES
+</p><br>
+
+<b> RESTRICTIONS: </b>
+<p style="margin:0; padding:0;">
+None.
+</p> <br>
+
+<b> METHOD: </b>
+<p style="margin:0; padding:0;">
+</p> <br>
+
+</body>
+</html>
