@@ -8,7 +8,7 @@ Simulink.data.dictionary.closeAll('-discard')
 writedata = 0; % flag to export logged data to txt
 
 %% init slx model
-obj_KMAG = pcssp_KMAG_module_obj();
+obj_KMAG = pcssp_KCURR_obj();
 obj_KMAG.init;
 obj_KMAG.setup;
 
