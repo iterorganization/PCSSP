@@ -1,5 +1,5 @@
 function Ky = pcssp_KCURR_Ky_tp()
 
-Ky          = zeros(11,11);
+Ky          = Simulink.Parameter(zeros(11,11));
 
 end

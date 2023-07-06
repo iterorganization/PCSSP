@@ -1,6 +1,8 @@
 function N = pcssp_KCURR_N_tp()
 
-N             = [100,100,100,100,100,100,100,100,100,100,100];
+Ntemp             = [100,100,100,100,100,100,100,100,100,100,100];
+
+N = Simulink.Parameter(Ntemp);
 
 end
 

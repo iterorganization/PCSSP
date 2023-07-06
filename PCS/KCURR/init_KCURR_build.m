@@ -8,24 +8,28 @@ Simulink.data.dictionary.closeAll('-discard')
 writedata = 0; % flag to export logged data to txt
 
 %% init slx model
-obj_KMAG = pcssp_KCURR_obj();
-obj_KMAG.init;
-obj_KMAG.setup;
+obj_KCURR = pcssp_KCURR_obj();
+obj_KCURR.init;
+obj_KCURR.setup;
 
 %% input size struct
-size.extFF = [11 1];
-size.Ref = [10 1];
-size.y = [10 1];
-size.enable = 1;
+size.extFF = [11];
+size.Ref = [11];
+size.y = [11];
+size.flaginom = 1;
+
+size.u = [11];
+size.internal = [33];
+size.error = [11];
 
 %% build
-obj_KMAG.build;
+obj_KCURR.build;
 
 %% build wrapper
 
 wrapper = pcssp_wrapper('pcssp_KMAG_wrapper');
-wrapper.timing.dt = obj_KMAG.gettiming.dt;
-wrapper = wrapper.addalgo(obj_KMAG);
+wrapper.timing.dt = obj_KCURR.gettiming.dt;
+wrapper = wrapper.addalgo(obj_KCURR);
 wrapper.build;        
 
 %% prep logged data for RTF export

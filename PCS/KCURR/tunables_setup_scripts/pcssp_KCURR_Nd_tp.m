@@ -1,5 +1,5 @@
 function Nd = pcssp_KCURR_Nd_tp()
 
-Nd = 100;
+Nd = Simulink.Parameter(100);
 
 end
