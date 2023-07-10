@@ -25,8 +25,8 @@ obj=obj.addtunparamstruct('KCURR_Ky', @()pcssp_KCURR_Ky_tp());
 obj=obj.addtunparamstruct('KCURR_N', @()pcssp_KCURR_N_tp());
 obj=obj.addtunparamstruct('KCURR_Nd', @()pcssp_KCURR_Nd_tp());
 
-obj=obj.addtunparamstruct('KCURR_NegCurSlewRate', @()pcssp_KCURR_NegCurSlewRate_tp());
-obj=obj.addtunparamstruct('KCURR_PosCurSlewRate', @()pcssp_KCURR_PosCurSlewRate_tp());
+% obj=obj.addtunparamstruct('KCURR_NegCurSlewRate', @()pcssp_KCURR_NegCurSlewRate_tp());
+% obj=obj.addtunparamstruct('KCURR_PosCurSlewRate', @()pcssp_KCURR_PosCurSlewRate_tp());
 
 obj=obj.addtunparamstruct('KCURR_Vlow', @()pcssp_KCURR_Vup_tp());
 obj=obj.addtunparamstruct('KCURR_Vup', @()pcssp_KCURR_Vup_tp());
