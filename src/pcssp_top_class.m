@@ -102,6 +102,11 @@ classdef pcssp_top_class
           fprintf('\n** DONE WITH ALL INITS **\n');
         end
         
+        function sim(obj)
+            % simulate the top-level simulink model
+            sim(obj.name);
+        end
+        
         %% adders
         % wrapper
         function obj = addwrapper(obj,wrapperObj)
