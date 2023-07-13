@@ -28,7 +28,7 @@ classdef pcssp_module < SCDDSclass_algo
         end
 
 
-        function set_tp_model_mask(obj,param,param_name)
+        function set_tp_model_arguments(obj,param,param_name)
 
             arguments
                 obj

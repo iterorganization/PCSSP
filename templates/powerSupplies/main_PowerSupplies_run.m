@@ -4,23 +4,13 @@
 clear; clc; bdclose all; Simulink.data.dictionary.closeAll('-discard');
 
 %% configure top model
-topm = PS_top_class('PS_top');
+topm = pcssp_top_class('PS_top');
 
 obj_PS = pcssp_PowerSupplies_obj();
 
-%% initialize and setup obj
+%% initialize and setup the top model
 
-obj_PS.init
-obj_PS.setup
-
-
-%% node object
-node = pcssp_node_class(1);
-node = node.addalgo(obj_PS);
-
-
-%% Setting node into main expcode obj
-topm = topm.setnode(node,1);
+topm = topm.addmodule(obj_PS);
 topm.init;
 topm.setup;
 
@@ -31,7 +21,7 @@ ds = Simulink.SimulationData.Dataset;
 ds = setElement(ds,1,PS_logged.PS_logged.getElement('CSPF_volt_cmd')); % CSPF_volt_cmd
 ds = setElement(ds,2,PS_logged.PS_logged.getElement('CSPF_curr_meas')); % CSPF_curr_meas
 
-Simin = Simulink.SimulationInput('PS_topmain');
+Simin = Simulink.SimulationInput('PS_top');
 Simin = Simin.setExternalInput(ds);
 
 out = sim(Simin);

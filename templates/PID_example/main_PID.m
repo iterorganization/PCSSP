@@ -11,30 +11,32 @@ Simulink.data.dictionary.closeAll('-discard')
 
 
 %% configure top model
-topm = pcssp_top_class('topmain');
+topm = pcssp_top_class('closed_loop');
 
 
 %% initialize PCSSP modules
 obj_PID = pcssp_PID_obj(3); % input is the size of the inBus
 obj_TF = pcssp_TF_obj();
 
+%% initialize PCSSP wrappers
 
-%% node object
-node = pcssp_node_class(1);
-node = node.addalgo(obj_TF);
-node = node.addalgo(obj_PID);
+wrapper_PID = pcssp_wrapper('pid_wrapper');
+wrapper_PID.timing.dt = obj_PID.gettiming.dt;
+wrapper_PID = wrapper_PID.addalgo(obj_PID);
 
+%% add modules and wrappers to top model and call init/setup
 
-%% Setting node into main expcode obj
-topm = topm.setnode(node,1);
+topm = topm.addwrapper(wrapper_PID);
+topm = topm.addmodule(obj_TF);
+
 topm.init;
 topm.setup;
 
 
 %% Simulate top model
-sim(topm.mainslxname);
+out = sim(topm.mainslxname);
 
-simout = logsout2struct(logsout);
+simout = logsout2struct(out.logsout);
 
 %% plot outputs
 h = tiledlayout(3,1,'TileSpacing','compact','Padding','compact');
