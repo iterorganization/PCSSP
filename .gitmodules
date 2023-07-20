@@ -1,5 +1,5 @@
 [submodule "mds/mds-matlab-structs"]
-  	active = false
+  	ignore = true
  	path = ../scdds-core/mds/mds-matlab-structs
 	url = ../../tcv/tbx/mds-matlab-structs.git
 
