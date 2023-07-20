@@ -1,7 +1,9 @@
-[submodule "scdds-core"]
-	path = scdds-core
-	url = ../scdds.git
 [submodule "mds/mds-matlab-structs"]
   	active = false
  	path = ../scdds-core/mds/mds-matlab-structs
 	url = ../../tcv/tbx/mds-matlab-structs.git
+
+[submodule "scdds-core"]
+	path = scdds-core
+	url = ../scdds.git
+
