@@ -1,3 +1,3 @@
 [submodule "scdds-core"]
 	path = scdds-core
-	url = git@git.iter.org:/pcs/scdds.git
+	url = ../scdds.git
