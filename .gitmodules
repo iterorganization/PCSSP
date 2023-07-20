@@ -6,5 +6,5 @@
 
 [submodule "scdds-core"]
 	path = scdds-core
-	url = ../scdds.git
+	url = ssh://git@git.iter.org/pcs/scdds.git
 
