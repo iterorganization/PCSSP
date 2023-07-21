@@ -13,6 +13,9 @@ and can be found [here](https://gitlab.epfl.ch/spc/scdds/scdds-core).
 - tools: useful functions for plotting etc.
 
 ## To clone: 
+### setup ssh-key to the ITER git
+Git submodules require cloning over ssh. You will therefore need to associate an ssh key with your ITER bitbucket account. [More info here](https://confluence.atlassian.com/bitbucketserver0721/creating-ssh-keys-1115665672.html) 
+
 ### clone the repository
 `git clone ssh://git@git.iter.org/pcs/pcssp-nightly.git`
 ### init and update scdds-core submodule

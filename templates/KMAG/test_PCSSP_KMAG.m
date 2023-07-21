@@ -10,6 +10,7 @@ classdef test_PCSSP_KMAG < pcssp_module_test
     %
     properties          % additional properties of the test class
         algoobj = @pcssp_KMAG_module_obj;
+        isCodegen = true;
     end
    
     %%%%%%%%%%%%%%%%%%%%%%%%%% Test definitions %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -32,13 +33,13 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             KMAG_logged = load('KMAG_logged');
             
             % get an empty input Dataset from the input ports of the model
-            ds = createInputDataset(testCase.obj.getname);
+            ds = createInputDataset(module.getname);
             
             % directly write timeseries objects to structures matching the input buses
             % of the model
-            ds{1}.extFF = KMAG_logged.KMAG_logged.getElement('extFF').Values;
-            ds{2}.ref = KMAG_logged.KMAG_logged.getElement('Ref').Values;
-            ds{3}.y = KMAG_logged.KMAG_logged.getElement('y').Values;
+            ds = setElement(ds,1,KMAG_logged.KMAG_logged.getElement('extFF'));
+            ds = setElement(ds,2,KMAG_logged.KMAG_logged.getElement('Ref'));
+            ds = setElement(ds,3,KMAG_logged.KMAG_logged.getElement('y'));
             ds = setElement(ds,4,KMAG_logged.KMAG_logged.getElement('enable'));
             
             Simin = Simulink.SimulationInput(module.modelname);
@@ -56,12 +57,12 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             l = tiledlayout(4,3,'TileSpacing','compact','Padding','compact');
             
             % get logged signals from stored baseline and current sim
-            usim = out.logsout{1}.Values.u.Data;
+            usim = squeeze(out.logsout{1}.Values.u.Data);
             ulog = KMAG_logged.KMAG_logged.getElement('output').Values.u.Data;
             
             for ii = 1:11
                 h1 = nexttile;
-                plot(out.logsout{1}.Values.u.Time,usim(:,ii)); hold on
+                plot(out.logsout{1}.Values.u.Time,usim(ii,:)); hold on
                 plot(KMAG_logged.KMAG_logged.getElement('output').Values.u.Time,...
                     ulog(:,ii));         
             end
@@ -82,14 +83,19 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             
             KMAG_logged = load('KMAG_logged');
             
+            %% prepare module
+            module = testCase.algoobj();
+            module.init;
+            module.setup;
+            
             %% prepare wrapper
             
             wrapper = pcssp_wrapper('pcssp_KMAG_wrapper');
-            wrapper.timing.dt = testCase.obj.gettiming.dt;
-            wrapper = wrapper.addalgo(testCase.obj);
+            wrapper.timing.dt = module.gettiming.dt;
+            wrapper = wrapper.addalgo(module);
             load_system(wrapper.name);
             
-            SCDconf_setConf('configurationSettingsCODEgcc');
+            SCDconf_setConf('configurationSettingsCODEgcc'); % to be replaced with wrapper.build
             
             
             % get an empty input Dataset from the input ports of the model
@@ -97,9 +103,9 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             
             % directly write timeseries objects to structures matching the input buses
             % of the model
-            ds{1}.extFF = KMAG_logged.KMAG_logged.getElement('extFF').Values;
-            ds{2}.ref = KMAG_logged.KMAG_logged.getElement('Ref').Values;
-            ds{3}.y = KMAG_logged.KMAG_logged.getElement('y').Values;
+            ds = setElement(ds,1,KMAG_logged.KMAG_logged.getElement('extFF'));
+            ds = setElement(ds,2,KMAG_logged.KMAG_logged.getElement('Ref'));
+            ds = setElement(ds,3,KMAG_logged.KMAG_logged.getElement('y'));
             ds = setElement(ds,4,KMAG_logged.KMAG_logged.getElement('enable'));
             
             Simin = Simulink.SimulationInput('pcssp_KMAG_wrapper');

@@ -6,6 +6,13 @@ classdef pcssp_PID_test < pcssp_module_test
         algoobj = @(n_input)pcssp_PID_obj(3);
         isCodegen = 1; % flag to trigger module tests for codeGen
     end  
+    
+    methods
+        function bla(testCase)
+            
+        end
+        
+    end
         
         
 end
