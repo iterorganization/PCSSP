@@ -16,7 +16,7 @@ and can be found [here](https://gitlab.epfl.ch/spc/scdds/scdds-core).
 ### clone the repository
 `git clone ssh://git@git.iter.org/pcs/pcssp-nightly.git`
 ### init and update scdds-core submodule
-`git submodule update --recursive --init`
+`git submodule update --init`
 
 
 ## To run:
