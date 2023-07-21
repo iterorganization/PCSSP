@@ -1,0 +1,1 @@
+mathworks.codegen.cgsl_0101,mathworks.codegen.SolverCodeGen,mathworks.codegen.codeGenSupport,mathworks.codegen.MdlrefConfigMismatch,mathworks.codegen.ModelRefRTWConfigCompliance,com.mathworks.sorting.datastoresimrtwcmp,mathworks.codegen.SubsysCodeReuse,mathworks.codegen.SampleTimesTaskingMode,mathworks.codegen.ConstraintsTunableParam

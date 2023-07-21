@@ -1,4 +1,4 @@
-classdef test_PCSSP_KMAG < matlab.unittest.TestCase
+classdef test_PCSSP_KMAG < pcssp_module_test
     % PCSSP test class to demonstrate how the matlab unit test framework
     % can be used to author tests in PCSSP/Simulink
     %
@@ -9,51 +9,19 @@ classdef test_PCSSP_KMAG < matlab.unittest.TestCase
     %%%%%%%%%%%%%%%%%%%%%%%%% Class Properties %%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %
     properties          % additional properties of the test class
-        obj             % pcssp_module class obj of the model
+        algoobj = @pcssp_KMAG_module_obj;
     end
-    
-    %%%%%%%%%%%%%%%%%%%%%%%%%% Class-wide Setup and Teardown %%%%%%%%%%%%%%
-    %
-    % The functions inside the TestClassSetup run before all others to set
-    % up the whole class environment
-    % The functions inside the TestClassTeardown run once after all other
-    % test are done
-    methods(TestClassSetup)
-        
-        function init(testCase)
-            %% initialize object
-            testCase.obj = pcssp_KMAG_module_obj();
-
-            testCase.obj.init;
-            testCase.obj.setup;
-            
-            load_system(testCase.obj.getname); % does not physically open the model
-            
-            % add teardown to close model once the test is finished
-            addTeardown(testCase, @() close_system(testCase.obj.getname, 0))
-        end
-    end
-    
-    %%%%%%%%%%%%%%%%%%%%%%%%%% Method-wide Setup and Teardown %%%%%%%%%%%%%
-    %
-    % The functions inside the TestMethodSetup run before every test in the
-    % class
-    % The functions in the TestMethodTeardown run after every test
-    
-    methods(TestMethodSetup)
-        % empty for now
-    end
-    
-    methods(TestMethodTeardown)
-        % empty for now
-    end
-    
+   
     %%%%%%%%%%%%%%%%%%%%%%%%%% Test definitions %%%%%%%%%%%%%%%%%%%%%%%%%%
     %
     % Each function in this Test method is ran as a separate test with one
     % result
     methods (Test)
         function run_verification_sim(testCase)
+            
+            module = testCase.algoobj();
+            module.init;
+            module.setup;
             
             import Simulink.sdi.constraints.MatchesSignal;
             import Simulink.sdi.constraints.MatchesSignalOptions;
@@ -73,7 +41,7 @@ classdef test_PCSSP_KMAG < matlab.unittest.TestCase
             ds{3}.y = KMAG_logged.KMAG_logged.getElement('y').Values;
             ds = setElement(ds,4,KMAG_logged.KMAG_logged.getElement('enable'));
             
-            Simin = Simulink.SimulationInput('pcssp_KMAG');
+            Simin = Simulink.SimulationInput(module.modelname);
             Simin = Simin.setExternalInput(ds);
             
             % overwrite start/stop time to match reference simulation UMC_demo

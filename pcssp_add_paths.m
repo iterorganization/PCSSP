@@ -7,7 +7,9 @@ addpath(genpath(fullfile(thispath,'configurations')));
 addpath(genpath(fullfile(thispath,'PCS'  )));
 addpath(genpath(fullfile(thispath,'src'  )));
 addpath(genpath(fullfile(thispath,'templates')));
+addpath(genpath(fullfile(thispath,'testing')));
 addpath(genpath(fullfile(thispath,'tools')));
+
 addpath(thispath);
 
 corepath = fullfile(thispath,'scdds-core'  );
