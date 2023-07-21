@@ -19,7 +19,7 @@ Git submodules require cloning over ssh. You will therefore need to associate an
 ### clone the repository
 `git clone ssh://git@git.iter.org/pcs/pcssp-nightly.git`
 ### init and update scdds-core submodule
-`git submodule update --recursive --init`
+`git submodule update --init`
 
 
 ## To run:
