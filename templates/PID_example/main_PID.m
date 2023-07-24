@@ -34,7 +34,7 @@ topm.setup;
 
 
 %% Simulate top model
-out = sim(topm.mainslxname);
+out = topm.sim;
 
 simout = logsout2struct(out.logsout);
 

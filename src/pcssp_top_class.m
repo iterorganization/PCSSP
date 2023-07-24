@@ -102,9 +102,13 @@ classdef pcssp_top_class
           fprintf('\n** DONE WITH ALL INITS **\n');
         end
         
-        function sim(obj)
+        function simout = sim(obj)
+            % set the correct Simulink Settings
+            sourcedd = 'configurations_container_pcssp.sldd';
+            SCDconf_setConf('pcssp_Simulation',sourcedd);
+
             % simulate the top-level simulink model
-            sim(obj.name);
+            simout = sim(obj.name);
         end
         
         %% adders
