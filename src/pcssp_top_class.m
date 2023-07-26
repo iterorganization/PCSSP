@@ -48,7 +48,7 @@ classdef pcssp_top_class
         function open(obj,varargin)
             % this method opens the top-level slx model
             openslx = obj.mainslxname;
-            fprintf('Opening %s.slx\n',openslx)
+            fprintf('Opening %s\n',openslx)
             open_system(openslx);
         end
         
@@ -100,6 +100,12 @@ classdef pcssp_top_class
               obj.moduleobjlist{ii}.getname,obj.ddname)
           end
           fprintf('\n** DONE WITH ALL INITS **\n');
+        end
+        
+        function compile(obj)
+            load_system(obj.name);
+            set_param(obj.name,'SimulationCommand','Update')
+            
         end
         
         function simout = sim(obj)
@@ -288,8 +294,18 @@ classdef pcssp_top_class
         end
         
         %% misc helper functions
-
-
+            
+        function close_all(obj,saveflag)
+            arguments
+                obj
+                saveflag (1,1) logical
+            end
+            
+            fprintf('Closing all data dictionaries and discarding changes\n')
+            Simulink.data.dictionary.closeAll('-discard');
+            close_system(obj.name,saveflag,'closeReferencedModels','on');
+            
+        end
         
         
     end
