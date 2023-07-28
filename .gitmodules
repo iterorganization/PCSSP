@@ -1,3 +1,11 @@
+[submodule "mds/mds-matlab-structs"]
+    path = scdds-core/mds/mds-matlab-structs
+    url = ssh://git@gitlab.epfl.ch:spc/tcv/tbx/mds-matlab-structs.git
+    update = none
+    fetchRecurseSubmodules = false
+    active = false
+    path = scdds-core/mds/mds-matlab-structs
+
 [submodule "scdds-core"]
 	path = scdds-core
 	url = ssh://git@git.iter.org/pcs/scdds.git
