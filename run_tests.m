@@ -11,8 +11,9 @@ import matlab.unittest.plugins.TestReportPlugin
 % tests that have pcssp_test as superclass. More options here:
 % https://nl.mathworks.com/help/matlab/ref/matlab.unittest.testsuite-class.html
 
+pcssp_add_paths();
 
-suite = TestSuite.fromFolder(pwd,'IncludingSubfolders',true,'Superclass','pcssp_test');
+suite = TestSuite.fromFolder(pwd,'IncludingSubfolders',true,'Superclass',{'pcssp_module_test','pcssp_topmodel_test'});
 
 runner = TestRunner.withNoPlugins;
 
