@@ -60,7 +60,7 @@ classdef (Abstract) pcssp_module_test < SCDDSalgo_test & matlab.unittest.TestCas
           result = getResults(app);
           
           % Print error flag to output
-          testCase.verifyEmpty(result.numFail);
+          testCase.verifyEqual(result.numFail,0);
           
           end
           
