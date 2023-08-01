@@ -38,9 +38,15 @@ classdef (Abstract) pcssp_module_test < SCDDSalgo_test & matlab.unittest.TestCas
           % Create Model Advisor app. Model must exist and be saved
           app = Advisor.Manager.createApplication();
           
+          % set Simulink Configuration to codegen
+          sourcedd = 'configurations_container_pcssp.sldd';
+          
+          
           module = testCase.algoobj();
           module.init;
           module.setup;
+          
+          SCDconf_setConf('configurationSettingsRTFcpp',sourcedd);
           
           % Set root for analysis
           setAnalysisRoot(app,'Root', module.modelname);
