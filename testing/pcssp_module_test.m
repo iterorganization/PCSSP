@@ -16,7 +16,7 @@ classdef (Abstract) pcssp_module_test < SCDDSalgo_test & matlab.unittest.TestCas
   % etc.
   
   properties(Abstract=true)
-     isCodegen
+     isCodegen logical
   end
   
   methods(TestClassSetup)

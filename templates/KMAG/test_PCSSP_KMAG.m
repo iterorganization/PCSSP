@@ -3,14 +3,14 @@ classdef test_PCSSP_KMAG < pcssp_module_test
     % can be used to author tests in PCSSP/Simulink
     %
     % You can run this particular test like this:
-    % >> results = runtests('test_PCSSP_MFC_event_demo')
+    % >> results = runtests('test_PCSSP_KMAG')
     % table(results) returns a convenient overview of all tests
     
     %%%%%%%%%%%%%%%%%%%%%%%%% Class Properties %%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %
     properties          % additional properties of the test class
         algoobj = @pcssp_KMAG_module_obj;
-        isCodegen = true;
+        isCodegen = false; % strange bug in KMAG .slx. Should be true in the future
     end
    
     %%%%%%%%%%%%%%%%%%%%%%%%%% Test definitions %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -60,18 +60,17 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             
             % get logged signals from stored baseline
      
-            ulog = KMAG_logged.KMAG_logged.getElement('output').Values.u.Data;
+            ulog_time = load('u_out_KMAG_logged_time');
+            ulog= load('u_out_KMAG_logged_data');
             
             for ii = 1:11
                 h1 = nexttile;
                 plot(out_struct.time,out_struct.u(ii,:)); hold on
-                plot(KMAG_logged.KMAG_logged.getElement('output').Values.u.Time,...
-                    ulog(:,ii));
+                plot(ulog_time,ulog(:,ii));
                 
                 % validate signals 1 by 1
                 u_out = timeseries(out_struct.u(ii,:)',out_struct.time);
-                u_base = KMAG_logged.KMAG_logged.getElement('output').Values.u;
-                u_base = timeseries(u_base.Data(:,ii),u_base.Time);
+                u_base = timeseries(ulog(:,ii),ulog_time);
                 
                 % compare signals within some tolerance
                 testCase.verifyThat(u_out,MatchesSignal(u_base,'reltol',0.01,'WithOptions',opts));
