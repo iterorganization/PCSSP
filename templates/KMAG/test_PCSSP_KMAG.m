@@ -29,18 +29,17 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             opts = MatchesSignalOptions('IgnoringExtraData',true);
             
             %% load and prep test data
-            
-            KMAG_logged = load('KMAG_logged');
+            load('/work/imas/shared/TEST/pcssp/KMAG_logged.mat');
             
             % get an empty input Dataset from the input ports of the model
             ds = createInputDataset(module.getname);
             
             % directly write timeseries objects to structures matching the input buses
             % of the model
-            ds = setElement(ds,1,KMAG_logged.KMAG_logged.getElement('extFF'));
-            ds = setElement(ds,2,KMAG_logged.KMAG_logged.getElement('Ref'));
-            ds = setElement(ds,3,KMAG_logged.KMAG_logged.getElement('y'));
-            ds = setElement(ds,4,KMAG_logged.KMAG_logged.getElement('enable'));
+            ds = setElement(ds,1,KMAG_logged.getElement('ExtFF'));
+            ds = setElement(ds,2,KMAG_logged.getElement('Ref'));
+            ds = setElement(ds,3,KMAG_logged.getElement('y'));
+            ds = setElement(ds,4,KMAG_logged.getElement('enable'));
             
             Simin = Simulink.SimulationInput(module.modelname);
             Simin = Simin.setExternalInput(ds);
@@ -60,17 +59,16 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             
             % get logged signals from stored baseline
      
-            ulog_time = load('u_out_KMAG_logged_time');
-            ulog= load('u_out_KMAG_logged_data');
+            ulog = KMAG_logged.getElement('u');    
             
             for ii = 1:11
                 h1 = nexttile;
                 plot(out_struct.time,out_struct.u(ii,:)); hold on
-                plot(ulog_time,ulog(:,ii));
+                plot(ulog.Values.Time,ulog.Values.Data(:,ii));
                 
                 % validate signals 1 by 1
                 u_out = timeseries(out_struct.u(ii,:)',out_struct.time);
-                u_base = timeseries(ulog(:,ii),ulog_time);
+                u_base = timeseries(ulog.Values.Data(:,ii),ulog.Values.Time);
                 
                 % compare signals within some tolerance
                 testCase.verifyThat(u_out,MatchesSignal(u_base,'reltol',0.01,'WithOptions',opts));
