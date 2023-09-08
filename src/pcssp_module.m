@@ -42,32 +42,29 @@ classdef pcssp_module < SCDDSclass_algo
         
         function set_model_argument(obj,param,param_name)
             
-            arguments
-                obj
-                param (1,1) Simulink.Parameter
-                param_name (1,:) char
-            end
-            
             % function to parametrize referenced models via a model mask
             
-            % this function takes the Simulink.Parameter and its desired
+            % this function takes the Simulink.Parameter or FP struct and its desired
             % mask name as input.
-            % It then creates a Simulink.Bus object and sticks
-            % the param in the model workspace of the wrapper. If the parameters
+            % It then sticks the param in the model workspace of the 
+            % wrapper. If the parameters
             % are already there, the function checks whether they need
             % updating and does so accordingly.
-            
-            % open points:
-            % - requires model to be loaded
-            % - only works for one param with one model in the wrapper
-            % - Should be combined with the obj.setup to make sure the
-            %   instance parameters are updated?
-            % -
             
             
             % grab model WS
             hws = get_param(obj.modelname, 'modelworkspace');
             
+            % grab current model argument names
+            model_arg_names = get_param(obj.modelname,'ParameterArgumentNames');
+            
+            % append string for set_param command later
+            if ~isempty(model_arg_names)
+                model_arg_string = [model_arg_names,',', param_name];
+            else
+                model_arg_string = param_name;
+            end
+              
             % only update param in model workspace when (1) the param is not
             % there or (2) outdated/dirty. The isequaln command is insensitive to
             % ordering within the structures
@@ -83,15 +80,37 @@ classdef pcssp_module < SCDDSclass_algo
                 %                 param.DataType = ['Bus: ' businfoTP.busName];
                 
                 hws.assignin(param_name, param);
-                
                 % set param as model argument
-                set_param(obj.modelname,'ParameterArgumentNames',param_name)
+                set_param(obj.modelname,'ParameterArgumentNames',model_arg_string);
                 
-            elseif ~isequaln(hws.getVariable(param_name).Value, param.Value) % TP outdated
-                hws.assignin(param_name, param);
+            elseif hws.hasVariable(param_name) % model WS has a var with the same name
+                param_MWS = hws.getVariable(param_name); % param in model WS
                 
-            else
-                fprintf('parameter %s already up-to-date in model WS. Skipping',param_name)
+                assert(strcmpi(class(param_MWS),class(param)),...
+                    'class clash of variables in function input vs model Workspace');
+                
+                if isa(param_MWS,'struct')
+                    paramMWS_value = param_MWS;
+                    param_value = param;
+                elseif isa(param_MWS,'Simulink.Parameter')
+                    paramMWS_value = param_MWS.Value;
+                    param_value = param.Value;
+                else
+                    error('parameter %s is not a struct or Simulink.Parameter',param_name)
+                    
+                end
+                
+                % update param_MWS with the new param value
+                if isequaln(paramMWS_value,param_value)
+                        fprintf('variable %s is already up to date, skipping\n',param_name);
+                        return
+                else
+                    hws.assignin(param_name, param);
+                    
+                    % set param as model argument
+                    set_param(obj.modelname,'ParameterArgumentNames',model_arg_string);
+                end
+                
                 
             end
             
