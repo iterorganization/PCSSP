@@ -307,6 +307,42 @@ classdef pcssp_top_class
             
         end
         
+        function set_model_argument_value(obj,model_path,var_position,value)
+            
+            % Function to set the model argument (or model instance
+            % parameters) in a referenced model. This is useful to inject
+            % parameters from the top model in a parametrized model
+            % reference.
+            
+            % before calling this function, the referenced model needs to
+            % have model arguments defined. Call the set_model_argument
+            % method of the pcssp_module class.
+            
+            load_system(obj.name);
+            instSpecParams = get_param([obj.name,'/',model_path],'InstanceParameters');
+            instSpecParams(var_position).Value = value;
+            set_param([obj.name,'/',model_path],'InstanceParameters',instSpecParams);
+            
+            
+        end
+        
+        function print_model_arguments(obj,model_path)
+            % helper function to print the model arguments associated with
+            % a model reference in the top model
+            load_system(obj.name);
+            path_spec = [obj.name,'/',model_path];
+            instSpecParams = get_param(path_spec,'InstanceParameters');
+            
+            fprintf('Referenced model %s has the following model instance parameters\n',path_spec);
+     
+ 
+            for ii = 1:length(instSpecParams)
+                fprintf('Name: %s \t \t Value: %s\n',instSpecParams(ii).Name, instSpecParams(ii).Value);
+            end
+       
+        end
+            
+        
         
     end
 end
