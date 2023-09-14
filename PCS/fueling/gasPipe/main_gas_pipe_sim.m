@@ -12,4 +12,17 @@ gas_obj.init;
 gas_obj.setup;
 
 gas_fp_struct = gas_obj.getfpindatadict;
-gas_obj.set_model_argument(gas_fp_struct.pcssp_gas_pipe_fp,'pcssp_gas_pipe_fp_shape');
+gas_obj.set_model_argument(gas_fp_struct.pcssp_gas_pipe_fp,'pcssp_gas_pipe_fp');
+
+%% initialize top model
+
+% customize paramter struct
+pcssp_gas_pipe_fp_H2 = pcssp_gas_pipe_loadfp("H2");
+pcssp_gas_pipe_fp_He = pcssp_gas_pipe_loadfp("He");
+
+topm = pcssp_top_class('gas_pipe_top');
+
+topm = topm.addmodule(gas_obj);
+
+topm.init;
+topm.setup;

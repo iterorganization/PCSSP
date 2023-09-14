@@ -12,6 +12,7 @@ obj=obj.settiming(0,1e-3,10.0);
 
 %% Fixed parameters init functions 
 obj=obj.addfpinitfcn(@(gas)pcssp_gas_pipe_loadfp(gasType),'pcssp_gas_pipe_fp');
+obj=obj.addfpinitfcn(@(gas)pcssp_gas_pipe_loadfp(gasType),'pcssp_gas_pipe_fp');
 
 
 %% Print (optional)

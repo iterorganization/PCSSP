@@ -76,9 +76,9 @@ switch gasType
 end
 fp.gamma = gamma;
 
-v=sqrt(3*R*fp.Temp/M_gas); %Moleculare velocity
+fp.v=sqrt(3*R*fp.Temp/M_gas); %Moleculare velocity
 
-C0=pi/12*fp.d^3*v; %Molecular conductance
+fp.C0=pi/12*fp.d^3*fp.v; %Molecular conductance
 C1=eye(fp.N);
 C1(fp.N,:)=0;
 for i=1:fp.N-1
@@ -89,6 +89,9 @@ fp.C1=pi*fp.R0^4/8/eta*C1;%viscous conductance gain
 
 fp.C1out=pi*fp.R0^4/8/eta/fp.dx/2; %viscous conductance gain for boundary condition at x=l
 
+
+% initial conditions
+fp.p0 = p0(1)*ones(fp.N,1);
 
 
 
