@@ -20,14 +20,8 @@ classdef pcssp_module < SCDDSclass_algo
                         designDataObj = getSection(dictionaryObj, 'Design Data');
                         % append structure
                         
-                        if ischar(obj.fpinits{ii}{1}) % fpinit fcn is not a fcnhandle
-                            name = obj.fpinits{ii}{1};
-                        elseif isa(obj.fpinits{ii}{1},'function_handle')
-                            name = func2str(obj.fpinits{ii}{1});
-                            
-                        else
-                            error('unrecognized fpinitfcn definition: not a char nor fcnhandle')
-                        end
+
+                        name = designDataObj.getEntry(obj.fpinits{ii}{2}{1}).Name;
                         fpstruct.(name) = designDataObj.getEntry(obj.fpinits{ii}{2}{1}).getValue;
                         
                     end

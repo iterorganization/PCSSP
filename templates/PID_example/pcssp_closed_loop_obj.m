@@ -1,4 +1,4 @@
-function topm = pcssp_closed_loop_obj()
+function [topm,obj_PID,obj_TF] = pcssp_closed_loop_obj()
 
 %% configure top model
 topm = pcssp_top_class('closed_loop');
