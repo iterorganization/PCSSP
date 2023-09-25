@@ -33,13 +33,19 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             
             % get an empty input Dataset from the input ports of the model
             ds = createInputDataset(module.getname);
+
+            % temporary fix to change the datatype of enable for WRL
+            entemp = KMAG_logged.getElement('enable').Values;
+
+            en = timeseries(double(entemp.Data),entemp.Time);
+
             
             % directly write timeseries objects to structures matching the input buses
             % of the model
             ds = setElement(ds,1,KMAG_logged.getElement('ExtFF'));
             ds = setElement(ds,2,KMAG_logged.getElement('Ref'));
             ds = setElement(ds,3,KMAG_logged.getElement('y'));
-            ds = setElement(ds,4,KMAG_logged.getElement('enable'));
+            ds = setElement(ds,4,en);
             
             Simin = Simulink.SimulationInput(module.modelname);
             Simin = Simin.setExternalInput(ds);
