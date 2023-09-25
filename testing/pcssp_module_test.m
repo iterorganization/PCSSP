@@ -46,7 +46,7 @@ classdef (Abstract) pcssp_module_test < SCDDSalgo_test & matlab.unittest.TestCas
           module.init;
           module.setup;
           
-          SCDconf_setConf('configurationSettingsRTFcpp',sourcedd);
+          SCDconf_setConf('configurationSettingsRTF',sourcedd);
           
           % Set root for analysis
           setAnalysisRoot(app,'Root', module.modelname);
