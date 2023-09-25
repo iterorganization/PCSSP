@@ -13,9 +13,9 @@ obj_KMAG.init;
 obj_KMAG.setup;
 
 %% input size struct
-size.extFF = [11 1];
-size.Ref = [10 1];
-size.y = [10 1];
+size.extFF = [11];
+size.Ref = [10];
+size.y = [10];
 size.enable = 1;
 
 %% build

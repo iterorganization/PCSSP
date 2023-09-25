@@ -23,14 +23,7 @@ size.internal = [33];
 size.error = [11];
 
 %% build
-obj_KCURR.build;
-
-%% build wrapper
-
-wrapper = pcssp_wrapper('pcssp_KMAG_wrapper');
-wrapper.timing.dt = obj_KCURR.gettiming.dt;
-wrapper = wrapper.addalgo(obj_KCURR);
-wrapper.build;        
+obj_KCURR.build;     
 
 %% prep logged data for RTF export
 if writedata

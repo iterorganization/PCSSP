@@ -114,7 +114,7 @@ classdef pcssp_module < SCDDSclass_algo
         function build(obj)
             % set configuration to gcc
             sourcedd = 'configurations_container_pcssp.sldd';
-            SCDconf_setConf('configurationSettingsRTFcpp',sourcedd);
+            SCDconf_setConf('configurationSettingsRTF',sourcedd);
             % build
             rtwbuild(obj.modelname);
             
