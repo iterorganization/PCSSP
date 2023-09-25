@@ -16,11 +16,6 @@ obj=obj.addfpinitfcn('pcssp_PID_loadfp','pcssp_PID_fp');
 %% Tunable parameters structure name
 obj=obj.addtunparamstruct('pcssp_PID_tp', @()pcssp_PID_loadtp());
 
-%% Wavegens
-% mdsconfig = SCDDSdemo_mdsconfig();
-% obj=obj.addwavegenbasetruct('algo_demo2_inbus1');
-% obj=obj.addwavegen(SCDclass_mdswgsigsingle( 'demo2.inputs.signal1','signal1'        ,'srcsrv',mdsconfig.mdsserver,'srctree',mdsconfig.mdstree));
-% obj=obj.addwavegen(SCDclass_mdswgsigsingle( 'demo2.inputs.signal2','signal2'        ,'srcsrv',mdsconfig.mdsserver,'srctree',mdsconfig.mdstree));
 
 %% Buses
 obj = obj.addbus('', @() pcssp_PID_inBus_def(n_input));
