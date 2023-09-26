@@ -119,6 +119,62 @@ classdef pcssp_module < SCDDSclass_algo
             rtwbuild(obj.modelname);
             
         end
+
+
+        %% RTF helper functions
+
+        function write_RTF_xml(obj)
+            % helper function to write XML parameter structure for RTF FBs
+
+            % The RTF XML application-buffer looks for example as follows:
+
+            %  <?xml version="1.0" encoding="UTF-8"?>
+            %  <FunctionBlock Name="KMAG" Type="SimulinkBlock">
+            %  <Parameter Name="LibraryPath" Value="~/pcssp_KMAG/build/libpcssp.so"/>
+            %  <Parameter Name="BlockName" Value="KMAG"/>
+            %  <Parameter Name="P" Value="[1,1,1,1,1,1,1,1,1,1]"/>
+
+            % this function uses the matlab writestruct fcn to mimick this
+            % XML structure for RTF applications.
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            
+            % fixed RTF XML type header
+            xml_out.NameAttribute = string(obj.getname);
+            xml_out.TypeAttribute = "SimulinkBlock"; 
+            
+
+            % fill fixed XML parameter fields
+            xml_out.Parameter(1).NameAttribute  = "LibraryPath";
+            xml_out.Parameter(1).ValueAttribute = join(["~/", string(obj.getname), "/build/"]);
+            
+            % loop over TPs of pcssp_module to fill XML parameter fields
+            for ii=1:numel(obj.exportedtps)
+                tp_name = obj.exportedtps{ii};
+                tp_val = feval(obj.exportedtpsdefaults{ii});
+                xml_out.Parameter(ii).NameAttribute = tp_name;
+
+
+                if isa(tp_val,'struct')
+                    tp_valXML = tp_val;
+                elseif isa(tp_val,'Simulink.Parameter')
+                    tp_valXML = tp_val.Value;
+                else
+                    error('parameter %s is not a struct or Simulink.Parameter',tp_name)
+
+                end
+
+
+                xml_out.Parameter(ii).ValueAttribute = jsonencode(tp_valXML);
+
+                
+            end
+
+            writestruct(xml_out,[obj.getname , '_params.xml'], "StructNodeName","FunctionBlock");
+
+
+
+
+        end
         
         
         

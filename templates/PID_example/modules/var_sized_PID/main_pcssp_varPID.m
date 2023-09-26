@@ -11,3 +11,7 @@ obj_varPID.init;
 obj_varPID.setup;
 %%
 obj_varPID.build;
+
+
+%% 
+obj_varPID.write_RTF_xml
