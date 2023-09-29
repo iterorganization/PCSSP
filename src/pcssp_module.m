@@ -145,10 +145,10 @@ classdef pcssp_module < SCDDSclass_algo
 
             % fill fixed XML parameter fields
             xml_out.Parameter(1).NameAttribute  = "LibraryPath";
-            xml_out.Parameter(1).ValueAttribute = join(["~/", string(obj.getname), "/build/"]);
+            xml_out.Parameter(1).ValueAttribute = ['~/',obj.getname,'/build/'];
             
             % loop over TPs of pcssp_module to fill XML parameter fields
-            for ii=1:numel(obj.exportedtps)
+            for ii=2:numel(obj.exportedtps)
                 tp_name = obj.exportedtps{ii};
                 tp_val = feval(obj.exportedtpsdefaults{ii});
                 xml_out.Parameter(ii).NameAttribute = tp_name;
@@ -164,16 +164,32 @@ classdef pcssp_module < SCDDSclass_algo
                 end
 
 
-                xml_out.Parameter(ii).ValueAttribute = jsonencode(tp_valXML);
+                xml_out.Parameter(ii).DefaultValueAttribute = jsonencode(tp_valXML);
+                xml_out.Parameter(ii).TypeAttribute = class(tp_valXML);
 
                 
             end
+
+            % ports
+
+
 
             writestruct(xml_out,[obj.getname , '_params.xml'], "StructNodeName","FunctionBlock");
 
 
 
 
+        end
+
+        function update_tp_value(obj,tp_name,tp_new_value)
+
+            hDict       = Simulink.data.dictionary.open([obj.getname, '.sldd']);
+            hDesignData = hDict.getSection('Design Data');
+            tp_entry    = hDesignData.getEntry([tp_name,'_tmpl']);
+
+
+            % push change
+            tp_entry.setValue(tp_new_value);
         end
         
         
