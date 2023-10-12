@@ -4,7 +4,8 @@ classdef pcssp_module < SCDDSclass_algo
     
     
     methods
-        
+
+        %% SLDD helper functions
         function fpstruct = getfpindatadict(obj)
             % TO DO: check use of
             % Simulink.data.evalinGlobal(obj,'paramname') for this
@@ -33,7 +34,7 @@ classdef pcssp_module < SCDDSclass_algo
         
         
         
-        
+        %% Model parameterization helper functions
         function set_model_argument(obj,param,param_name)
             
             % function to parametrize referenced models via a model mask
@@ -109,8 +110,42 @@ classdef pcssp_module < SCDDSclass_algo
             end
             
         end
+
+        function clear_model_ws(obj,variables)
+            % method to clear variables in the model workspace. Accepts
+            % either zero arguments upon which all variables are cleared,
+            % or a comma-seperated variables to-be-cleared as follows
+            % obj.clear_model_ws 
+            % obj.clear_model_ws('tp1','tp2','tp3')
+            
+            arguments
+                obj
+            end
+            
+            arguments(Repeating)
+               variables char
+            end
+
+
+            mdlWks = get_param(obj.modelname,'ModelWorkspace');
+            if isempty(variables)
+                % clear everything
+                
+                clear(mdlWks);
+
+            else
+                % clear only variables specified in repeating input
+                % 'variables'
+                for ii = 1:length(variables)
+                    clear(mdlWks, variables{ii});
+                end
+            end
+
+        end
         
         
+
+        %% RTF/codegen functions
         function build(obj)
             % set configuration to gcc
             sourcedd = 'configurations_container_pcssp.sldd';
@@ -121,7 +156,6 @@ classdef pcssp_module < SCDDSclass_algo
         end
 
 
-        %% RTF helper functions
 
         function write_RTF_xml(obj)
             % helper function to write XML parameter structure for RTF FBs
@@ -181,16 +215,7 @@ classdef pcssp_module < SCDDSclass_algo
 
         end
 
-        function update_tp_value(obj,tp_name,tp_new_value)
 
-            hDict       = Simulink.data.dictionary.open([obj.getname, '.sldd']);
-            hDesignData = hDict.getSection('Design Data');
-            tp_entry    = hDesignData.getEntry([tp_name,'_tmpl']);
-
-
-            % push change
-            tp_entry.setValue(tp_new_value);
-        end
         
         
         
