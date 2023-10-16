@@ -30,12 +30,12 @@ wrapper.build;
 
 %% prep logged data for RTF export
 if writedata
-    load('KMAG_logged.mat');
-    KMAGin = logsout2struct(KMAG_logged);
-    fieldN = fieldnames(KMAGin);
+    load('KMAG_in.mat');
+%     KMAGin = logsout2struct(KMAG_logged);
+    fieldN = fieldnames(KMAG_in);
 
     for ii = 1:length(fieldN)
-        writematrix(transpose(KMAGin.(fieldN{ii})),['KMAG_in_' fieldN{ii}],'FileType','text');
+        writematrix(transpose(KMAG_in.(fieldN{ii})),['KMAG_in_' fieldN{ii}],'FileType','text');
 
     end
 end
@@ -65,7 +65,7 @@ end
 %%
 
 % if writedata
-    writestruct(xml_out,'KMAG_params.xml',"StructNodeName","FunctionBlock");
+%     writestruct(xml_out,'KMAG_params.xml',"StructNodeName","FunctionBlock");
 % end
 
 

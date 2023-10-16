@@ -12,8 +12,18 @@ Simulink.data.dictionary.closeAll('-discard')
 
 [topm,obj_PID,obj_TF] = pcssp_closed_loop_obj();
 
+%% Initialize 
+
 topm.init;
 topm.setup;
+
+%% Parametrize the PID module: 
+% define the parameters from the obj_PID
+% inject them from the topm
+% obj_PID.set_model_argument(pcssp_PID_tp,'tp');
+
+% the following step dirties the top model, so use sparingly
+% topm.set_model_argument_value('PID',1,'pcssp_PID_tp');
 
 
 %% Simulate top model
