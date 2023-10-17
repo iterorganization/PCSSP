@@ -35,43 +35,59 @@ classdef (Abstract) pcssp_module_test < SCDDSalgo_test & matlab.unittest.TestCas
           % module
           
           if testCase.isCodegen
-          % Create Model Advisor app. Model must exist and be saved
-          app = Advisor.Manager.createApplication();
-          
-          % set Simulink Configuration to codegen
-          sourcedd = 'configurations_container_pcssp.sldd';
-          
-          
-          module = testCase.algoobj();
-          module.init;
-          module.setup;
-          
-          SCDconf_setConf('configurationSettingsRTF',sourcedd);
-          
-          % Set root for analysis
-          setAnalysisRoot(app,'Root', module.modelname);
-          
-          % Clear all check instances from Model Advisor analysis.
-          deselectCheckInstances(app);
-          
-          % Load and select codegen relevant checks
-          IDs = readcell('checkinstanceIDs.txt');
-          instanceIDs = getCheckInstanceIDs(app, IDs);
-          selectCheckInstances(app, 'IDs', instanceIDs);
-          
-          %Run Model Advisor analysis.
-          run(app);
-          
-          %Get analysis results.
-          result = getResults(app);
-          
+          checkIDs = readcell('checkinstanceIDs.txt');
+          result = run_model_advisor(testCase,checkIDs,'configurationSettingsRTF');
           % Print error flag to output
           testCase.verifyEqual(result.numFail,0);
           
           end
           
       end
+
+      function pcssp_ITER_model_compliance(testCase)
+
+          % This test validates the PCSSP module for compliance against
+          % some basic modeling standards as determined by the Simulink
+          % advisory board
+        checkIDs = readcell('MABcheckIDs.txt');
+        result = run_model_advisor(testCase,checkIDs,'pcssp_Simulation');
+        testCase.verifyEqual(result.numFail,0);
+
+
+      end
+
+
+
+
   end
-  
-  
+
+
+  %% helper functions
+  methods
+      function result = run_model_advisor(testCase,checkIDs,configurationSettings)
+          % This function runs the Simulink Check 'model advisor' on a
+          % selected number of checkIDs
+
+          % Limitations: ModelAdvisor.run does not cross model boundaries
+          % and 2) does not run all model variants. We should use
+          % Advisor.application for this instead
+
+          % set Simulink Configuration to codegen
+          sourcedd = 'configurations_container_pcssp.sldd';
+
+
+          module = testCase.algoobj();
+          module.init;
+          module.setup;
+
+          SCDconf_setConf(configurationSettings,sourcedd);
+
+          result = ModelAdvisor.run(module.modelname,checkIDs,'Force','On');
+          result = result{1};
+
+          
+
+      end
+
+  end
 end
