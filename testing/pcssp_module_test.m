@@ -26,6 +26,16 @@ classdef (Abstract) pcssp_module_test < SCDDSalgo_test & matlab.unittest.TestCas
       run(fullfile(rootpath,'pcssp_add_paths'));
     end
   end
+
+  methods(TestMethodSetup)
+        % empty for now
+        function clear_workspaces_and_sldds(~)
+            disp('clearing workspace, models, and sldds');
+            clear; 
+            bdclose all; 
+            Simulink.data.dictionary.closeAll('-discard')
+        end
+    end
   
   methods(Test)
       function pcssp_ITER_codeGen_compliance(testCase)
