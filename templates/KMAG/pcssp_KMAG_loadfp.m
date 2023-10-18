@@ -1,4 +1,4 @@
-function fp = pcssp_PID_loadfp(obj)
+function fp = pcssp_KMAG_loadfp(obj)
 
 %% Load other fixed parameters
 %

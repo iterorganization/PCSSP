@@ -12,6 +12,7 @@ obj=obj.settiming(0,2e-3,10.0);
 
 %% Fixed parameters init functions 
 obj=obj.addfpinitfcn('pcssp_KMAG_loadfp','pcssp_KMAG_fp');
+obj = obj.addfpinitfcn('pcssp_KMAG_sizes','size');
 
 %% Tunable parameters structure name
 % obj=obj.addtunparamstruct('pcssp_KMAG_tp', @()pcssp_KMAG_loadtp());
