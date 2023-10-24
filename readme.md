@@ -30,3 +30,6 @@ Git submodules require cloning over ssh. You will therefore need to associate an
 `module load intel MATLAB`
 `matlab`
 ### run the pcssp_add_paths script
+
+### Inside matlab, execute the following command once to setup git merges with simulink:
+`comparisons.ExternalSCMLink.setupGitConfig()`
