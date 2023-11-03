@@ -94,7 +94,7 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             
             %% load and prep test data
             
-            load('~/Desktop/KMAG_logged');
+            load('/work/imas/shared/TEST/pcssp/KMAG_logged.mat');
             
             %% prepare module
             module = testCase.algoobj();
