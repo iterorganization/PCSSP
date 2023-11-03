@@ -9,8 +9,8 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
   
       function build(obj)
           % set configuration to gcc
-          sourcedd = 'configurations_container_pcssp.sldd';
-          SCDconf_setConf('configurationSettings',sourcedd);
+          sourcedd = 'configurations_container_RTF.sldd';
+          SCDconf_setConf('configurationSettingsRTFcpp',sourcedd);
           % build
           build@SCDDSclass_wrapper(obj); % call superclass method       
           

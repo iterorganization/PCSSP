@@ -208,11 +208,12 @@ classdef pcssp_module < SCDDSclass_algo
 
                 xml_out.Parameter(ii+1).DefaultValueAttribute = jsonencode(tp_valXML);
 
-                if all(size(tp_valXML)>1) % matrix valued param
-                    size_string = sprintf('[%d][%d]',size(tp_valXML,1),size(tp_valXML,2));
-                else % vector or scalar
-                    size_string = sprintf('[%d]',length(tp_valXML));
+                if size(tp_valXML,1)>1
+                    size_string = 
+                else
+
                 end
+                size_string = fprintf('')
                 xml_out.Parameter(ii+1).TypeAttribute = [class(tp_valXML),size_string];
 
                 
