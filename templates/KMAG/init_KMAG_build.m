@@ -17,9 +17,7 @@ obj_KMAG.build;
 
 %% build wrapper
 
-wrapper = pcssp_wrapper('pcssp_KMAG_wrapper');
-wrapper.timing.dt = obj_KMAG.gettiming.dt;
-wrapper = wrapper.addalgo(obj_KMAG);
+wrapper = pcssp_KMAG_wrapper();
 wrapper.build;        
 
 %% prep logged data for RTF export

@@ -10,7 +10,8 @@ clear; clc; bdclose all;
 Simulink.data.dictionary.closeAll('-discard')
 
 
-[topm,obj_PID,obj_TF] = pcssp_closed_loop_obj();
+
+[topm,obj_PID,obj_TF,obj_sensor,sensor_wrapper] = pcssp_closed_loop_obj();
 
 %% Initialize 
 

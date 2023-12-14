@@ -184,7 +184,6 @@ classdef pcssp_top_class
         function setupwrapperdd(obj)
           % Set up the wrapper data dictionary links
           
-          
             for ii=1:numel(obj.wrappers)
               wrapperObj = obj.wrappers{ii}.wrapperobj;
               % link to algorithms contained in the wrappers
