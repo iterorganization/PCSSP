@@ -3,8 +3,8 @@ classdef pcssp_PID_sensor_test < pcssp_module_test
     % see pcssp_module test class for all standard pcssp module tests
     
     properties
-        algoobj = @pcssp_PID_sensor_obj();
-        isCodegen = 1; % flag to trigger module tests for codeGen
+        algoobj = @pcssp_PID_sensor_obj;
+        isCodegen = 0; % flag to trigger module tests for codeGen
     end  
     
     methods
