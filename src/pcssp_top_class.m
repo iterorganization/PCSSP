@@ -297,7 +297,7 @@ classdef pcssp_top_class
         function close_all(obj,saveflag)
             arguments
                 obj
-                saveflag (1,1) logical
+                saveflag (1,1) logical % 0 to close without saving, 1 to save
             end
             
             fprintf('Closing all data dictionaries and discarding changes\n')
@@ -306,7 +306,7 @@ classdef pcssp_top_class
             
         end
         
-        function set_model_argument_value(obj,model_path,var_position,value)
+        function set_model_argument_value(obj,model_path,var_name,value)
             
             % Function to set the model argument (or model instance
             % parameters) in a referenced model. This is useful to inject
@@ -318,9 +318,7 @@ classdef pcssp_top_class
             % method of the pcssp_module class.
             
             load_system(obj.name);
-            instSpecParams = get_param([obj.name,'/',model_path],'InstanceParameters');
-            instSpecParams(var_position).Value = value;
-            set_param([obj.name,'/',model_path],'InstanceParameters',instSpecParams);
+            set_param([obj.name,'/',model_path],var_name,value);
             
             
         end
