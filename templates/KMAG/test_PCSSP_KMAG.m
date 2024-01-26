@@ -23,6 +23,7 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             module = testCase.algoobj();
             module.init;
             module.setup;
+            module.load;
             
             import Simulink.sdi.constraints.MatchesSignal;
             import Simulink.sdi.constraints.MatchesSignalOptions;
@@ -100,6 +101,7 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             module = testCase.algoobj();
             module.init;
             module.setup;
+            module.load;
             
             %% prepare wrapper
             
@@ -127,7 +129,8 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             wrapper.build;
             
             % get an empty input Dataset from the input ports of the model
-            ds = createInputDataset(wrapper.name);
+            wrapper.load;
+            ds = createInputDataset(wrapper.mdlname);
             
             % directly write timeseries objects to structures matching the input buses
             % of the model
