@@ -57,7 +57,7 @@ classdef pcssp_top_class
             % to simulate this assessment model. It creates an sldd and
             % calls the setups for all attached modules and wrappers
             
-            
+            load_system(obj.name);
             fprintf('Setting up top model ''%s'', configuring data dictionaries ...\n',obj.name);
             obj.createmaindd;
             
@@ -163,6 +163,9 @@ classdef pcssp_top_class
           end
           delete(which(obj.ddname));
           Simulink.data.dictionary.create(fullfile(obj.ddpath,obj.ddname));
+
+          % link sldd to top-model slx
+          set_param(obj.name,'DataDictionary',obj.ddname);
         end
           
         function setupmaindd(obj)
