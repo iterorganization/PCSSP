@@ -322,6 +322,11 @@ classdef pcssp_top_class
             
             load_system(obj.name);
             set_param([obj.name,'/',model_path],var_name,value);
+            if ~Simulink.data.existsInGlobal(obj.name,value)
+                % variable does not yet exist anywhere in relation to the
+                % mdl
+                warning('variable %s does not exist in base WS or sldd of model %s. Model may not compile',value,obj.name);
+            end
             
             
         end
