@@ -57,7 +57,6 @@ classdef pcssp_top_class
             % to simulate this assessment model. It creates an sldd and
             % calls the setups for all attached modules and wrappers
             
-            load_system(obj.name);
             fprintf('Setting up top model ''%s'', configuring data dictionaries ...\n',obj.name);
             obj.createmaindd;
             
@@ -165,6 +164,7 @@ classdef pcssp_top_class
           Simulink.data.dictionary.create(fullfile(obj.ddpath,obj.ddname));
 
           % link sldd to top-model slx
+          load_system(obj.name);
           set_param(obj.name,'DataDictionary',obj.ddname);
         end
           
@@ -322,6 +322,11 @@ classdef pcssp_top_class
             
             load_system(obj.name);
             set_param([obj.name,'/',model_path],var_name,value);
+            if ~Simulink.data.existsInGlobal(obj.name,value)
+                % variable does not yet exist anywhere in relation to the
+                % mdl
+                warning('variable %s does not exist in base WS or sldd of model %s. Model may not compile',value,obj.name);
+            end
             
             
         end
