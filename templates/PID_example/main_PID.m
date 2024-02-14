@@ -11,16 +11,20 @@ Simulink.data.dictionary.closeAll('-discard')
 
 
 
-[topm,obj_PID,obj_TF,obj_sensor,sensor_wrapper] = pcssp_closed_loop_obj();
+[topm,obj_PID,obj_TF,obj_sensor,sensor_wrapper_obj] = pcssp_closed_loop_obj();
+
+%% initialize wrapper
+sensor_wrapper_obj.init;
 
 %% Initialize 
-
 topm.init;
 topm.setup;
 
 %% Parametrize the PID module: 
 % define a new model WS parameter 'tp' mirroring the one in the obj_PID
 % definition:
+
+% pcssp_PID_tp = obj_PID.get_nominal_tp_value('pcssp_PID_tp');
 % obj_PID.set_model_argument(pcssp_PID_tp,'tp');
 
 % the model should use this 'tp' value in all its blocks.

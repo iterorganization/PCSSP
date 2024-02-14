@@ -81,8 +81,8 @@ classdef pcssp_module < SCDDSclass_algo
             elseif hws.hasVariable(param_name) % model WS has a var with the same name
                 param_MWS = hws.getVariable(param_name); % param in model WS
                 
-                assert(strcmpi(class(param_MWS.Value),class(param)),...
-                    'class clash of variables in function input vs model Workspace');
+                assert(strcmpi(class(param_MWS),class(param)),...
+                    'class clash of variables in function input vs model WS: model WS has %s whereas input has %s',class(param_MWS),class(param));
                 
                 if isa(param_MWS,'struct')
                     paramMWS_value = param_MWS;

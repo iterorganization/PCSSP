@@ -27,15 +27,15 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
 
       function compile(obj)
          try
-           eval(sprintf('%s([],[],[],''compile'')',obj.name));
+           eval(sprintf('%s([],[],[],''compile'')',obj.mdlname));
          catch ME
              try
-                eval(sprintf('%s([],[],[],''term'')',obj.name)); % terminate if necessary
+                eval(sprintf('%s([],[],[],''term'')',obj.mdlname)); % terminate if necessary
              catch
                 rethrow(ME); % rethrow error so we can see it
              end
          end
-         eval(sprintf('%s([],[],[],''term'')',obj.name)); % terminate is successful
+         eval(sprintf('%s([],[],[],''term'')',obj.mdlname)); % terminate is successful
       end
 
 

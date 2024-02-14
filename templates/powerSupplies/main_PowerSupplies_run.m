@@ -14,19 +14,9 @@ topm = topm.addmodule(obj_PS);
 topm.init;
 topm.setup;
 
-%% load and prep test data
+%% call harness
 
-PS_logged = load('PS_logged');
-ds = Simulink.SimulationData.Dataset;
-ds = setElement(ds,1,PS_logged.PS_logged.getElement('CSPF_volt_cmd')); % CSPF_volt_cmd
-ds = setElement(ds,2,PS_logged.PS_logged.getElement('CSPF_curr_meas')); % CSPF_curr_meas
-
-Simin = Simulink.SimulationInput('PS_top');
-Simin = Simin.setExternalInput(ds);
-
-out = sim(Simin);
-
-%%
+out = topm.sim;
 
 logsout = logsout2struct(out.yout);
 
