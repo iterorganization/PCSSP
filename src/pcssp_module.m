@@ -51,7 +51,7 @@ classdef pcssp_module < SCDDSclass_algo
             hws = get_param(obj.modelname, 'modelworkspace');
             
             % grab current model argument names
-            model_arg_names = get_param(obj.modelname,'ParameterArgumentNames');
+            model_arg_names = obj.get_model_arguments;
             
             % append string for set_param command later
             if ~isempty(model_arg_names)
@@ -81,7 +81,7 @@ classdef pcssp_module < SCDDSclass_algo
             elseif hws.hasVariable(param_name) % model WS has a var with the same name
                 param_MWS = hws.getVariable(param_name); % param in model WS
                 
-                assert(strcmpi(class(param_MWS),class(param)),...
+                assert(strcmpi(class(param_MWS.Value),class(param)),...
                     'class clash of variables in function input vs model Workspace');
                 
                 if isa(param_MWS,'struct')
@@ -143,7 +143,11 @@ classdef pcssp_module < SCDDSclass_algo
 
         end
         
-        
+        % helper function to grab model arguments
+
+        function names = get_model_arguments(obj)
+            names = get_param(obj.modelname,'ParameterArgumentNames');
+        end
 
         %% RTF/codegen functions
         function build(obj)
