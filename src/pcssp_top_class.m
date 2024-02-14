@@ -156,7 +156,7 @@ classdef pcssp_top_class
         
         function createmaindd(obj)
           % create main data dictionary from scratch to ensure it exists
-          if contains(Simulink.data.dictionary.getOpenDictionaryPaths,obj.ddname)
+          if any(contains(Simulink.data.dictionary.getOpenDictionaryPaths,obj.ddname))
               Simulink.data.dictionary.closeAll(obj.ddname,'-discard');
               % close if it exists and discard changes 
           end
