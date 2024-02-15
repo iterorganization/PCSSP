@@ -67,6 +67,10 @@ classdef pcssp_top_class
             for ii=1:numel(obj.moduleobjlist)
                 obj.moduleobjlist{ii}.setup();
             end
+            % run setups for all wrappers
+            for jj=1:numel(obj.wrappers)
+                obj.wrappers{jj}.wrapperobj.setup;
+            end
             
             % Set configuration settings sldd
             SCDconf_setConf('pcssp_Simulation','configurations_container_pcssp.sldd');
@@ -98,6 +102,14 @@ classdef pcssp_top_class
               'init for %s leaves %s open - this should be avoided',...
               obj.moduleobjlist{ii}.getname,obj.ddname)
           end
+
+          % init all wrappers
+
+          for jj = 1:numel(obj.wrappers)
+              obj.wrappers{jj}.wrapperobj.init();
+          end
+
+
           fprintf('\n** DONE WITH ALL INITS **\n');
         end
         
