@@ -13,9 +13,6 @@ Simulink.data.dictionary.closeAll('-discard')
 
 [topm,obj_PID,obj_TF,obj_sensor,sensor_wrapper_obj] = pcssp_closed_loop_obj();
 
-%% initialize wrapper
-sensor_wrapper_obj.init;
-
 %% Initialize 
 topm.init;
 topm.setup;

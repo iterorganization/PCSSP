@@ -105,10 +105,10 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             
             %% prepare wrapper
             
-            wrapper = pcssp_wrapper('pcssp_KMAG_wrapper');
-            wrapper.timing.dt = module.gettiming.dt;
+            wrapper = pcssp_wrapper('pcssp_KMAG_wrapper',module.gettiming.dt);
             wrapper = wrapper.addalgo(module);
-            load_system(wrapper.name);
+            wrapper.init;
+            wrapper.setup;
             
             % shift logged signals in time to meet codegen t=0 starting
             % condition
@@ -128,9 +128,9 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             
             wrapper.build;
             
+            load_system(wrapper.name)
             % get an empty input Dataset from the input ports of the model
-            wrapper.load;
-            ds = createInputDataset(wrapper.mdlname);
+            ds = createInputDataset(wrapper.name);
             
             % directly write timeseries objects to structures matching the input buses
             % of the model

@@ -13,6 +13,7 @@ obj_sensor = pcssp_PID_sensor_obj();
             
 sensor_wrapper = pcssp_wrapper('sensor_wrapper');
 sensor_wrapper = sensor_wrapper.addalgo(obj_sensor);
+sensor_wrapper.init; % to create sldd
 
 %% add modules and wrappers to top model and call init/setup
 
