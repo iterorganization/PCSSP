@@ -54,7 +54,28 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
            run(sprintf('%s(obj)',harnessname)); % run script with name <wrapper_name>_harness_run.m
          end
                   
-       end
+      end
+
+      function set_model_argument_value(obj,model_path,var_name,value)
+            
+            % Function to set the model argument (or model instance
+            % parameters) in a referenced model. This is useful to inject
+            % parameters from the wrapper in a parametrized pcssp module
+            
+            % before calling this function, the referenced model needs to
+            % have model arguments defined. Call the set_model_argument
+            % method of the pcssp_module class.
+            
+            load_system(obj.name);
+            set_param([obj.name,'/',model_path],var_name,value);
+            if ~Simulink.data.existsInGlobal(obj.name,value)
+                % variable does not yet exist anywhere in relation to the
+                % mdl
+                warning('variable %s does not exist in base WS or sldd of model %s. Model may not compile',value,obj.name);
+            end
+            
+            
+        end
       
   end
   
