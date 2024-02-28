@@ -1,35 +1,42 @@
-function [bus_name_list, Buses] = define_bus_from_struct(mdl,tp,bus_name,bus_name_list, Buses, varargin)
-% to define buses, dont care of array struct
-% varargin{1}: 1D_array option for signal dimension
-% varargin{2} is char to add prefix to original bus_name,
-% varargin{3} is char to add postfix to original bus_name,
-% varargin{4} is option to use SCDsignal format % new 2022
-% e.g. 'Bus_xxx_postfix' is used in SAMONE for instance
+function [bus_name_list, Buses] = define_bus_from_struct(mdl,tp,bus_name,...
+    bus_name_list, Buses, options,busoptions)
+% function to define a bus from a structure tp. The structure may be nested
+% in which case child buses are automatically created.
 
-%%% NEED to cleanup and review create_customized_bus: maybe removed!!!
-%%% init
+% inputs:
+% - mdl                 model name
+% - tp                  structured parameter. Can be nested
+% - bus_name            desired name of bus (string)
+% - bus_name_list       cell array of existing buses
+% - Buses               cell array of existing bus objects
+% - options             name-value options (see below)
+%   busoptions          name-value options for bus fields (see below)
+
+% optional arguments:
+% ...,'array1d',false,'prefix','some_string','postfix','some_string','is_SCDsig',false);
+
+% optional arguments for bus fields:
+% ...,'unit','m2','description','velocity of car');
+
+arguments
+   mdl                      char
+   tp                       struct
+   bus_name                 char
+   bus_name_list            cell
+   Buses                    cell
+   options.array1d          logical = false; 
+   options.prefix           char = '';
+   options.postfix          char = '';
+   options.is_SCDsig        logical = false;
+   busoptions.unit          cell = {''};
+   busoptions.description   cell = {''};
+end
+
+
 modif_bus_name = false;
-prefix         = ''; postfix = ''; array1d = false;
-is_SCDsig      = false;
-dim = ''; unit = ''; description = '';
+bus_name = [options.prefix, bus_name, options.postfix];
+dim = '';
 
-%%% get input
-if numel(varargin)>=1 && isequal('1D_array',varargin{1})
-  array1d = true;
-end
-
-if numel(varargin)>=2 && ischar(varargin{2})
-  modif_bus_name = true;
-  prefix   = varargin{2};
-  if numel(varargin)>=3 && ischar(varargin{3})
-    postfix = varargin{3};
-  end
-  bus_name = [prefix bus_name postfix];
-end
-
-if numel(varargin)>=4 && islogical(varargin{4})
-  is_SCDsig = varargin{4};
-end
 
 %%% main codes
 if isstruct(tp)
@@ -39,22 +46,22 @@ if isstruct(tp)
     fname = state_name{i_field};
     fval  = tp.(fname);
     dim{i_field} = size(fval);
-    if array1d && any(dim{i_field}<2)
+    if options.array1d && any(dim{i_field}<2)
       dim{i_field} = max(dim{i_field});
     end
     
     if isstruct(fval)
-      [bus_name_list, Buses] = define_bus_from_struct(mdl,fval,fname,bus_name_list, Buses,varargin{:}); % recursive
+      [bus_name_list, Buses] = define_bus_from_struct(mdl,fval,fname,bus_name_list, Buses,options,busoptions); % recursive
       if modif_bus_name; fname =  [prefix fname postfix]; end
       type{i_field} = ['Bus: ' fname];
     else
       [type{i_field},dim{i_field},bus_name_list, Buses]= ...
-        get_info_per_signal(is_SCDsig,fval,dim{i_field},bus_name_list, Buses);
+        get_info_per_signal(options.is_SCDsig,fval,dim{i_field},bus_name_list, Buses);
     end
   end
   
   %% create bus
-  my_bus        = create_customized_bus(mdl,bus_name,state_name,dim,type,unit,description);
+  my_bus        = create_customized_bus(mdl,bus_name,state_name,dim,type,busoptions);
   bus_name_list = [bus_name_list bus_name];
   Buses         = [Buses {my_bus}];
 end

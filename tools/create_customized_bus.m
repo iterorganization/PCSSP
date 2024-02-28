@@ -1,20 +1,43 @@
-function MyBus = create_customized_bus(mdl,bus_name,state_name,dimension,datatype, varargin)
-% Create bus and add to model mdl
-unit_in = ''; description_in = '';
-if ~isempty(varargin)
-  if numel(varargin)==1
-    unit_in = varargin{1};
-  elseif numel(varargin)==2
-    [unit_in, description_in] = deal(varargin{:});
-  end
+function MyBus = create_customized_bus(mdl,bus_name,state_name,dimension,datatype,busoptions)
+
+arguments
+   mdl                      char
+   bus_name                 char
+   state_name               cell
+   dimension                cell
+   datatype                 cell
+   busoptions               struct
+   
 end
+
+
+unit_cell = cell(1,numel(state_name));
+description_cell = cell(1,numel(state_name));
+
+for ii = 1:length(unit_cell)
+    if numel(busoptions.unit) == 1
+        unit_cell{ii} = busoptions.unit{1};      
+    else
+        unit_cell{ii} = busoptions.unit{ii};     
+    end  
+end
+
+for ii = 1:length(description_cell)
+    if numel(busoptions.description) == 1
+        description_cell{ii} = busoptions.description{1};      
+    else
+        description_cell{ii} = busoptions.description{ii};     
+    end  
+end
+
+
+
 
 % init
 clear elems
 elems = [];
 MyBus = Simulink.Bus;
-unit  = '';
-description = '';
+
 for ii = 1:numel(state_name)
   if ~isempty(datatype) && ~isempty(datatype{ii})
     type_ii =  datatype{ii};
@@ -22,12 +45,11 @@ for ii = 1:numel(state_name)
     type_ii =  'single'; % default type for numeric signals
   end  
   
-  if ~isempty(unit_in) && numel(unit_in)>=ii
-    unit = unit_in{ii};
-  end
-  if ~isempty(description_in) && numel(description_in)>=ii
-    description = description_in{ii};
-  end
+
+  unit = unit_cell{ii};
+  description = description_cell{ii};
+
+
   
   elems = addelemsignal(elems,[],type_ii,dimension{ii}, state_name{ii},unit,description);
 end
