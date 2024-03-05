@@ -32,8 +32,6 @@ arguments
    busoptions.description   cell = {''};
 end
 
-
-modif_bus_name = false;
 bus_name = [options.prefix, bus_name, options.postfix];
 dim = '';
 
@@ -51,8 +49,8 @@ if isstruct(tp)
     end
     
     if isstruct(fval)
-      [bus_name_list, Buses] = define_bus_from_struct(mdl,fval,fname,bus_name_list, Buses,options,busoptions); % recursive
-      if modif_bus_name; fname =  [prefix fname postfix]; end
+      [bus_name_list, Buses] = define_bus_from_struct(mdl,fval,fname,bus_name_list, Buses); % recursive
+      fname =  [options.prefix, fname, options.postfix];
       type{i_field} = ['Bus: ' fname];
     else
       [type{i_field},dim{i_field},bus_name_list, Buses]= ...
