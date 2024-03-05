@@ -25,17 +25,17 @@ classdef test_tools < matlab.unittest.TestCase
             a.b.iter    = 1;
             a.b.maxiter = 5;
             
-            [busNames,busobj] = define_bus_from_struct('',a,'Herz',{},{},'prefix','Mein','postfix','Brennt',...
+            [busNames,busobj] = define_bus_from_struct('',a,'Herz',{},{},'prefix','Mein_','postfix','_Brennt',...
                                         'unit',[{''},{'m'},{'Hz'},{''}]);
             
             % main bus
-            testCase.verifyEqual(busNames{2},'MeinHerzBrennt');
+            testCase.verifyEqual(busNames{2},'Mein_Herz_Brennt');
             testCase.verifyEqual(busobj{2}.Elements(1).Name,'gain');
             testCase.verifyEqual(busobj{2}.Elements(2).Name,'satur');
             testCase.verifyEqual(busobj{2}.Elements(3).Name,'bandWidth');
             
             % nested bus
-            testCase.verifyEqual(busNames{1},'b');
+            testCase.verifyEqual(busNames{1},'Mein_b_Brennt');
             testCase.verifyEqual(busobj{1}.Elements(1).Name,'iter');
             testCase.verifyEqual(busobj{1}.Elements(2).Name,'maxiter');
             

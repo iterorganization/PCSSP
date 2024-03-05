@@ -49,7 +49,7 @@ if isstruct(tp)
     end
     
     if isstruct(fval)
-      [bus_name_list, Buses] = define_bus_from_struct(mdl,fval,fname,bus_name_list, Buses); % recursive
+      [bus_name_list, Buses] = define_bus_from_struct(mdl,fval,fname,bus_name_list, Buses,'prefix',options.prefix,'postfix',options.postfix); % recursive
       fname =  [options.prefix, fname, options.postfix];
       type{i_field} = ['Bus: ' fname];
     else
