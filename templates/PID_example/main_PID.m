@@ -10,20 +10,29 @@ clear; clc; bdclose all;
 Simulink.data.dictionary.closeAll('-discard')
 
 
-[topm,obj_PID,obj_TF] = pcssp_closed_loop_obj();
+
+[topm,obj_PID,obj_TF,obj_sensor,sensor_wrapper_obj] = pcssp_closed_loop_obj();
 
 %% Initialize 
-
 topm.init;
 topm.setup;
 
 %% Parametrize the PID module: 
-% define the parameters from the obj_PID
-% inject them from the topm
+% define a new model WS parameter 'tp' mirroring the one in the obj_PID
+% definition:
+
+% pcssp_PID_tp = obj_PID.get_nominal_tp_value('pcssp_PID_tp');
 % obj_PID.set_model_argument(pcssp_PID_tp,'tp');
 
-% the following step dirties the top model, so use sparingly
-% topm.set_model_argument_value('PID',1,'pcssp_PID_tp');
+% the model should use this 'tp' value in all its blocks.
+
+% the following step dirties the top model, so use sparingly. This writes
+% the value 'pcssp_PID_tp' to the mask parameter 'tp' in the model 'PID'.
+
+% Effectively, the parameter value 'pcssp_PID_tp' is injected into the
+% referenced model, in which it locally is known/used as 'tp'
+
+% topm.set_model_argument_value('PID','tp','pcssp_PID_tp');
 
 
 %% Simulate top model
@@ -48,3 +57,7 @@ plot(h3,simout.time,simout.controlCmd);
 legend(h3,'controller command');
 
 h.XLabel.String = 't (s)';
+
+%% close the model
+
+topm.close_all(0); % 0 to close without saving, 1 to save the model

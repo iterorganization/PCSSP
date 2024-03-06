@@ -13,3 +13,5 @@ Ketemp = [-0.2867    0.3491   -1.0960   -0.6198    0.1582    0.0138   -0.7993   
     0.3582    0.7209   -1.1370    0.7614    1.2383    0.0540   -1.3194    0.4742   -0.0194    1.0663]*1e5;
 
 Ke = Simulink.Parameter(Ketemp);
+
+Ke.Description = 'Error multiplication matrix for magnetic control';

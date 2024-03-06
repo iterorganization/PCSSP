@@ -57,7 +57,6 @@ classdef pcssp_top_class
             % to simulate this assessment model. It creates an sldd and
             % calls the setups for all attached modules and wrappers
             
-            
             fprintf('Setting up top model ''%s'', configuring data dictionaries ...\n',obj.name);
             obj.createmaindd;
             
@@ -67,6 +66,10 @@ classdef pcssp_top_class
             % run setups for all modules
             for ii=1:numel(obj.moduleobjlist)
                 obj.moduleobjlist{ii}.setup();
+            end
+            % run setups for all wrappers
+            for jj=1:numel(obj.wrappers)
+                obj.wrappers{jj}.wrapperobj.setup;
             end
             
             % Set configuration settings sldd
@@ -99,6 +102,14 @@ classdef pcssp_top_class
               'init for %s leaves %s open - this should be avoided',...
               obj.moduleobjlist{ii}.getname,obj.ddname)
           end
+
+          % init all wrappers
+
+          for jj = 1:numel(obj.wrappers)
+              obj.wrappers{jj}.wrapperobj.init();
+          end
+
+
           fprintf('\n** DONE WITH ALL INITS **\n');
         end
         
@@ -157,12 +168,16 @@ classdef pcssp_top_class
         
         function createmaindd(obj)
           % create main data dictionary from scratch to ensure it exists
-          if contains(Simulink.data.dictionary.getOpenDictionaryPaths,obj.ddname)
+          if any(contains(Simulink.data.dictionary.getOpenDictionaryPaths,obj.ddname))
               Simulink.data.dictionary.closeAll(obj.ddname,'-discard');
               % close if it exists and discard changes 
           end
           delete(which(obj.ddname));
           Simulink.data.dictionary.create(fullfile(obj.ddpath,obj.ddname));
+
+          % link sldd to top-model slx
+          load_system(obj.name);
+          set_param(obj.name,'DataDictionary',obj.ddname);
         end
           
         function setupmaindd(obj)
@@ -183,7 +198,6 @@ classdef pcssp_top_class
         
         function setupwrapperdd(obj)
           % Set up the wrapper data dictionary links
-          
           
             for ii=1:numel(obj.wrappers)
               wrapperObj = obj.wrappers{ii}.wrapperobj;
@@ -298,7 +312,7 @@ classdef pcssp_top_class
         function close_all(obj,saveflag)
             arguments
                 obj
-                saveflag (1,1) logical
+                saveflag (1,1) logical % 0 to close without saving, 1 to save
             end
             
             fprintf('Closing all data dictionaries and discarding changes\n')
@@ -307,7 +321,7 @@ classdef pcssp_top_class
             
         end
         
-        function set_model_argument_value(obj,model_path,var_position,value)
+        function set_model_argument_value(obj,model_path,var_name,value)
             
             % Function to set the model argument (or model instance
             % parameters) in a referenced model. This is useful to inject
@@ -319,9 +333,12 @@ classdef pcssp_top_class
             % method of the pcssp_module class.
             
             load_system(obj.name);
-            instSpecParams = get_param([obj.name,'/',model_path],'InstanceParameters');
-            instSpecParams(var_position).Value = value;
-            set_param([obj.name,'/',model_path],'InstanceParameters',instSpecParams);
+            set_param([obj.name,'/',model_path],var_name,value);
+            if ~Simulink.data.existsInGlobal(obj.name,value)
+                % variable does not yet exist anywhere in relation to the
+                % mdl
+                warning('variable %s does not exist in base WS or sldd of model %s. Model may not compile',value,obj.name);
+            end
             
             
         end

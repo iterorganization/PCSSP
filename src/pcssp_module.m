@@ -6,29 +6,39 @@ classdef pcssp_module < SCDDSclass_algo
     methods
 
         %% SLDD helper functions
-        function fpstruct = getfpindatadict(obj)
-            % TO DO: check use of
-            % Simulink.data.evalinGlobal(obj,'paramname') for this
-            
-            
-            if(~isempty(obj.fpinits)) % only try when fixed params are defined
-                for ii=1:numel(obj.fpinits) % loop over all FP inits
-                    if ~strcmpi(obj.fpinits{ii}{3},'datadictionary')
-                        fprintf('fixed params not in datadict, use obj.printinits to check');
-                    else
-                        % open the main sldd and grab fixed parameters
-                        dictionaryObj = Simulink.data.dictionary.open(obj.getdatadictionary);
-                        designDataObj = getSection(dictionaryObj, 'Design Data');
-                        % append structure
-                        
+        function fpstruct = get_nominal_fp_value(obj,param_name)
+            % function to grab fixed params from the sldd. If no param_name
+            % is provided all fp's are grabbed
+            % inputs
+            % param_name (optional) name of param to be grabbed
+            arguments
+            obj 
+            param_name string = '';
+            end
 
-                        name = designDataObj.getEntry(obj.fpinits{ii}{2}{1}).Name;
-                        fpstruct.(name) = designDataObj.getEntry(obj.fpinits{ii}{2}{1}).getValue;
+
+            % open the main sldd and grab fixed parameters
+            dictionaryObj = Simulink.data.dictionary.open(obj.getdatadictionary);
+            designDataObj = getSection(dictionaryObj, 'Design Data');
+
+            if ~(param_name=="") && designDataObj.exist(param_name)
+                fpstruct = designDataObj.getEntry(param_name).getValue;
+
+            elseif ~(param_name=="") && ~designDataObj.exist(param_name)
+                error('sldd %s does not have parameter %s',obj.datadictionary,param_name);
+
+            elseif (param_name=="")
+                % loop over all params
+                for ii=1:numel(obj.fpinits) % loop over all FP inits
                         
-                    end
-                    
-                    
+                    % append structure
+
+                    name = designDataObj.getEntry(obj.fpinits{ii}{2}{1}).Name;
+                    fpstruct.(name) = designDataObj.getEntry(obj.fpinits{ii}{2}{1}).getValue;                   
                 end
+
+            else
+                error("unrecognized input");
             end
         end
         
@@ -51,7 +61,7 @@ classdef pcssp_module < SCDDSclass_algo
             hws = get_param(obj.modelname, 'modelworkspace');
             
             % grab current model argument names
-            model_arg_names = get_param(obj.modelname,'ParameterArgumentNames');
+            model_arg_names = obj.get_model_arguments;
             
             % append string for set_param command later
             if ~isempty(model_arg_names)
@@ -82,7 +92,7 @@ classdef pcssp_module < SCDDSclass_algo
                 param_MWS = hws.getVariable(param_name); % param in model WS
                 
                 assert(strcmpi(class(param_MWS),class(param)),...
-                    'class clash of variables in function input vs model Workspace');
+                    'class clash of variables in function input vs model WS: model WS has %s whereas input has %s',class(param_MWS),class(param));
                 
                 if isa(param_MWS,'struct')
                     paramMWS_value = param_MWS;
@@ -143,13 +153,17 @@ classdef pcssp_module < SCDDSclass_algo
 
         end
         
-        
+        % helper function to grab model arguments
+
+        function names = get_model_arguments(obj)
+            names = get_param(obj.modelname,'ParameterArgumentNames');
+        end
 
         %% RTF/codegen functions
         function build(obj)
             % set configuration to gcc
-            sourcedd = 'configurations_container_pcssp.sldd';
-            SCDconf_setConf('configurationSettingsRTF',sourcedd);
+            sourcedd = 'configurations_container_RTF.sldd';
+            SCDconf_setConf('configurationSettingsRTFcpp',sourcedd);
             % build
             rtwbuild(obj.modelname);
             
@@ -166,7 +180,9 @@ classdef pcssp_module < SCDDSclass_algo
             %  <FunctionBlock Name="KMAG" Type="SimulinkBlock">
             %  <Parameter Name="LibraryPath" Value="~/pcssp_KMAG/build/libpcssp.so"/>
             %  <Parameter Name="BlockName" Value="KMAG"/>
-            %  <Parameter Name="P" Value="[1,1,1,1,1,1,1,1,1,1]"/>
+            %  <Parameter Name="KdRef" Type="float64[11][11]" />
+            %  <InputPort Name="I_CSPF_ref" Type="Buffer<float64,11>" />
+            %  <OutputPort Name="errorSignals" Type="Buffer<float64,11>" />
 
             % this function uses the matlab writestruct fcn to mimick this
             % XML structure for RTF applications.
@@ -182,30 +198,61 @@ classdef pcssp_module < SCDDSclass_algo
             xml_out.Parameter(1).ValueAttribute = ['~/',obj.getname,'/build/'];
             
             % loop over TPs of pcssp_module to fill XML parameter fields
-            for ii=2:numel(obj.exportedtps)
+            % To do: use sldd values/entries for this? or tpsdefaults?
+            for ii=1:numel(obj.exportedtps)
                 tp_name = obj.exportedtps{ii};
                 tp_val = feval(obj.exportedtpsdefaults{ii});
-                xml_out.Parameter(ii).NameAttribute = tp_name;
+                xml_out.Parameter(ii+1).NameAttribute = tp_name;
 
 
                 if isa(tp_val,'struct')
                     tp_valXML = tp_val;
                 elseif isa(tp_val,'Simulink.Parameter')
                     tp_valXML = tp_val.Value;
+                    
+                    % add description field if available
+                    if ~isempty(tp_val.Description)
+                        xml_out.Parameter(ii+1).Description = tp_val.Description;
+                    end
                 else
                     error('parameter %s is not a struct or Simulink.Parameter',tp_name)
 
                 end
 
 
-                xml_out.Parameter(ii).DefaultValueAttribute = jsonencode(tp_valXML);
-                xml_out.Parameter(ii).TypeAttribute = class(tp_valXML);
+                xml_out.Parameter(ii+1).DefaultValueAttribute = jsonencode(tp_valXML);
+
+                if all(size(tp_valXML)>1) % matrix valued param
+                    size_string = sprintf('[%d][%d]',size(tp_valXML,1),size(tp_valXML,2));
+                else % vector or scalar
+                    size_string = sprintf('[%d]',length(tp_valXML));
+                end
+                xml_out.Parameter(ii+1).TypeAttribute = [class(tp_valXML),size_string];
 
                 
             end
 
-            % ports
+            %% ports
+            % XML structure: Name="errorSignals" Type="Buffer<float64,11>
 
+            modelInfo = Simulink.MDLInfo(obj.getname);
+            % input ports
+            for jj = 1:length(modelInfo.Interface.Inports)
+                xml_out.InputPort(jj).NameAttribute = modelInfo.Interface.Inports(jj).Name;
+            
+                type = ['Buffer', '<', modelInfo.Interface.Inports(jj).DataTypeExpr,',', modelInfo.Interface.Inports(jj).DimensionsExpr,'>' ];    
+
+                xml_out.InputPort(jj).TypeAttribute = type;
+
+            end
+            % output ports
+
+            for kk = 1:length(modelInfo.Interface.Outports)
+                xml_out.OutputPort(kk).NameAttribute = modelInfo.Interface.Outports(kk).Name;
+                type = ['Buffer', '<', modelInfo.Interface.Outports(kk).DataTypeExpr,',', modelInfo.Interface.Outports(kk).DimensionsExpr,'>' ];
+                xml_out.OutputPort(kk).TypeAttribute = type;
+
+            end
 
 
             writestruct(xml_out,[obj.getname , '_params.xml'], "StructNodeName","FunctionBlock");

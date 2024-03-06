@@ -23,6 +23,7 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             module = testCase.algoobj();
             module.init;
             module.setup;
+            module.load;
             
             import Simulink.sdi.constraints.MatchesSignal;
             import Simulink.sdi.constraints.MatchesSignalOptions;
@@ -86,58 +87,85 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             
         end
         
-%         function SIL_MIL_comparison(testCase)
-%             
-%             import Simulink.sdi.constraints.MatchesSignal;
-%             import Simulink.sdi.constraints.MatchesSignalOptions;
-%             opts = MatchesSignalOptions('IgnoringExtraData',true);
-%             
-%             %% load and prep test data
-%             
-%             KMAG_logged = load('KMAG_logged');
-%             
-%             %% prepare module
-%             module = testCase.algoobj();
-%             module.init;
-%             module.setup;
-%             
-%             %% prepare wrapper
-%             
-%             wrapper = pcssp_wrapper('pcssp_KMAG_wrapper');
-%             wrapper.timing.dt = module.gettiming.dt;
-%             wrapper = wrapper.addalgo(module);
-%             load_system(wrapper.name);
-%             
-%             SCDconf_setConf('configurationSettingsCODEgcc'); % to be replaced with wrapper.build
-%             
-%             
-%             % get an empty input Dataset from the input ports of the model
-%             ds = createInputDataset(wrapper.name);
-%             
-%             % directly write timeseries objects to structures matching the input buses
-%             % of the model
-%             ds = setElement(ds,1,KMAG_logged.KMAG_logged.getElement('extFF'));
-%             ds = setElement(ds,2,KMAG_logged.KMAG_logged.getElement('Ref'));
-%             ds = setElement(ds,3,KMAG_logged.KMAG_logged.getElement('y'));
-%             ds = setElement(ds,4,KMAG_logged.KMAG_logged.getElement('enable'));
-%             
-%             Simin = Simulink.SimulationInput('pcssp_KMAG_wrapper');
-%             Simin = Simin.setExternalInput(ds);
-%             
-%             % overwrite start/stop time to match reference simulation UMC_demo
-%             Simin = Simin.setModelParameter('StartTime','-40','StopTime','-34');
-%             
-%             % run as SIL
-%             Simin = Simin.setModelParameter('SimulationMode','Software-in-the-loop (SIL)');
-%             
-%             
-%             %% simulate
-%             out = sim(Simin);
-% 
-%             % compare signals within some tolerance
-%             testCase.verifyThat(out.logsout{1}.Values.u,MatchesSignal(KMAG_logged.KMAG_logged.getElement('output').Values.u,...
-%                                 'reltol',0.01,'WithOptions',opts)); 
-%         end
+        function SIL_MIL_comparison(testCase)
+            
+            import Simulink.sdi.constraints.MatchesSignal;
+            import Simulink.sdi.constraints.MatchesSignalOptions;
+            opts = MatchesSignalOptions('IgnoringExtraData',true);
+            
+            %% load and prep test data
+            
+            load('/work/imas/shared/TEST/pcssp/KMAG_logged.mat');
+            
+            %% prepare module
+            module = testCase.algoobj();
+            module.init;
+            module.setup;
+            module.load;
+            
+            %% prepare wrapper
+            
+            wrapper = pcssp_wrapper('pcssp_KMAG_wrapper',module.gettiming.dt);
+            wrapper = wrapper.addalgo(module);
+            wrapper.init;
+            wrapper.setup;
+            
+            % shift logged signals in time to meet codegen t=0 starting
+            % condition
+
+            ExtFFts = KMAG_logged.getElement('ExtFF').Values;
+            ExtFFts.Time = ExtFFts.Time+abs(ExtFFts.Time(1));
+
+            yts = KMAG_logged.getElement('y').Values;
+            yts.Time = yts.Time+abs(yts.Time(1));
+
+            uts = KMAG_logged.getElement('u').Values;
+            uts.Time = uts.Time+abs(uts.Time(1));
+
+            Refts = KMAG_logged.getElement('Ref').Values;
+            Refts.Time = Refts.Time+abs(Refts.Time(1));
+
+            
+            wrapper.build;
+            
+            load_system(wrapper.name)
+            % get an empty input Dataset from the input ports of the model
+            ds = createInputDataset(wrapper.name);
+            
+            % directly write timeseries objects to structures matching the input buses
+            % of the model
+            ds = setElement(ds,1,ExtFFts);
+            ds = setElement(ds,2,Refts);
+            ds = setElement(ds,3,yts);
+            % temporary fix to change the datatype of enable for WRL
+            entemp = KMAG_logged.getElement('enable').Values;
+
+            en = timeseries(double(entemp.Data),entemp.Time+40);
+            ds = setElement(ds,4,en);
+            
+            Simin = Simulink.SimulationInput('pcssp_KMAG_wrapper');
+            Simin = Simin.setExternalInput(ds);
+            
+            % overwrite start/stop time to match reference simulation UMC_demo
+            Simin = Simin.setModelParameter('StartTime','0','StopTime','10');
+            
+            % run as SIL
+            Simin = Simin.setModelParameter('SimulationMode','Software-in-the-loop (SIL)');
+            
+            
+            %% simulate
+            out = sim(Simin);
+            out_struct = logsout2struct(out.logsout);
+
+            % only compare the first element of controller output u.
+            % Simulink doesnt like it when you feed in more
+            u_out_check = timeseries(out_struct.u(1,:)',out_struct.time,'Name','u');
+            u_out_logged = timeseries(uts.Data(:,1),uts.Time,'Name',uts.Name);
+            
+            % compare signals within some tolerance
+            testCase.verifyThat(u_out_check,MatchesSignal(u_out_logged,...
+                                'reltol',0.05,'WithOptions',opts)); 
+        end
         
         
     end

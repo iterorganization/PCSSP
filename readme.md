@@ -1,14 +1,13 @@
-# PCSSP repository containing modules for ITER PCS development
-This repository relies on a git submodule to implement the Simulink functionality regarding
+# Git repository containing core functionality of the Plasma Control System Simulation Platform (PCSSP)
+PCSSP provides standardized methods for the design and assessment of modules and models for plasma control. This repository relies on a git submodule to implement the Simulink functionality regarding
 data dictionaries and referenced models. This submodule is developed under a GPL license
-and can be found [here](https://gitlab.epfl.ch/spc/scdds/scdds-core). 
+and can be found [here](https://git.iter.org/projects/PCS/repos/scdds/browse).  
 
 ## Directory structure:
-- APS: modules for the ITER Advanced Protection System
-- PCS: modules for the ITER Plasma Control System
 - configurations: Simulink configuration definitions for codegen and simulation
 - scdds-core: git submodule (!) to handle data-dictionaries and module references in Simulink
 - src: inherited PCSSP classes
+- testing: inherited PCSSP classes for testing modules
 - templates: pcssp examples
 - tools: useful functions for plotting etc.
 
@@ -23,10 +22,14 @@ Git submodules require cloning over ssh. You will therefore need to associate an
 
 
 ## To run:
-### define an environment variable SCDDS_COREPATH to point to scdds-core in your ~/.bashrc
+### define an environment variable SCDDS_COREPATH to point to scdds-core in your ~/.bashrc. For example, on SDCC the path could be:
 `export SCDDS_COREPATH="/home/ITER/<user_name>/Documents/MATLAB/pcssp-nightly/scdds-core"`
 
-### On SDCC in a new terminal window:
+### Open Matlab. On SDCC type the following in a new terminal window:
 `module load intel MATLAB`
 `matlab`
 ### run the pcssp_add_paths script
+
+### Inside matlab, execute the following command once to setup git merges with simulink:
+`comparisons.ExternalSCMLink.setupGitConfig()`
+This will tell git to use the simulink 3-way merge tool to resolve merge conflicts in binary slx files. 
