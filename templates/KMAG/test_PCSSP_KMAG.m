@@ -47,12 +47,17 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             ds = setElement(ds,2,KMAG_logged.getElement('Ref'));
             ds = setElement(ds,3,KMAG_logged.getElement('y'));
             ds = setElement(ds,4,en);
+
             
             Simin = Simulink.SimulationInput(module.modelname);
             Simin = Simin.setExternalInput(ds);
+
+            % inject a parameter to the model
+            Simin = Simin.setVariable('bla',5);
             
             % overwrite start/stop time to match reference simulation UMC_demo
             Simin = Simin.setModelParameter('StartTime','-40','StopTime','-34');
+            Simin = Simin.setModelParameter('SaveOutput', 'on');
             
             
             %% simulate
