@@ -160,10 +160,28 @@ classdef pcssp_module < SCDDSclass_algo
         end
 
         %% RTF/codegen functions
-        function build(obj)
-            % set configuration to gcc
-            sourcedd = 'configurations_container_RTF.sldd';
-            SCDconf_setConf('configurationSettingsRTFcpp',sourcedd);
+        function build(obj,build_target)
+            arguments
+                obj
+                build_target {mustBeMember(build_target,{'rtf','auto'})} = 'rtf';
+            end
+
+            
+
+            if strcmpi(build_target,'rtf')
+                % set configuration to cpp with super duper RTF constraints
+                sourcedd = 'configurations_container_RTF.sldd';
+                SCDconf_setConf('configurationSettingsRTFcpp',sourcedd);
+
+            elseif strcmpi(build_target,'auto')
+                % relax constraints to build on macOS or win64 toolchains
+                sourcedd = 'configurations_container_pcssp.sldd';
+                SCDconf_setConf('configurationSettingsAutocpp',sourcedd);
+           
+            else
+                error('build target %s is unknown to pcssp',build_target);
+            end
+            
             % build
             rtwbuild(obj.modelname);
             
