@@ -11,6 +11,7 @@ classdef pcssp_top_class
         moduleobjlist       % list of loaded algorithm objects with configured inits
         modulenamelist      % List of loaded algorithm names
         moduleddlist        % list of data dictionaries at algorithm level
+        wrapperddlist       % list of data dictionaries at wrapper level
         fpinits             % list of standard inits scripts
         modules             % list of linked algorithms objects
         wrappers            % list of wrapper objects
@@ -33,6 +34,7 @@ classdef pcssp_top_class
             obj.algonameprefix = 'pcssp';
             obj.modulenamelist  = {};
             obj.moduleddlist    = {};
+            obj.wrapperddlist = {};
             obj.wrappers        = [];
             obj.modules         = [];
             obj.exportedtps   = [];
@@ -73,7 +75,7 @@ classdef pcssp_top_class
             end
             
             % Set configuration settings sldd
-            SCDconf_setConf('pcssp_Simulation','configurations_container_pcssp.sldd');
+            SCDconf_setConf('pcssp_Simulation','configurations_container_pcssp.sldd','configurationSettingsTop');
             
         end
         

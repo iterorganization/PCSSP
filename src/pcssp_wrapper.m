@@ -1,9 +1,9 @@
 classdef pcssp_wrapper < SCDDSclass_wrapper
-  % superclass for SCDDSdemo wrapper
+  % Inherited class for PCSSP wrapper definition and manipulation
+  % To define a new instance: 
+  % obj_wrapper = pcssp_wrapper('name',dt);
   %
-  %
-  % [ SCDDS - Simulink Control Development & Deployment Suite ] Copyright SPC-EPFL Lausanne 2022.
-  % Distributed under the terms of the GNU Lesser General Public License, LGPL-3.0-only.
+
   
   methods
       
