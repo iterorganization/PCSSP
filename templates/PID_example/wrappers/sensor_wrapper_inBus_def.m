@@ -3,10 +3,9 @@ function [busNames,Buses] = sensor_wrapper_inBus_def()
 busNames={};
 Buses={};
 
-% init bus
 elems(1)=Simulink.BusElement;
-elems(1).Name='bla';
-elems(1).DataType='single';
+elems(1).Name='plantMeasurement';
+elems(1).DataType='double';
 
 inBus = Simulink.Bus;
 inBus.DataScope = 'Auto';
