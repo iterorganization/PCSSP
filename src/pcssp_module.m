@@ -161,6 +161,12 @@ classdef pcssp_module < SCDDSclass_algo
 
         %% RTF/codegen functions
         function build(obj,build_target)
+            % function to generate C/C++ from a PCSSP module. This function
+            % first grabs the required SimulinkConfiguration settings, sets
+            % them as configurationSettings in the base WS, and then calls
+            % rtwbuild.
+
+            % Optional input argument: build_target ('rtf' or 'auto')
             arguments
                 obj
                 build_target {mustBeMember(build_target,{'rtf','auto'})} = 'rtf';

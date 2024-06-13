@@ -16,6 +16,11 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
       end
   
       function build(obj)
+          % function to generate C/C++ from a PCSSP wrapper. This function
+          % first grabs the required SimulinkConfiguration settings, sets
+          % them as configurationSettings in the base WS, and then calls
+          % rtwbuild.
+
           % set configuration to gcc
           sourcedd = 'configurations_container_RTF.sldd';
           SCDconf_setConf('configurationSettingsRTFcpp',sourcedd);
@@ -26,6 +31,7 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
 
 
       function compile(obj)
+          % function to compile a PCSSP wrapper (equivalent to ctrl+D in the Simulink model)
          try
            eval(sprintf('%s([],[],[],''compile'')',obj.name));
          catch ME
@@ -40,6 +46,10 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
 
 
       function test_harness(obj)
+          % function to run the attached wrapper harness model for testing
+          % purposes. Requires the existence of a m-script called
+          % <module_name>_harness_run.m to set up the simulation.
+          
          harnessname = sprintf('%s_harness_run',obj.name);
          if ~exist(harnessname,'file')
            warning('no harness %s found, skipping test',harnessname);
