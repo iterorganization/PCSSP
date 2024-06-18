@@ -149,11 +149,14 @@ classdef pcssp_top_class
             
             for imodule = 1:numel(wrapperObj.algos)
                 algoObj = wrapperObj.algos(imodule);
-                obj = processalgorithm(obj,algoObj);
+                obj = process_pcssp_module(obj,algoObj);
             end
             
             % add wrapper to obj
             obj.wrappers{end+1}  = mywrapper;
+
+            % add sldd to topmodel
+            obj = obj.process_pcssp_wrapper(wrapperObj);
         end
         
         % module
@@ -163,7 +166,7 @@ classdef pcssp_top_class
             assert(nargout==1,'must assign output for addmodule method')
             assert(isa(module,'SCDDSclass_algo'),'algo is a %s and not an SCDDSclass_algo',class(module));
             
-            obj = obj.processalgorithm(module);
+            obj = obj.process_pcssp_module(module);
         end
         
         %% setup helper functions
@@ -186,12 +189,18 @@ classdef pcssp_top_class
           % prepare main top-level SLDD
           dd = Simulink.data.dictionary.open(obj.ddname);
 
-          % link data dictionaries for active nodes
+          % link data dictionaries for active PCSSP modules
           for ii=1:length(obj.moduleddlist)
 
-            mydatasource = obj.moduleddlist{ii};
-            fprintf('adding data source %s to %s\n',mydatasource,obj.ddname)
-            dd.addDataSource(mydatasource);
+              mydatasource = obj.moduleddlist{ii};
+              fprintf('adding data source %s to %s\n',mydatasource,obj.ddname)
+              dd.addDataSource(mydatasource);
+          end
+
+          for ii=1:length(obj.wrapperddlist)
+              mydatasource = obj.wrapperddlist{ii};
+              fprintf('adding data source %s to %s\n',mydatasource,obj.ddname)
+              dd.addDataSource(mydatasource);
           end
           
           dd.saveChanges;
@@ -209,14 +218,14 @@ classdef pcssp_top_class
           
         end
         
-        %% init helper functions
+        %% module init helper functions
         
         function obj = sortmoduleobjlist(obj)
           % sort moduleobj list such that no moduleobj has dependency on other 
           % moduleobj that are further down the list. So running moduleobj inits 
           % in this order ensures that everything is initialized in the correct order.
           
-          A = zeros(numel(obj.moduleobjlist)); % init adiadency matrix
+          A = zeros(numel(obj.moduleobjlist),numel(obj.moduleobjlist)); % init adiadency matrix
           % This matrix element (col,row)=(j,i) will contain 1 if the 
           % algorithm in moduleobjlist(i) references a data dictionary which
           % depends on the algoritm in moduleobjlist(j).
@@ -243,7 +252,7 @@ classdef pcssp_top_class
           obj.moduleobjlist = obj.moduleobjlist(isort); % sort the init obj list
         end
         
-        function obj = processalgorithm(obj,moduleObj)
+        function obj = process_pcssp_module(obj,moduleObj)
             % Checking and importing algorithm name
             if(~ismember(moduleObj.getname,obj.modulenamelist))
                 obj.modulenamelist{end+1} = moduleObj.getname;
@@ -309,6 +318,19 @@ classdef pcssp_top_class
             end
         end
         
+
+        %% wrapper init helper functions
+
+        % Importing algorithms data dictionary, only those with proper name
+
+        function obj = process_pcssp_wrapper(obj,wrapperObj)
+            wrapperdd=wrapperObj.ddname;
+            if(~ismember(wrapperdd,obj.wrapperddlist))
+                obj.wrapperddlist{end+1}=wrapperdd;
+            else
+                warning('pcssp_top_class_class:process_wrapper','Wrapper data dictionary ''%s'' already present, ignoring', wrapperdd);
+            end
+        end
         %% misc helper functions
             
         function close_all(obj,saveflag)
