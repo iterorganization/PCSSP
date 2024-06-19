@@ -9,17 +9,20 @@ classdef pcssp_top_class
         loadverbose   (1,1)    int32   % Verbosity level of the loading (currently 0 or 1)
         name(1,:)      char % top-level model name
         moduleobjlist       % list of loaded algorithm objects with configured inits
-        modulenamelist      % List of loaded algorithm names
-        moduleddlist        % list of data dictionaries at algorithm level
-        wrapperddlist       % list of data dictionaries at wrapper level
-        fpinits             % list of standard inits scripts
-        modules             % list of linked algorithms objects
-        wrappers            % list of wrapper objects
-        exportedtps         % list of tunable parameters variable to be exported
+        modulenamelist      % List of loaded algorithm names        
+        wrappers            % list of wrapper objects       
         ddname              % top model data dictionary name
         mainslxname         % Top-level SLX name
+        
+    end
+
+    properties (Access = private)
         algonameprefix char % algorithms name prefix
         ddpath              % main expcode data dictionary save path
+        exportedtps         % list of tunable parameters variable to be exported
+        fpinits             % list of standard inits scripts
+        moduleddlist        % list of data dictionaries at algorithm level
+        wrapperddlist       % list of data dictionaries at wrapper level
     end
     
     methods
@@ -36,7 +39,6 @@ classdef pcssp_top_class
             obj.moduleddlist    = {};
             obj.wrapperddlist = {};
             obj.wrappers        = [];
-            obj.modules         = [];
             obj.exportedtps   = [];
             
             mainslxpath = fileparts(which(obj.mainslxname));
@@ -60,57 +62,50 @@ classdef pcssp_top_class
             % calls the setups for all attached modules and wrappers
             
             fprintf('Setting up top model ''%s'', configuring data dictionaries ...\n',obj.name);
-            obj.createmaindd;
             
+            obj.createmaindd;
             obj.setupwrapperdd;
             obj.setupmaindd;
+            
             
             % run setups for all modules
             for ii=1:numel(obj.moduleobjlist)
                 obj.moduleobjlist{ii}.setup();
             end
-            % run setups for all wrappers
-            for jj=1:numel(obj.wrappers)
-                obj.wrappers{jj}.wrapperobj.setup;
-            end
             
             % Set configuration settings sldd
             SCDconf_setConf('pcssp_Simulation','configurations_container_pcssp.sldd','configurationSettingsTop');
+
+            % add wrapper level buses to top model sldd
+            obj.addwrapperbusestosldd;
             
         end
         
         function obj = init(obj)
             % Method to initialize the top model by calling inits of all
             % children
-            
+
             % close all data dictionaries
             Simulink.data.dictionary.closeAll('-discard')
-            
+
             % check if anything to be done
             if isempty(obj.moduleobjlist)
                 fprintf(' no inits to run, done ***\n'); return;
             end
 
-          % sort initobj list to respect dependencies in refdd parents
-          obj = obj.sortmoduleobjlist;         
-          
-          % Carry out any init tasks of algorithms
-          for ii=1:numel(obj.moduleobjlist)
-            obj.moduleobjlist{ii}.init();
-            
-            opendds = Simulink.data.dictionary.getOpenDictionaryPaths;
-            % check that .sldd is not opened by some algorithm init
-            assert(~any(contains(opendds,obj.ddname)),...
-              'init for %s leaves %s open - this should be avoided',...
-              obj.moduleobjlist{ii}.getname,obj.ddname)
-          end
+            % sort initobj list to respect dependencies in refdd parents
+            obj = obj.sortmoduleobjlist;
 
-          % init all wrappers
+            % Carry out any init tasks of algorithms
+            for ii=1:numel(obj.moduleobjlist)
+                obj.moduleobjlist{ii}.init();
 
-          for jj = 1:numel(obj.wrappers)
-              obj.wrappers{jj}.wrapperobj.init();
-          end
-
+                opendds = Simulink.data.dictionary.getOpenDictionaryPaths;
+                % check that .sldd is not opened by some algorithm init
+                assert(~any(contains(opendds,obj.ddname)),...
+                    'init for %s leaves %s open - this should be avoided',...
+                    obj.moduleobjlist{ii}.getname,obj.ddname)
+            end
 
           fprintf('\n** DONE WITH ALL INITS **\n');
         end
@@ -168,6 +163,64 @@ classdef pcssp_top_class
             
             obj = obj.process_pcssp_module(module);
         end
+
+        %% misc helper functions
+            
+        function close_all(obj,saveflag)
+            arguments
+                obj
+                saveflag (1,1) logical % 0 to close without saving, 1 to save
+            end
+            
+            fprintf('Closing all data dictionaries and discarding changes\n')
+            Simulink.data.dictionary.closeAll('-discard');
+            close_system(obj.name,saveflag,'closeReferencedModels','on');
+            
+        end
+        
+        function set_model_argument_value(obj,model_path,var_name,value)
+            
+            % Function to set the model argument (or model instance
+            % parameters) in a referenced model. This is useful to inject
+            % parameters from the top model in a parametrized model
+            % reference.
+            
+            % before calling this function, the referenced model needs to
+            % have model arguments defined. Call the set_model_argument
+            % method of the pcssp_module class.
+            
+            load_system(obj.name);
+            set_param([obj.name,'/',model_path],var_name,value);
+            if ~Simulink.data.existsInGlobal(obj.name,value)
+                % variable does not yet exist anywhere in relation to the
+                % mdl
+                warning('variable %s does not exist in base WS or sldd of model %s. Model may not compile',value,obj.name);
+            end
+            
+            
+        end
+        
+        function print_model_arguments(obj,model_path)
+            % helper function to print the model arguments associated with
+            % a model reference in the top model
+            load_system(obj.name);
+            path_spec = [obj.name,'/',model_path];
+            instSpecParams = get_param(path_spec,'InstanceParameters');
+            
+            fprintf('Referenced model %s has the following model instance parameters\n',path_spec);
+     
+ 
+            for ii = 1:length(instSpecParams)
+                fprintf('Name: %s \t \t Value: %s\n',instSpecParams(ii).Name, instSpecParams(ii).Value);
+            end
+       
+        end
+
+    end
+
+
+
+    methods(Hidden = true)
         
         %% setup helper functions
         
@@ -193,12 +246,6 @@ classdef pcssp_top_class
           for ii=1:length(obj.moduleddlist)
 
               mydatasource = obj.moduleddlist{ii};
-              fprintf('adding data source %s to %s\n',mydatasource,obj.ddname)
-              dd.addDataSource(mydatasource);
-          end
-
-          for ii=1:length(obj.wrapperddlist)
-              mydatasource = obj.wrapperddlist{ii};
               fprintf('adding data source %s to %s\n',mydatasource,obj.ddname)
               dd.addDataSource(mydatasource);
           end
@@ -256,7 +303,7 @@ classdef pcssp_top_class
             % Checking and importing algorithm name
             if(~ismember(moduleObj.getname,obj.modulenamelist))
                 obj.modulenamelist{end+1} = moduleObj.getname;
-                obj.modules{end+1}        = moduleObj;
+                obj.moduleobjlist{end+1}        = moduleObj;
             else
                 fprintf('algorithm ''%s'' already present, skipping \n',moduleObj.getname);
                 return
@@ -331,60 +378,77 @@ classdef pcssp_top_class
                 warning('pcssp_top_class_class:process_wrapper','Wrapper data dictionary ''%s'' already present, ignoring', wrapperdd);
             end
         end
-        %% misc helper functions
-            
-        function close_all(obj,saveflag)
-            arguments
-                obj
-                saveflag (1,1) logical % 0 to close without saving, 1 to save
+
+
+        function addwrapperbusestosldd(obj)
+            % Add buses to data dictionary from .m file descriptions
+            dictionaryObj = Simulink.data.dictionary.open(obj.ddname);
+            designDataObj = getSection(dictionaryObj, 'Design Data');
+
+            for jj = 1:length(obj.wrappers)
+
+                busList = obj.wrappers{jj}.wrapperobj.buslist;
+
+                for ii=1:numel(busList)
+                    mybusSource = busList(ii).source;
+                    busName = busList(ii).name;
+
+                    if ischar(mybusSource)
+                        % User specified a file that contains a bus definition
+                        % (typically exported from bus editor)
+                        fprintf('Adding wrapper bus %s from %s to %s\n',busName,mybusSource,obj.ddname);
+
+                        assert(logical(exist(mybusSource,'file')),'%s does not exist',mybusSource)
+
+                        eval(mybusSource); % eval bus script here
+
+                        assert(exist(busName,'var')~=0,...
+                            'no variable %s found despite running script %s',busName,which(mybusSource))
+                        names{1} = busName; buses{1} = eval(busName);
+                        sourcename = mybusSource;
+                    elseif isa(mybusSource,'function_handle')
+                        % user specified a function that returns cell arrays of
+                        % bus names and bus objects. busNames is ignored in this case
+                        [names,buses] = mybusSource();
+                        sourcename = func2str(mybusSource);
+                    else
+                        error('Bus source %s is neither a fcn handle nor script definition',class(mybusSource))
+                    end
+
+                    for kk=1:numel(buses) % loop over buses to be added
+                        fprintf('adding bus %25s from function %s to %s\n',...
+                            names{kk},sourcename,obj.ddname)
+                        obj.replaceorcreateddentry(designDataObj,names{kk},buses{kk});
+                    end
+                end
+
             end
-            
-            fprintf('Closing all data dictionaries and discarding changes\n')
-            Simulink.data.dictionary.closeAll('-discard');
-            close_system(obj.name,saveflag,'closeReferencedModels','on');
-            
-        end
-        
-        function set_model_argument_value(obj,model_path,var_name,value)
-            
-            % Function to set the model argument (or model instance
-            % parameters) in a referenced model. This is useful to inject
-            % parameters from the top model in a parametrized model
-            % reference.
-            
-            % before calling this function, the referenced model needs to
-            % have model arguments defined. Call the set_model_argument
-            % method of the pcssp_module class.
-            
-            load_system(obj.name);
-            set_param([obj.name,'/',model_path],var_name,value);
-            if ~Simulink.data.existsInGlobal(obj.name,value)
-                % variable does not yet exist anywhere in relation to the
-                % mdl
-                warning('variable %s does not exist in base WS or sldd of model %s. Model may not compile',value,obj.name);
+
+            % Save if necessary
+            if dictionaryObj.HasUnsavedChanges
+                dictionaryObj.saveChanges;
             end
-            
-            
+
         end
-        
-        function print_model_arguments(obj,model_path)
-            % helper function to print the model arguments associated with
-            % a model reference in the top model
-            load_system(obj.name);
-            path_spec = [obj.name,'/',model_path];
-            instSpecParams = get_param(path_spec,'InstanceParameters');
-            
-            fprintf('Referenced model %s has the following model instance parameters\n',path_spec);
-     
- 
-            for ii = 1:length(instSpecParams)
-                fprintf('Name: %s \t \t Value: %s\n',instSpecParams(ii).Name, instSpecParams(ii).Value);
+
+        function replaceorcreateddentry(obj,designDataObj,entry,value)
+            if designDataObj.exist(entry)
+                oldEntry = designDataObj.getEntry(entry);
+                assert(numel(oldEntry)==1,'multiple entries found for %s',entry)
+                if isequal(oldEntry.getValue,value)
+                    fprintf('%s: keep old value of %s since not changed\n',obj.name,entry);
+                else
+                    oldEntry.setValue(value); % replace
+                    fprintf('%s: replaced value of %s since it changed\n',obj.name,entry);
+                end
+            else
+                fprintf('   %s: added new %s\n',obj.name, entry);
+                designDataObj.addEntry(entry,value);
             end
-       
         end
-            
+
         
-        
+                  
     end
 end
 
