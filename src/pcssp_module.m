@@ -9,8 +9,12 @@ classdef pcssp_module < SCDDSclass_algo
         function fpstruct = get_nominal_fp_value(obj,param_name)
             % function to grab fixed params from the sldd. If no param_name
             % is provided all fp's are grabbed
-            % inputs
+            %% Syntax
+            % fpstruct = get_nominal_fp_value('pcssp_fp_name');    
+            %% inputs
             % param_name (optional) name of param to be grabbed
+
+            
             arguments
             obj 
             param_name string = '';
@@ -46,15 +50,22 @@ classdef pcssp_module < SCDDSclass_algo
         
         %% Model parameterization helper functions
         function set_model_argument(obj,param,param_name)
-            
-            % function to parametrize referenced models via a model mask
-            
-            % this function takes the Simulink.Parameter or FP struct and its desired
-            % mask name as input.
-            % It then sticks the param in the model workspace of the 
-            % wrapper. If the parameters
-            % are already there, the function checks whether they need
-            % updating and does so accordingly.
+            % function to set model arguments to allow parametrization when
+            % referencing this module from a top model. The parameter is
+            % put in the model workspace and exposed as a mask parameter.
+            % If the parameter already exists in the model WS it is updated
+            % when needed
+            %% Syntax
+            % set_model_argument(param,param_name_in_mask)   
+            %% inputs
+            % param Simulink.Parameter or struct to become model arg
+            % param_name name of the parameter in the model WS and mask
+
+            arguments
+            obj 
+            param {mustBeA(param,["Simulink.Parameter","struct"])}
+            param_name string
+            end
             
             
             % grab model WS
@@ -122,11 +133,13 @@ classdef pcssp_module < SCDDSclass_algo
         end
 
         function clear_model_ws(obj,variables)
-            % method to clear variables in the model workspace. Accepts
-            % either zero arguments upon which all variables are cleared,
-            % or a comma-seperated variables to-be-cleared as follows
-            % obj.clear_model_ws 
+            % This method clears all or a comma-separated list of variables 
+            % from the model workspace of this PCSSP module
+            %% Syntax
+            % obj.clear_model_ws
             % obj.clear_model_ws('tp1','tp2','tp3')
+            %% Inputs
+            % none or a comma separated list of to-be-deleted parameters
             
             arguments
                 obj
@@ -135,7 +148,6 @@ classdef pcssp_module < SCDDSclass_algo
             arguments(Repeating)
                variables char
             end
-
 
             mdlWks = get_param(obj.modelname,'ModelWorkspace');
             if isempty(variables)
@@ -154,25 +166,39 @@ classdef pcssp_module < SCDDSclass_algo
         end
         
         % helper function to grab model arguments
-
         function names = get_model_arguments(obj)
+            % This method grabs all model arguments that are currently
+            % defined in the model workspace of this PCSSP module. You can
+            % define new model arguments using the set_model_arguments
+            % method
+            %% syntax
+            % obj.get_model_arguments
+            %% inputs
+            % none
+
             names = get_param(obj.modelname,'ParameterArgumentNames');
         end
 
         %% RTF/codegen functions
         function build(obj,build_target)
-            % function to generate C/C++ from a PCSSP module. This function
+            % method to generate C/C++ from a PCSSP module. The method
             % first grabs the required SimulinkConfiguration settings, sets
             % them as configurationSettings in the base WS, and then calls
-            % rtwbuild.
-
-            % Optional input argument: build_target ('rtf' or 'auto')
+            % rtwbuild. Optionally, a build target can be provided ('rtf' 
+            % or 'auto'). Select auto to automatically detect an installed
+            % toolchain on your machine and use use the hardcore RTF
+            % settings.
+            %% Syntax
+            % obj.build or obj.build('rtf')
+            %% inputs
+            % build_target optional target for C code generation. Current
+            % options are 'rtf' or 'auto' to automatically select an
+            % installed toolchain.
+            % function 
             arguments
                 obj
                 build_target {mustBeMember(build_target,{'rtf','auto'})} = 'rtf';
             end
-
-            
 
             if strcmpi(build_target,'rtf')
                 % set configuration to cpp with super duper RTF constraints
@@ -196,21 +222,19 @@ classdef pcssp_module < SCDDSclass_algo
 
 
         function write_RTF_xml(obj)
-            % helper function to write XML parameter structure for RTF FBs
-
-            % The RTF XML application-buffer looks for example as follows:
-
-            %  <?xml version="1.0" encoding="UTF-8"?>
-            %  <FunctionBlock Name="KMAG" Type="SimulinkBlock">
-            %  <Parameter Name="LibraryPath" Value="~/pcssp_KMAG/build/libpcssp.so"/>
-            %  <Parameter Name="BlockName" Value="KMAG"/>
-            %  <Parameter Name="KdRef" Type="float64[11][11]" />
-            %  <InputPort Name="I_CSPF_ref" Type="Buffer<float64,11>" />
-            %  <OutputPort Name="errorSignals" Type="Buffer<float64,11>" />
-
+            % Method to automatically generate an XML description of this
+            % PCSSP module to act as RTF FunctionBlock description. This
+            % XML works together with the generated code to form an RTF FB.
+            % You can use the optional Bus and Simulink.Parameter
+            % description field to describe your signal/parameter, which
+            % then gets put as a comment in the RTF XML.
+            %
             % this function uses the matlab writestruct fcn to mimick this
             % XML structure for RTF applications.
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            %% syntax
+            % obj.write_RTF_xml;
+            %% inputs
+            % none
             
             % fixed RTF XML type header
             xml_out.NameAttribute = string(obj.getname);

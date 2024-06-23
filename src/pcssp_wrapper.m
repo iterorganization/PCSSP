@@ -16,10 +16,14 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
       end
   
       function build(obj)
-          % function to generate C/C++ from a PCSSP wrapper. This function
+          % Method to generate C/C++ from a PCSSP wrapper. This method
           % first grabs the required SimulinkConfiguration settings, sets
           % them as configurationSettings in the base WS, and then calls
           % rtwbuild.
+          %% Syntax
+          % obj.build;   
+          %% Input
+          % none
 
           % set configuration to gcc
           sourcedd = 'configurations_container_RTF.sldd';
@@ -31,7 +35,12 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
 
 
       function compile(obj)
-          % function to compile a PCSSP wrapper (equivalent to ctrl+D in the Simulink model)
+          % method to compile a PCSSP wrapper (equivalent to ctrl+D in the Simulink model)
+          %% Syntax
+          % obj.compile
+          %% Inputs
+          % none
+
          try
            eval(sprintf('%s([],[],[],''compile'')',obj.name));
          catch ME
@@ -46,10 +55,14 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
 
 
       function test_harness(obj)
-          % function to run the attached wrapper harness model for testing
+          % method to run the attached wrapper harness model for testing
           % purposes. Requires the existence of a m-script called
           % <module_name>_harness_run.m to set up the simulation.
-          
+          %% Syntax
+          % obj.test_harness
+          %% Inputs
+          % none
+
          harnessname = sprintf('%s_harness_run',obj.name);
          if ~exist(harnessname,'file')
            warning('no harness %s found, skipping test',harnessname);
@@ -66,16 +79,21 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
                   
       end
 
-      function set_model_argument_value(obj,model_path,var_name,value)
-            
+      function set_model_argument_value(obj,model_path,var_name,value)  
             % Function to set the model argument (or model instance
             % parameters) in a referenced model. This is useful to inject
-            % parameters from the wrapper in a parametrized pcssp module
-            
+            % parameters from the wrapper in a parametrized pcssp module     
             % before calling this function, the referenced model needs to
             % have model arguments defined. Call the set_model_argument
-            % method of the pcssp_module class.
-            
+            % method of the pcssp_module class for this purpose
+            %% Syntax
+            % obj.set_model_argument_value('<top_model_name/referenced_mode_namel>','var_name','value')
+            %% inputs
+            % model_path : string to point to the referenced model in the
+            % top model hierarchy. For example 'closed_loop_model/PID_controller'
+            % var_name : name of the model argument
+            % value : value of the to-be-injected model argument
+       
             load_system(obj.name);
             set_param([obj.name,'/',model_path],var_name,value);
             if ~Simulink.data.existsInGlobal(obj.name,value)

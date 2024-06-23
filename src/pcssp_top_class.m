@@ -49,8 +49,12 @@ classdef pcssp_top_class
         
         %% top level class methods
         
-        function open(obj,varargin)
-            % this method opens the top-level slx model
+        function open(obj)
+            % this method physically opens the top-level slx model
+            %% syntax
+            % obj.open
+            %% inputs
+            % none
             openslx = obj.mainslxname;
             fprintf('Opening %s\n',openslx)
             open_system(openslx);
@@ -58,8 +62,14 @@ classdef pcssp_top_class
         
         function setup(obj)
             % This method sets up the top-level Simulink model
-            % to simulate this assessment model. It creates an sldd and
-            % calls the setups for all attached modules and wrappers
+            % to prepare simulation of the model. It creates an sldd and
+            % calls the setups for all attached modules. For wrappers, it
+            % only calls the bus definition scripts to prevent parameter
+            % clashes.
+            %% syntax
+            % obj.setup
+            %% inputs
+            % none
             
             fprintf('Setting up top model ''%s'', configuring data dictionaries ...\n',obj.name);
             
@@ -88,7 +98,13 @@ classdef pcssp_top_class
         
         function obj = init(obj)
             % Method to initialize the top model by calling inits of all
-            % children
+            % children, both wrappers and modules. It sorts the referenced
+            % modules to make sure they are initialized in the correct
+            % order
+            %% syntax
+            % obj.init
+            %% Inputs
+            % none
 
             % close all data dictionaries
             Simulink.data.dictionary.closeAll('-discard')
@@ -122,12 +138,25 @@ classdef pcssp_top_class
         end
         
         function compile(obj)
+            % method to compile the top model attached to this class
+            % (equivalent to ctrl+D in Simulink)
+            %% Syntax
+            % obj.compile
+            %% inputs
+            % none
+
             load_system(obj.name);
             set_param(obj.name,'SimulationCommand','Update')
             
         end
         
         function simout = sim(obj)
+            % method to simulate the top model
+            %% syntax
+            % obj.sim
+            %% inputs
+            % none
+
             % set the correct Simulink Settings
             sourcedd = 'configurations_container_pcssp.sldd';
             SCDconf_setConf('pcssp_Simulation',sourcedd);
@@ -139,7 +168,21 @@ classdef pcssp_top_class
         %% adders
         % wrapper
         function obj = addwrapper(obj,wrapperObj)
-            % add wrapper to top model
+            % method to add a wrapper instance to the top model
+            % add wrapper to top model. This wrapper must be an instance of
+            % the pcssp wrapper class
+            %% Syntax
+            % topm_obj = topm_obj.addwrapper(wrapper_obj)
+            %% inputs
+            % wrapperObj : instance of the wrapper class to be attached to
+            % the top model
+            
+            arguments
+                obj
+                wrapperObj pcssp_wrapper 
+            end
+
+
             assert(nargout==1,'must assign output for addwrapper method')
             
             % wrapper obj must be of SCDDS class
@@ -167,7 +210,17 @@ classdef pcssp_top_class
         
         % module
         function obj = addmodule(obj,module)
-            % add a pcssp module object to the top-model
+            % method to add a pcssp module object to the top-model
+            %% syntax
+            % topm_obj = topm_obj.addmodule(pcssp_module_obj)
+            %% input
+            % module : instance of pcssp module class to be attached to top
+            % model
+
+            arguments
+                obj
+                module pcssp_module
+            end
             
             assert(nargout==1,'must assign output for addmodule method')
             assert(isa(module,'SCDDSclass_algo'),'algo is a %s and not an SCDDSclass_algo',class(module));
@@ -190,15 +243,27 @@ classdef pcssp_top_class
         end
         
         function set_model_argument_value(obj,model_path,var_name,value)
-            
             % Function to set the model argument (or model instance
             % parameters) in a referenced model. This is useful to inject
             % parameters from the top model in a parametrized model
-            % reference.
-            
+            % reference.            
             % before calling this function, the referenced model needs to
             % have model arguments defined. Call the set_model_argument
             % method of the pcssp_module class.
+            %% syntax
+            % obj.set_model_argument_value('path_to_model_in_hierarchy','var_name','var_value')
+            %% inputs
+            % model_path (string) : path to model in the hierarchy of the top model
+            % var_name (string) : name of the to-be-injected variable in
+            % the model mask
+            % value : value of the to-be-injected variable
+            
+            arguments
+                obj
+                model_path (1,:) char
+                var_name (1,:) char
+                value 
+            end
             
             load_system(obj.name);
             set_param([obj.name,'/',model_path],var_name,value);
@@ -214,6 +279,16 @@ classdef pcssp_top_class
         function print_model_arguments(obj,model_path)
             % helper function to print the model arguments associated with
             % a model reference in the top model
+            %% syntax
+            % obj.prin_model_arguments('path_to_model')
+            %% inputs
+            % model_path : relative path to the referenced model in the top model hierarchy
+
+            arguments
+                obj
+                model_path (1,:) char
+            end
+            
             load_system(obj.name);
             path_spec = [obj.name,'/',model_path];
             instSpecParams = get_param(path_spec,'InstanceParameters');
