@@ -389,7 +389,6 @@ classdef pcssp_top_class
             % Checking and importing algorithm name
             if(~ismember(moduleObj.getname,obj.modulenamelist))
                 obj.modulenamelist{end+1} = moduleObj.getname;
-                obj.moduleobjlist{end+1}        = moduleObj;
             else
                 fprintf('algorithm ''%s'' already present, skipping \n',moduleObj.getname);
                 return
