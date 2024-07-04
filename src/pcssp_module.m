@@ -1,9 +1,15 @@
 classdef pcssp_module < SCDDSclass_algo
     % derived class for PCSSP modules using the SCDDS core framework for model
     % referencing with data dictionaries.
+
+
+    properties
+        description
+    end
     
     
     methods
+
 
         %% SLDD helper functions
         function fpstruct = get_nominal_fp_value(obj,param_name)
@@ -221,7 +227,7 @@ classdef pcssp_module < SCDDSclass_algo
 
 
 
-        function write_RTF_xml(obj)
+        function write_RTF_xml(obj,functionblock_alias)
             % Method to automatically generate an XML description of this
             % PCSSP module to act as RTF FunctionBlock description. This
             % XML works together with the generated code to form an RTF FB.
@@ -232,13 +238,28 @@ classdef pcssp_module < SCDDSclass_algo
             % this function uses the matlab writestruct fcn to mimick this
             % XML structure for RTF applications.
             %% syntax
-            % obj.write_RTF_xml;
+            % obj.write_RTF_xml('FUN-CTRL-MAG-01');
             %% inputs
-            % none
+            % functionblock_alias : Alias linking to the PCSDB, for example
+            % FUN-CTRL-MAG-01
+            % functionBlock
+
+            arguments
+                obj
+                functionblock_alias char = '';
+            end
             
             % fixed RTF XML type header
             xml_out.NameAttribute = string(obj.getname);
             xml_out.TypeAttribute = "SimulinkBlock"; 
+
+            % write the block description field
+            xml_out.Description.NameAttribute = "BlockDescription";
+            xml_out.Description.ValueAttribute = obj.description;
+
+            % write the block PCSDB alias field
+            xml_out.Alias.NameAttribute = 'pcsdbAlias';
+            xml_out.Alias.ValueAttribute = functionblock_alias;
             
 
             % fill fixed XML parameter fields
@@ -309,6 +330,34 @@ classdef pcssp_module < SCDDSclass_algo
 
 
         end
+
+
+        function obj = set_module_description(obj,description_string)
+            % this method adds a descriptive text to the module obj property
+            % obj.description, and sets it in the description of the
+            % attached slx model. 
+            %% syntax
+            % obj = set_module_description('some piece of text');
+            %% inputs
+            % description_string : char array containing the description
+
+
+            arguments
+                obj
+                description_string char = ''
+            end
+            
+            if ~bdIsLoaded(obj.modelname)
+                load_system(obj.modelname);
+            end
+
+            set_param(obj.modelname,'Description',description_string);
+
+            obj.description = description_string;
+
+        end
+
+
 
 
         
