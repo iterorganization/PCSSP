@@ -72,7 +72,11 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
 
            % link sldd to harness model (for buses etc?)
            harnessmdl = [obj.name '_harness'];
-           load_system(harnessmdl);
+
+           if ~bdIsLoaded(harnessmdl)
+               load_system(harnessmdl);
+           end
+
            set_param(harnessmdl,'DataDictionary',obj.ddname);
            run(sprintf('%s(obj)',harnessname)); % run script with name <wrapper_name>_harness_run.m
          end
@@ -93,8 +97,11 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
             % top model hierarchy. For example 'closed_loop_model/PID_controller'
             % var_name : name of the model argument
             % value : value of the to-be-injected model argument
-       
-            load_system(obj.name);
+            
+            if ~bdIsLoaded(obj.name)
+                load_system(obj.name);
+            end
+            
             set_param([obj.name,'/',model_path],var_name,value);
             if ~Simulink.data.existsInGlobal(obj.name,value)
                 % variable does not yet exist anywhere in relation to the

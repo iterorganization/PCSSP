@@ -72,6 +72,10 @@ classdef pcssp_module < SCDDSclass_algo
             param {mustBeA(param,["Simulink.Parameter","struct"])}
             param_name string
             end
+
+            if ~bdIsLoaded(obj.modelname)
+                load_system(obj.modelname);
+            end
             
             
             % grab model WS
@@ -181,6 +185,10 @@ classdef pcssp_module < SCDDSclass_algo
             % obj.get_model_arguments
             %% inputs
             % none
+
+            if ~bdIsLoaded(obj.modelname)
+                load_system(obj.modelname);
+            end
 
             names = get_param(obj.modelname,'ParameterArgumentNames');
         end

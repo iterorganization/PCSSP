@@ -145,7 +145,9 @@ classdef pcssp_top_class
             %% inputs
             % none
 
-            load_system(obj.name);
+            if ~bdIsLoaded(obj.name)
+                load_system(obj.name);
+            end
             set_param(obj.name,'SimulationCommand','Update')
             
         end
@@ -265,7 +267,9 @@ classdef pcssp_top_class
                 value 
             end
             
-            load_system(obj.name);
+            if ~bdIsLoaded(obj.name)
+                load_system(obj.name);
+            end
             set_param([obj.name,'/',model_path],var_name,value);
             if ~Simulink.data.existsInGlobal(obj.name,value)
                 % variable does not yet exist anywhere in relation to the
@@ -288,8 +292,11 @@ classdef pcssp_top_class
                 obj
                 model_path (1,:) char
             end
-            
-            load_system(obj.name);
+
+            if ~bdIsLoaded(obj.name)
+                load_system(obj.name);
+            end
+
             path_spec = [obj.name,'/',model_path];
             instSpecParams = get_param(path_spec,'InstanceParameters');
             
