@@ -297,7 +297,7 @@ classdef pcssp_module < SCDDSclass_algo
                 end
 
 
-                xml_out.Parameter(ii+1).DefaultValueAttribute = jsonencode(tp_valXML);
+                xml_out.Parameter(ii+1).ValueAttribute = jsonencode(tp_valXML);
 
                 if all(size(tp_valXML)>1) % matrix valued param
                     size_string = sprintf('[%d][%d]',size(tp_valXML,1),size(tp_valXML,2));
@@ -310,24 +310,25 @@ classdef pcssp_module < SCDDSclass_algo
             end
 
             %% ports
-            % XML structure: Name="errorSignals" Type="Buffer<float64,11>
+            % XML structure: Name="errorSignals" Signal="signal_name_bf
 
             modelInfo = Simulink.MDLInfo(obj.getname);
             % input ports
             for jj = 1:length(modelInfo.Interface.Inports)
-                xml_out.InputPort(jj).NameAttribute = modelInfo.Interface.Inports(jj).Name;
+                signal_name = modelInfo.Interface.Inports(jj).Name;
+                xml_out.InputPort(jj).NameAttribute = signal_name;
             
-                type = ['Buffer', '<', modelInfo.Interface.Inports(jj).DataTypeExpr,',', modelInfo.Interface.Inports(jj).DimensionsExpr,'>' ];    
+%                 type = ['Signal', '<', modelInfo.Interface.Inports(jj).DataTypeExpr,',', modelInfo.Interface.Inports(jj).DimensionsExpr,'>' ];    
 
-                xml_out.InputPort(jj).TypeAttribute = type;
+                xml_out.InputPort(jj).SignalAttribute = [signal_name, '_bf'];
 
             end
             % output ports
 
             for kk = 1:length(modelInfo.Interface.Outports)
-                xml_out.OutputPort(kk).NameAttribute = modelInfo.Interface.Outports(kk).Name;
-                type = ['Buffer', '<', modelInfo.Interface.Outports(kk).DataTypeExpr,',', modelInfo.Interface.Outports(kk).DimensionsExpr,'>' ];
-                xml_out.OutputPort(kk).TypeAttribute = type;
+                output_port_name = modelInfo.Interface.Outports(kk).Name;
+                xml_out.OutputPort(kk).NameAttribute = output_port_name;
+                xml_out.OutputPort(kk).SignalAttribute = output_port_name;
 
             end
 
