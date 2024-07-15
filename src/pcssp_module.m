@@ -250,7 +250,6 @@ classdef pcssp_module < SCDDSclass_algo
             %% inputs
             % functionblock_alias : Alias linking to the PCSDB, for example
             % FUN-CTRL-MAG-01
-            % functionBlock
 
             arguments
                 obj
@@ -278,8 +277,7 @@ classdef pcssp_module < SCDDSclass_algo
             % To do: use sldd values/entries for this? or tpsdefaults?
             for ii=1:numel(obj.exportedtps)
                 tp_name = obj.exportedtps{ii};
-                tp_val = feval(obj.exportedtpsdefaults{ii});
-                xml_out.Parameter(ii+1).NameAttribute = tp_name;
+                tp_val = feval(obj.exportedtpsdefaults{ii}); 
 
 
                 if isa(tp_val,'struct')
@@ -296,16 +294,29 @@ classdef pcssp_module < SCDDSclass_algo
 
                 end
 
+                % get name string of parameter to act as prefix in the XML
+                prefix = obj.exportedtps{ii};
 
-                xml_out.Parameter(ii+1).ValueAttribute = jsonencode(tp_valXML);
+                % loop over all parameter fields
+                field_names_tp = fieldnames(tp_valXML);
+                field_values_tp = struct2cell(tp_valXML);
 
-                if all(size(tp_valXML)>1) % matrix valued param
-                    size_string = sprintf('[%d][%d]',size(tp_valXML,1),size(tp_valXML,2));
-                else % vector or scalar
-                    size_string = sprintf('[%d]',length(tp_valXML));
+                for jj = 1:length(field_names_tp)
+                    % name
+                    xml_out.Parameter(ii+jj).NameAttribute = [prefix,'.' field_names_tp{jj}];
+
+                    % value
+                    xml_out.Parameter(ii+jj).ValueAttribute = jsonencode(field_values_tp{jj});
+
+                    % class and size of param
+                    % if all(size(field_values_tp{jj})>1) % matrix valued param
+                    %     size_string = sprintf('[%d][%d]',size(field_values_tp{jj},1),size(field_values_tp{jj},2));
+                    % else % vector or scalar
+                    %     size_string = sprintf('[%d]',length(field_values_tp{jj}));
+                    % end
+                    % xml_out.Parameter(ii+jj).TypeAttribute = [class(field_values_tp{jj}),size_string];
+
                 end
-                xml_out.Parameter(ii+1).TypeAttribute = [class(tp_valXML),size_string];
-
                 
             end
 
