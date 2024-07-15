@@ -156,6 +156,7 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             
             % run as SIL
             Simin = Simin.setModelParameter('SimulationMode','Software-in-the-loop (SIL)');
+            Simin = Simin.setModelParameter('RootIOFormat','Structure reference');
             
             
             %% simulate

@@ -15,23 +15,44 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
           
       end
   
-      function build(obj)
-          % Method to generate C/C++ from a PCSSP wrapper. This method
-          % first grabs the required SimulinkConfiguration settings, sets
-          % them as configurationSettings in the base WS, and then calls
-          % rtwbuild.
-          %% Syntax
-          % obj.build;   
-          %% Input
-          % none
+      function build(obj,build_target)
+            % method to generate C/C++ from a PCSSP wrapper. The method
+            % first grabs the required SimulinkConfiguration settings, sets
+            % them as configurationSettings in the base WS, and then calls
+            % rtwbuild. Optionally, a build target can be provided ('rtf' 
+            % or 'auto'). Select auto to automatically detect an installed
+            % toolchain on your machine and use use the hardcore RTF
+            % settings.
+            %% Syntax
+            % obj.build or obj.build('rtf')
+            %% inputs
+            % build_target optional target for C code generation. Current
+            % options are 'rtf' or 'auto' to automatically select an
+            % installed toolchain.
+            % function 
+            arguments
+                obj
+                build_target {mustBeMember(build_target,{'rtf','auto'})} = 'rtf';
+            end
 
-          % set configuration to gcc
-          sourcedd = 'configurations_container_RTF.sldd';
-          SCDconf_setConf('configurationSettingsRTFcpp',sourcedd);
-          % build
-          build@SCDDSclass_wrapper(obj); % call superclass method       
-          
-      end
+            if strcmpi(build_target,'rtf')
+                % set configuration to cpp with super duper RTF constraints
+                sourcedd = 'configurations_container_RTF.sldd';
+                SCDconf_setConf('configurationSettingsRTFcpp',sourcedd);
+
+            elseif strcmpi(build_target,'auto')
+                % relax constraints to build on macOS or win64 toolchains
+                sourcedd = 'configurations_container_pcssp.sldd';
+                SCDconf_setConf('configurationSettingsAutocpp',sourcedd);
+           
+            else
+                error('build target %s is unknown to pcssp',build_target);
+            end
+            
+            % build
+            rtwbuild(obj.name);
+            
+        end
 
 
       function compile(obj)
