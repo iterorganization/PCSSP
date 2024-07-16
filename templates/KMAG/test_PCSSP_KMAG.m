@@ -30,7 +30,7 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             opts = MatchesSignalOptions('IgnoringExtraData',true);
             
             %% load and prep test data
-            % load('/work/imas/shared/TEST/pcssp/KMAG_logged.mat');
+            load('/work/imas/shared/TEST/pcssp/KMAG_logged.mat');
             
             % get an empty input Dataset from the input ports of the model
             ds = createInputDataset(module.getname);
