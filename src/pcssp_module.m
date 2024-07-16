@@ -235,7 +235,7 @@ classdef pcssp_module < SCDDSclass_algo
 
 
 
-        function write_RTF_xml(obj,functionblock_alias)
+        function write_XML(obj,function_block_alias)
             % Method to automatically generate an XML description of this
             % PCSSP module to act as RTF FunctionBlock description. This
             % XML works together with the generated code to form an RTF FB.
@@ -253,102 +253,10 @@ classdef pcssp_module < SCDDSclass_algo
 
             arguments
                 obj
-                functionblock_alias char = '';
-            end
-            
-            % fixed RTF XML type header
-            xml_out.NameAttribute = string(obj.getname);
-            xml_out.TypeAttribute = "SimulinkBlock"; 
-
-            % write the block description field
-            xml_out.Description.NameAttribute = "BlockDescription";
-            xml_out.Description.ValueAttribute = obj.description;
-
-            % write the block PCSDB alias field
-            xml_out.Alias.NameAttribute = 'pcsdbAlias';
-            xml_out.Alias.ValueAttribute = functionblock_alias;
-            
-
-            % fill fixed XML parameter fields
-            xml_out.Parameter(1).NameAttribute  = "LibraryPath";
-            xml_out.Parameter(1).ValueAttribute = ['~/',obj.getname,'/build/'];
-            
-            % loop over TPs of pcssp_module to fill XML parameter fields
-            % To do: use sldd values/entries for this? or tpsdefaults?
-            for ii=1:numel(obj.exportedtps)
-                tp_name = obj.exportedtps{ii};
-                tp_val = feval(obj.exportedtpsdefaults{ii}); 
-
-
-                if isa(tp_val,'struct')
-                    tp_valXML = tp_val;
-                elseif isa(tp_val,'Simulink.Parameter')
-                    tp_valXML = tp_val.Value;
-                    
-                    % add description field if available
-                    if ~isempty(tp_val.Description)
-                        xml_out.Parameter(ii+1).Description = tp_val.Description;
-                    end
-                else
-                    error('parameter %s is not a struct or Simulink.Parameter',tp_name)
-
-                end
-
-                % get name string of parameter to act as prefix in the XML
-                prefix = obj.exportedtps{ii};
-
-                % loop over all parameter fields
-                field_names_tp = fieldnames(tp_valXML);
-                field_values_tp = struct2cell(tp_valXML);
-
-                for jj = 1:length(field_names_tp)
-                    % name
-                    xml_out.Parameter(ii+jj).NameAttribute = [prefix,'.' field_names_tp{jj}];
-
-                    % value
-                    xml_out.Parameter(ii+jj).ValueAttribute = jsonencode(field_values_tp{jj});
-
-                    % class and size of param
-                    % if all(size(field_values_tp{jj})>1) % matrix valued param
-                    %     size_string = sprintf('[%d][%d]',size(field_values_tp{jj},1),size(field_values_tp{jj},2));
-                    % else % vector or scalar
-                    %     size_string = sprintf('[%d]',length(field_values_tp{jj}));
-                    % end
-                    % xml_out.Parameter(ii+jj).TypeAttribute = [class(field_values_tp{jj}),size_string];
-
-                end
-                
+                function_block_alias char = '';
             end
 
-            %% ports
-            % XML structure: Name="errorSignals" Signal="signal_name_bf
-
-            modelInfo = Simulink.MDLInfo(obj.getname);
-            % input ports
-            for jj = 1:length(modelInfo.Interface.Inports)
-                signal_name = modelInfo.Interface.Inports(jj).Name;
-                xml_out.InputPort(jj).NameAttribute = signal_name;
-            
-%                 type = ['Signal', '<', modelInfo.Interface.Inports(jj).DataTypeExpr,',', modelInfo.Interface.Inports(jj).DimensionsExpr,'>' ];    
-
-                xml_out.InputPort(jj).SignalAttribute = [signal_name, '_bf'];
-
-            end
-            % output ports
-
-            for kk = 1:length(modelInfo.Interface.Outports)
-                output_port_name = modelInfo.Interface.Outports(kk).Name;
-                xml_out.OutputPort(kk).NameAttribute = output_port_name;
-                xml_out.OutputPort(kk).SignalAttribute = output_port_name;
-
-            end
-
-
-            writestruct(xml_out,[obj.getname , '_params.xml'], "StructNodeName","FunctionBlock");
-
-
-
-
+            write_RTF_xml(obj,function_block_alias);
         end
 
 

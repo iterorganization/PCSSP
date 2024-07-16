@@ -4,6 +4,10 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
   % obj_wrapper = pcssp_wrapper('name',dt);
   %
 
+
+  properties
+        description
+    end
   
   methods
       
@@ -12,6 +16,7 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
           if nargin<2, dt=1e-3; end % default wrapper period
           obj@SCDDSclass_wrapper(name,dt)
           obj.createdd = true;
+          obj.description = '';
           
       end
   
@@ -131,7 +136,57 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
             end
             
             
-        end
+      end
+
+
+      function obj = set_wrapper_description(obj,description_string)
+            % this method adds a descriptive text to the module obj property
+            % obj.description, and sets it in the description of the
+            % attached slx model. 
+            %% syntax
+            % obj = set_module_description('some piece of text');
+            %% inputs
+            % description_string : char array containing the description
+
+
+            arguments
+                obj
+                description_string char = ''
+            end
+            
+            if ~bdIsLoaded(obj.name)
+                load_system(obj.name);
+            end
+
+            set_param(obj.name,'Description',description_string);
+
+            obj.description = description_string;
+
+      end
+
+      function write_XML(obj,function_block_alias)
+            % Method to automatically generate an XML description of this
+            % PCSSP wrapper to act as RTF FunctionBlock description. This
+            % XML works together with the generated code to form an RTF FB.
+            % You can use the optional Bus and Simulink.Parameter
+            % description field to describe your signal/parameter, which
+            % then gets put as a comment in the RTF XML.
+            %
+            % this function uses the matlab writestruct fcn to mimick this
+            % XML structure for RTF applications.
+            %% syntax
+            % obj.write_RTF_xml('FUN-CTRL-MAG-01');
+            %% inputs
+            % functionblock_alias : Alias linking to the PCSDB, for example
+            % FUN-CTRL-MAG-01
+
+            arguments
+                obj
+                function_block_alias char = '';
+            end
+
+            write_RTF_xml(obj,function_block_alias);
+      end
       
   end
   
