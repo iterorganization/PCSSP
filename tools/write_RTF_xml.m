@@ -26,7 +26,11 @@ end
 if strcmpi(class(obj), 'pcssp_wrapper')
     blockName = obj.name;
     exportedtps = arrayfun(@(obj) obj.exportedtps, obj.algos,'UniformOutput',false);
+    exportedtps = vertcat(exportedtps{:});
     exportedtpsdefaults = arrayfun(@(obj) obj.exportedtpsdefaults, obj.algos,'UniformOutput',false);
+    exportedtpsdefaults = vertcat(exportedtpsdefaults{:});
+
+
 
 
 else % is a pcssp_module
