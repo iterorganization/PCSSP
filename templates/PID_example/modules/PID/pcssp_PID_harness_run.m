@@ -4,7 +4,7 @@ function out = pcssp_PID_harness_run(obj)
 obj.init;
 obj.setup;
 
-pcssp_PID_tp = obj.get_nominal_tp_value('pcssp_PID_tp');
+pcssp_PID_tp = obj.get_nominal_param_value('pcssp_PID_tp');
 
 % define waveforms
 SimIn = Simulink.SimulationInput([obj.getname '_harness']);
