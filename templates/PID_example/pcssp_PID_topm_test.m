@@ -27,7 +27,7 @@ classdef pcssp_PID_topm_test < pcssp_topmodel_test
 
             obj_PID = obj.moduleobjlist{1};
 
-            PID = obj_PID.get_nominal_tp_value('pcssp_PID_tp');
+            PID = obj_PID.get_nominal_param_value('pcssp_PID_tp');
             obj_PID.clear_model_ws;
 
             obj_PID.set_model_argument(PID,'tp');
