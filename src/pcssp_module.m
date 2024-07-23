@@ -9,50 +9,7 @@ classdef pcssp_module < SCDDSclass_algo
     
     
     methods
-
-
-        %% SLDD helper functions
-        function fpstruct = get_nominal_fp_value(obj,param_name)
-            % function to grab fixed params from the sldd. If no param_name
-            % is provided all fp's are grabbed
-            %% Syntax
-            % fpstruct = get_nominal_fp_value('pcssp_fp_name');    
-            %% inputs
-            % param_name (optional) name of param to be grabbed
-
-            
-            arguments
-            obj 
-            param_name string = '';
-            end
-
-
-            % open the main sldd and grab fixed parameters
-            dictionaryObj = Simulink.data.dictionary.open(obj.getdatadictionary);
-            designDataObj = getSection(dictionaryObj, 'Design Data');
-
-            if ~(param_name=="") && designDataObj.exist(param_name)
-                fpstruct = designDataObj.getEntry(param_name).getValue;
-
-            elseif ~(param_name=="") && ~designDataObj.exist(param_name)
-                error('sldd %s does not have parameter %s',obj.datadictionary,param_name);
-
-            elseif (param_name=="")
-                % loop over all params
-                for ii=1:numel(obj.fpinits) % loop over all FP inits
-                        
-                    % append structure
-
-                    name = designDataObj.getEntry(obj.fpinits{ii}{2}{1}).Name;
-                    fpstruct.(name) = designDataObj.getEntry(obj.fpinits{ii}{2}{1}).getValue;                   
-                end
-
-            else
-                error("unrecognized input");
-            end
-        end
-        
-        
+  
         
         %% Model parameterization helper functions
         function set_model_argument(obj,param,param_name)

@@ -92,7 +92,7 @@ classdef pcssp_top_class
             SCDconf_setConf('pcssp_Simulation','configurations_container_pcssp.sldd','configurationSettingsTop');
 
             % add wrapper level buses to top model sldd
-            obj.addwrapperbusestosldd;
+            % obj.addwrapperbusestosldd;
             
         end
         

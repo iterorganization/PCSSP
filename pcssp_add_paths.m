@@ -1,5 +1,8 @@
 function pcssp_add_paths()
-% Script to setup paths for pcssp
+%% Script to setup paths for pcssp
+
+%% close sldd's, if any
+Simulink.data.dictionary.closeAll('-discard');
 
 thispath = fileparts(mfilename('fullpath'));
 addpath(genpath(fullfile(thispath,'configurations')));

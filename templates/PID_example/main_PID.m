@@ -21,7 +21,7 @@ topm.setup;
 % define a new model WS parameter 'tp' mirroring the one in the obj_PID
 % definition:
 
-% pcssp_PID_tp = obj_PID.get_nominal_tp_value('pcssp_PID_tp');
+% pcssp_PID_tp = obj_PID.get_nominal_param_value('pcssp_PID_tp');
 % obj_PID.set_model_argument(pcssp_PID_tp,'tp');
 
 % the model should use this 'tp' value in all its blocks.
