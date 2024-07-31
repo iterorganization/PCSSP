@@ -23,6 +23,8 @@ classdef pcssp_top_class
         fpinits             % list of standard inits scripts
         moduleddlist        % list of data dictionaries at algorithm level
         wrapperddlist       % list of data dictionaries at wrapper level
+        directobjlist       % list of module objects that are directly 
+                            % referenced in the top model (without wrapper)
     end
     
     methods
@@ -40,6 +42,7 @@ classdef pcssp_top_class
             obj.wrapperddlist = {};
             obj.wrappers        = [];
             obj.exportedtps   = [];
+            obj.directobjlist = {};
             
             mainslxpath = fileparts(which(obj.mainslxname));
             assert(~isempty(mainslxpath),'%s.slx not found?',obj.mainslxname)
@@ -77,22 +80,21 @@ classdef pcssp_top_class
             obj.setupwrapperdd;
             obj.setupmaindd;
             
-            
-            % run setups for all modules
-            for ii=1:numel(obj.moduleobjlist)
-                obj.moduleobjlist{ii}.setup();
+
+            % run setups for all wrappers
+            for jj=1:numel(obj.wrappers)
+                obj.wrappers{jj}.wrapperobj.setup;
             end
 
-            % % run setups for all wrappers
-            % for jj=1:numel(obj.wrappers)
-            %     obj.wrappers{jj}.wrapperobj.setup;
-            % end
+            % run setups for directly referenced modules
+            obj = obj.modules_to_init();
+
+            for ii=1:numel(obj.directobjlist)
+                obj.directobjlist{ii}.setup();
+            end
             
             % Set configuration settings sldd
             SCDconf_setConf('pcssp_Simulation','configurations_container_pcssp.sldd','configurationSettingsTop');
-
-            % add wrapper level buses to top model sldd
-            % obj.addwrapperbusestosldd;
             
         end
         
@@ -117,9 +119,20 @@ classdef pcssp_top_class
             % sort initobj list to respect dependencies in refdd parents
             obj = obj.sortmoduleobjlist;
 
-            % Carry out any init tasks of algorithms
-            for ii=1:numel(obj.moduleobjlist)
-                obj.moduleobjlist{ii}.init();
+            % compile a list of all modules, both directly referenced from
+            % the top model and indirectly in wrappers
+
+
+            % init all wrappers
+          for jj = 1:numel(obj.wrappers)
+              obj.wrappers{jj}.wrapperobj.init();
+          end
+
+          % Carry out any init tasks of directly referenced algorithms (not
+          % via wrapper)
+          obj = obj.modules_to_init();
+            for ii=1:numel(obj.directobjlist)
+                obj.directobjlist{ii}.init();
 
                 opendds = Simulink.data.dictionary.getOpenDictionaryPaths;
                 % check that .sldd is not opened by some algorithm init
@@ -128,11 +141,7 @@ classdef pcssp_top_class
                     obj.moduleobjlist{ii}.getname,obj.ddname)
             end
 
-            % init all wrappers
 
-          for jj = 1:numel(obj.wrappers)
-              obj.wrappers{jj}.wrapperobj.init();
-          end
 
           fprintf('\n** DONE WITH ALL INITS **\n');
         end
@@ -390,6 +399,23 @@ classdef pcssp_top_class
           % topological sorting, maintaining index order where possible
           isort = toposort(D,'Order','stable'); 
           obj.moduleobjlist = obj.moduleobjlist(isort); % sort the init obj list
+        end
+
+        function obj = modules_to_init(obj)
+            
+            % first build a long string array of all modules that are
+            % referenced via a wrapper
+            module_names_wrps = [];
+            for ii = 1:length(obj.wrappers)
+                algos = obj.wrappers{ii}.wrapperobj.algos;
+                module_names_wrps =  vertcat(module_names_wrps,...
+                        arrayfun(@(module) string(module.getname),algos));
+            end
+
+            k = cellfun(@(modulename) contains(modulename,module_names_wrps),obj.modulenamelist);
+            obj.directobjlist = obj.moduleobjlist(~k);
+
+
         end
         
         function obj = process_pcssp_module(obj,moduleObj)
