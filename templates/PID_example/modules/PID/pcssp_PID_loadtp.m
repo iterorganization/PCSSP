@@ -6,8 +6,8 @@ function TP = pcssp_PID_loadtp()
 % Distributed under the terms of the GNU Lesser General Public License, LGPL-3.0-only.
 
 TP.enable           = true;
-TP.P                = [50 0 0];
-TP.I                = [3  0 0];
-TP.D                = [0  0 0];
+TP.P                = 50;
+TP.I                = 3;
+TP.D                = 0;
 
 end

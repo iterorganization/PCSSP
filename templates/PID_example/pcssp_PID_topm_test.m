@@ -13,8 +13,10 @@ classdef pcssp_PID_topm_test < pcssp_topmodel_test
             %% Initialize
             topm.init;
             topm.setup;
-            % options = simset('SrcWorkspace','current');
-            % sim(topm.mainslxname,[],options);
+
+            pcssp_PID2_tp = struct('enable',true,'P', 0,'I',0,'D',0);
+            % inject param directly in topm sldd (not saved)
+            write_variable2sldd(pcssp_PID2_tp,'pcssp_PID2_tp',topm.ddname,'Design Data')
             topm.sim;
 
         end
@@ -32,7 +34,7 @@ classdef pcssp_PID_topm_test < pcssp_topmodel_test
 
             obj_PID.set_model_argument(PID,'tp');
 
-            obj.set_model_argument_value('PID','tp','PID');
+            obj.set_model_argument_value('PID1','tp','PID');
 
             Simin = Simulink.SimulationInput(obj.name);
 

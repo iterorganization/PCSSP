@@ -13,6 +13,9 @@ Simulink.data.dictionary.closeAll('-discard')
 
 [topm,obj_PID,obj_TF,obj_sensor,sensor_wrapper_obj] = pcssp_closed_loop_obj();
 
+%% create a mask variable for PID2 with gains
+pcssp_PID2_tp = struct('enable',true,'P', 0,'I',0,'D',0);
+
 %% Initialize 
 topm.init;
 topm.setup;
@@ -32,7 +35,7 @@ topm.setup;
 % Effectively, the parameter value 'pcssp_PID_tp' is injected into the
 % referenced model, in which it locally is known/used as 'tp'
 
-% topm.set_model_argument_value('PID','tp','pcssp_PID_tp');
+% topm.set_model_argument_value('PID1','tp','pcssp_PID_tp');
 
 
 %% Simulate top model

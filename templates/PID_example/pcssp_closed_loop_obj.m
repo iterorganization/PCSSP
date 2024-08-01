@@ -5,7 +5,7 @@ topm = pcssp_top_class('closed_loop');
 
 
 %% initialize PCSSP modules
-obj_PID = pcssp_PID_obj(3); % input is the size of the inBus
+obj_PID = pcssp_PID_obj(1); % input is the size of the inBus
 obj_TF = pcssp_TF_obj();
 obj_sensor = pcssp_PID_sensor_obj();
 
