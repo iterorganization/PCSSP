@@ -412,7 +412,7 @@ classdef pcssp_top_class
                         arrayfun(@(module) string(module.getname),algos));
             end
 
-            k = cellfun(@(modulename) contains(modulename,module_names_wrps),obj.modulenamelist);
+            k = contains(obj.modulenamelist,module_names_wrps);
             obj.directobjlist = obj.moduleobjlist(~k);
 
 
