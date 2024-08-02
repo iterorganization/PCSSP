@@ -400,7 +400,9 @@ classdef pcssp_top_class
           D = digraph(A); % directed graph
           % topological sorting, maintaining index order where possible
           isort = toposort(D,'Order','stable'); 
-          obj.moduleobjlist = obj.moduleobjlist(isort); % sort the init obj list
+
+          % sort the properties related to pcssp modules
+          obj.moduleobjlist = obj.moduleobjlist(isort);
           obj.moduleddlist = obj.moduleddlist(isort);
           obj.modulenamelist = obj.modulenamelist(isort);
         end
