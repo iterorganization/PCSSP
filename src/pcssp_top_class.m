@@ -63,40 +63,6 @@ classdef pcssp_top_class
             open_system(openslx);
         end
         
-        function setup(obj)
-            % This method sets up the top-level Simulink model
-            % to prepare simulation of the model. It creates an sldd and
-            % calls the setups for all attached modules. For wrappers, it
-            % only calls the bus definition scripts to prevent parameter
-            % clashes.
-            %% syntax
-            % obj.setup
-            %% inputs
-            % none
-            
-            fprintf('Setting up top model ''%s'', configuring data dictionaries ...\n',obj.name);
-            
-            obj.createmaindd;
-            obj.setupwrapperdd;
-            obj.setupmaindd;
-            
-
-            % run setups for all wrappers
-            for jj=1:numel(obj.wrappers)
-                obj.wrappers{jj}.wrapperobj.setup;
-            end
-
-            % run setups for directly referenced modules
-            obj = obj.modules_to_init();
-
-            for ii=1:numel(obj.directobjlist)
-                obj.directobjlist{ii}.setup();
-            end
-            
-            % Set configuration settings sldd
-            SCDconf_setConf('pcssp_Simulation','configurations_container_pcssp.sldd','configurationSettingsTop');
-            
-        end
         
         function obj = init(obj)
             % Method to initialize the top model by calling inits of all
@@ -144,6 +110,42 @@ classdef pcssp_top_class
 
 
           fprintf('\n** DONE WITH ALL INITS **\n');
+        end
+
+
+        function setup(obj)
+            % This method sets up the top-level Simulink model
+            % to prepare simulation of the model. It creates an sldd and
+            % calls the setups for all attached modules. For wrappers, it
+            % only calls the bus definition scripts to prevent parameter
+            % clashes.
+            %% syntax
+            % obj.setup
+            %% inputs
+            % none
+            
+            fprintf('Setting up top model ''%s'', configuring data dictionaries ...\n',obj.name);
+            
+            obj.createmaindd;
+            obj.setupwrapperdd;
+            obj.setupmaindd;
+            
+
+            % run setups for all wrappers
+            for jj=1:numel(obj.wrappers)
+                obj.wrappers{jj}.wrapperobj.setup;
+            end
+
+            % run setups for directly referenced modules
+            obj = obj.modules_to_init();
+
+            for ii=1:numel(obj.directobjlist)
+                obj.directobjlist{ii}.setup();
+            end
+            
+            % Set configuration settings sldd
+            SCDconf_setConf('pcssp_Simulation','configurations_container_pcssp.sldd','configurationSettingsTop');
+            
         end
         
         function compile(obj)
@@ -399,6 +401,8 @@ classdef pcssp_top_class
           % topological sorting, maintaining index order where possible
           isort = toposort(D,'Order','stable'); 
           obj.moduleobjlist = obj.moduleobjlist(isort); % sort the init obj list
+          obj.moduleddlist = obj.moduleddlist(isort);
+          obj.modulenamelist = obj.modulenamelist(isort);
         end
 
         function obj = modules_to_init(obj)
