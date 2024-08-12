@@ -1,4 +1,4 @@
-classdef pcssp_module < SCDDSclass_algo
+classdef pcssp_module < SCDDSclass_algo_core
     % derived class for PCSSP modules using the SCDDS core framework for model
     % referencing with data dictionaries.
 
