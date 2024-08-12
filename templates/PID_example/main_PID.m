@@ -66,8 +66,8 @@ pcssp_PID3_tp = struct('enable',true,'P', 0,'I',0,'D',0);
 % write the new variable value programatically to the masks. Note that this
 % action is performed from the top model level/class:
 
-topm.set_model_argument_value('PID2','tp','pcssp_PID2_tp');
-topm.set_model_argument_value('PID3','tp','pcssp_PID3_tp');
+% topm.set_model_argument_value('PID2','tp','pcssp_PID2_tp');
+% topm.set_model_argument_value('PID3','tp','pcssp_PID3_tp');
 
 %%
 % Effectively, the parameter values 'pcssp_PIDXX_tp' are injected into the

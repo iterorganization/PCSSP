@@ -236,7 +236,6 @@ classdef pcssp_top_class
             end
             
             assert(nargout==1,'must assign output for addmodule method')
-            assert(isa(module,'SCDDSclass_algo'),'algo is a %s and not an SCDDSclass_algo',class(module));
             
             obj = obj.process_pcssp_module(module);
         end
