@@ -7,7 +7,6 @@ import matlab.unittest.TestSuite
 import matlab.unittest.plugins.XMLPlugin
 import matlab.unittest.plugins.TestReportPlugin
 import matlab.unittest.plugins.CodeCoveragePlugin
-import matlab.unittest.plugins.codecoverage.CoverageReport
 
 % use testSuite method to build suite from Folder, selecting only those
 % tests that have pcssp_test as superclass. More options here:
@@ -15,7 +14,7 @@ import matlab.unittest.plugins.codecoverage.CoverageReport
 
 pcssp_add_paths();
 
-suite = TestSuite.fromFolder(pwd,'IncludingSubfolders',true,'Superclass',{'pcssp_module_test','pcssp_topmodel_test'});
+suite = TestSuite.fromFolder(pwd,'IncludingSubfolders',true,'Superclass',{'pcssp_module_test','pcssp_wrapper_test','pcssp_topmodel_test'});
 
 runner = TestRunner.withNoPlugins;
 
@@ -28,11 +27,16 @@ htmlFile = "testreport";
 p1 = TestReportPlugin.producingHTML(htmlFile);
 
 % add code coverage for pcssp
-reportFormat = CoverageReport("coverageReportPCSSP");
+reportFormat = matlab.unittest.plugins.codecoverage.CoverageReport("coverageReportPCSSP");
 
 % add m-files in repo, excluding scdds
-files = get_files_for_coverage_test();
-p2 = matlab.unittest.plugins.CodeCoveragePlugin.forFile(files,'Producing',reportFormat);
+dirOut = dir('**/*.m');
+
+codeFilepaths = string({dirOut.folder}) + filesep + string({dirOut.name});
+
+filePathsToExclude = fullfile(fileparts(mfilename('fullpath')),'scdds-core');
+codeFilepaths(contains(codeFilepaths, filePathsToExclude)) = [];
+p2 = matlab.unittest.plugins.CodeCoveragePlugin.forFile(codeFilepaths,'Producing',reportFormat);
 
 % run the tests
 runner.addPlugin(p)
@@ -42,17 +46,4 @@ results = runner.run(suite);
 end
 
 
-function files = get_files_for_coverage_test()
 
-f = dir('**/*.m'); % all .m in the pcssp repository
-
-f(contains({f(:).folder},'scdds-core')) = []; % remove SCDDS-core
-
-
-files  = [""];
-
-for ii = 1:numel(f)  
-files(ii) = fullfile({f(ii).folder},{f(ii).name});
-end
-
-end

@@ -9,7 +9,7 @@ SimIn = Simulink.SimulationInput([obj.name '_harness']);
 ds = createInputDataset(obj.name);
 
 
-input = timeseries([5 5],[0 10]);
+input = timeseries(5*ones(3,2),[0 10]);
 ds = setElement(ds,1,input);
 
 SimIn = SimIn.setExternalInput(ds);
