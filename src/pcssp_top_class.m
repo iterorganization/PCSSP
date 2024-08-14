@@ -88,11 +88,11 @@ classdef pcssp_top_class
             % compile a list of all modules, both directly referenced from
             % the top model and indirectly in wrappers
 
-
+            
             % init all wrappers
-          for jj = 1:numel(obj.wrappers)
-              obj.wrappers{jj}.wrapperobj.init();
-          end
+            for jj = 1:numel(obj.wrappers)
+                obj.wrappers{jj}.wrapperobj.init();
+            end
 
           % Carry out any init tasks of directly referenced algorithms (not
           % via wrapper)
@@ -416,10 +416,13 @@ classdef pcssp_top_class
                 module_names_wrps =  vertcat(module_names_wrps,...
                         arrayfun(@(module) string(module.getname),algos));
             end
-
-            k = contains(obj.modulenamelist,module_names_wrps);
-            obj.directobjlist = obj.moduleobjlist(~k);
-
+            
+            if isempty(module_names_wrps)
+                obj.directobjlist = obj.moduleobjlist;
+            else
+                k = contains(obj.modulenamelist,module_names_wrps);
+                obj.directobjlist = obj.moduleobjlist(~k);
+            end
 
         end
         
