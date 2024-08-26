@@ -27,7 +27,7 @@ classdef pcssp_module < SCDDSclass_algo_core
             arguments
             obj 
             param {mustBeA(param,["Simulink.Parameter","struct"])}
-            param_name string
+            param_name char
             end
 
             if ~bdIsLoaded(obj.modelname)
