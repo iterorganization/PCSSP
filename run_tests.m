@@ -14,6 +14,14 @@ import matlab.unittest.plugins.CodeCoveragePlugin
 
 pcssp_add_paths();
 
+% add platform specific path to large test input data
+test_data_path = getenv("TEST_DATA_PATH");
+
+if ~isempty(test_data_path)
+   addpath(genpath(test_data_path));     
+end
+
+
 suite = TestSuite.fromFolder(pwd,'IncludingSubfolders',true,'Superclass',{'pcssp_module_test','pcssp_wrapper_test','pcssp_topmodel_test'});
 
 runner = TestRunner.withNoPlugins;
