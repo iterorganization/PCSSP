@@ -1,14 +1,14 @@
 classdef pcssp_PID_topm_test < pcssp_topmodel_test
     
     properties 
-       topm_obj =  @()pcssp_closed_loop_obj(); 
+       topm =  @()pcssp_closed_loop_obj(); 
     end
 
     methods(Test)
 
 
         function test_param_injection(testCase)
-            obj = testCase.topm_obj();
+            obj = testCase.topm;
             
             obj.init;
             obj.setup;

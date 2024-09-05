@@ -12,13 +12,9 @@ classdef (Abstract) pcssp_topmodel_test < matlab.unittest.TestCase
     % and logs any errors that may arise during those tasks
     
     properties (Abstract = true)
-        topm_obj function_handle % top-model obj
+        topm {mustBeA(topm,["function_handle","pcssp_top_class"])}
     end
     
-    properties
-        topm pcssp_top_class
-        
-    end
     
     methods(TestClassSetup) % these methods run before any tests in the class
         function clear_base(testCase)
@@ -38,7 +34,10 @@ classdef (Abstract) pcssp_topmodel_test < matlab.unittest.TestCase
         end
         
         function init_class(testCase)
-            testCase.topm = testCase.topm_obj();
+
+            if isa(testCase.topm,"function_handle")
+                testCase.topm = testCase.topm();
+            end
         end
     end
     
