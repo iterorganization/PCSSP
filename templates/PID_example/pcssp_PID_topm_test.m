@@ -27,15 +27,17 @@ classdef pcssp_PID_topm_test < pcssp_topmodel_test
 
             obj_PID.set_model_argument(pcssp_PID1_tp,'tp');
 
-            obj.set_model_argument_value('PID1','tp','pcssp_PID1_tp');
-            obj.set_model_argument_value('PID2','tp','pcssp_PID2_tp');
-            obj.set_model_argument_value('PID3','tp','pcssp_PID3_tp');
-
             Simin = Simulink.SimulationInput(obj.name);
 
+            % add the parameters to the model
             Simin = Simin.setVariable('pcssp_PID1_tp',pcssp_PID1_tp);
             Simin = Simin.setVariable('pcssp_PID2_tp',pcssp_PID2_tp);
             Simin = Simin.setVariable('pcssp_PID3_tp',pcssp_PID3_tp);
+
+            % update masks to inject the variable in the ref model
+            obj.set_model_argument_value('PID1','tp','pcssp_PID1_tp');
+            obj.set_model_argument_value('PID2','tp','pcssp_PID2_tp');
+            obj.set_model_argument_value('PID3','tp','pcssp_PID3_tp');
 
             out = sim(Simin);
 
