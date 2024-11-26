@@ -6,3 +6,4 @@
 *.fig
 *.m~
 *gencodes*
+*.slx.autosave
