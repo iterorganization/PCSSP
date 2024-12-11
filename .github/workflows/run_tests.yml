@@ -1,0 +1,69 @@
+name: Run PCSSP Tests
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  # This workflow contains a single job called "runTests"
+  runTests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            release: latest
+            products: >
+                  Simulink
+                  Simulink_Test
+                  Simulink_Coverage
+                  Simulink_Check
+          - os: macos-latest
+            release: latest
+            products: >
+                  Simulink
+                  Simulink_Test
+                  Simulink_Coverage
+                  Simulink_Check
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+      
+      # Sets up MATLAB on a GitHub-hosted runner
+      - name: Setup MATLAB
+        uses: matlab-actions/setup-matlab@v2.2.0
+        with:
+          # MATLAB release to set up (R2021a or later)
+          release: ${{matrix.release}}
+          # Products to set up in addition to MATLAB, specified as a list of product names separated by spaces
+          products: ${{matrix.products}}
+
+      # Run the run_tests script in the root of the repo
+      - name: Run script
+        uses: matlab-actions/run-command@v2
+        with:
+          command: run_tests
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()    # run this step even if previous step failed
+        with:
+          name: junit Tests            # Name of the check run which will be created
+          path: ./testResults.xml     # Path to test results
+          reporter: java-junit        # Format of test results
+
+          
+            
+            
+            
+            
+            
+            
+          
