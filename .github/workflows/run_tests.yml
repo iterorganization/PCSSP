@@ -20,12 +20,14 @@ jobs:
                   Simulink
                   Simulink_Test
                   Simulink_Coverage
+                  Simulink_Check
           - os: macos-latest
             release: latest
             products: >
                   Simulink
                   Simulink_Test
                   Simulink_Coverage
+                  Simulink_Check
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
