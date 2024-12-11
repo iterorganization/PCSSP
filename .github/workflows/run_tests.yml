@@ -48,6 +48,16 @@ jobs:
         uses: matlab-actions/run-command@v2
         with:
           command: run_tests
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()    # run this step even if previous step failed
+        with:
+          name: junit Tests            # Name of the check run which will be created
+          path: ./testResults.xml     # Path to test results
+          reporter: java-junit        # Format of test results
+
+          
             
             
             
