@@ -1,4 +1,4 @@
 [submodule "scdds-core"]
 	path = scdds-core
-	url = ssh://git@git.iter.org/pcs/scdds.git
+	url = https://gitlab.epfl.ch/spc/scdds/scdds-core.git
 
