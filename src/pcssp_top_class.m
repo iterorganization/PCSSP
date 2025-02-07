@@ -430,6 +430,7 @@ classdef pcssp_top_class
             % Checking and importing algorithm name
             if(~ismember(moduleObj.getname,obj.modulenamelist))
                 obj.modulenamelist{end+1} = moduleObj.getname;
+                obj.moduleobjlist{end+1}=moduleObj;
             else
                 fprintf('algorithm ''%s'' already present, skipping \n',moduleObj.getname);
                 return
@@ -461,7 +462,7 @@ classdef pcssp_top_class
             end
             
             
-            % Importing inits
+            % Importing fixed parameter inits
             [stdinitstmp,fpinitstmp]=moduleObj.getinits;
             if numel(fpinitstmp)>0
                 toadd = ones(numel(fpinitstmp),1);
@@ -483,12 +484,8 @@ classdef pcssp_top_class
                         obj.fpinits{end+1}=temp;
                     end
                 end
-                if any(toadd) % if any inits from this algoobj were taken
-                    obj.moduleobjlist{end+1}=moduleObj; %% Add the full algorithm object here, to see if it is fine
-                end
-            elseif(numel(stdinitstmp)>0)
-                obj.moduleobjlist{end+1}=moduleObj;
             end
+            
         end
         
 
