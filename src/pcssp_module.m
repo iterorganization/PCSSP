@@ -65,6 +65,15 @@ classdef pcssp_module < SCDDSclass_algo
                 hws.assignin(param_name, param);
                 % set param as model argument
                 set_param(obj.modelname,'ParameterArgumentNames',model_arg_string);
+
+                if isa(param,'Simulink.Parameter')
+                    % set the storage class for the new 'model parameter
+                    % argument' we just created
+                    cm = coder.mapping.api.get(obj.modelname);
+
+                    cm.setModelParameter(param_name,"StorageClass","MultiInstance");
+                end
+
                 
             elseif hws.hasVariable(param_name) % model WS has a var with the same name
                 param_MWS = hws.getVariable(param_name); % param in model WS
@@ -92,6 +101,14 @@ classdef pcssp_module < SCDDSclass_algo
                     
                     % set param as model argument
                     set_param(obj.modelname,'ParameterArgumentNames',model_arg_string);
+
+                    if isa(param,'Simulink.Parameter')
+                    % set the storage class for the new 'model parameter
+                    % argument' we just updated
+                    cm = coder.mappings.api.get(obj.modelname);
+
+                    cm.setModelParameter(param_name,"StorageClass","MultiInstance");
+                    end
                 end
                 
                 
