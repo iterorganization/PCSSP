@@ -57,6 +57,18 @@ classdef test_tools < matlab.unittest.TestCase
             testCase.verifyEqual(var.gain,5);
         end
             
+
+        function test_PcsSignal_creator(testCase)
+            [busNames,Buses] = PcsSignal(1,'Rammstein','Sonne');
+
+            testCase.verifyEqual(busNames{1},'PcsSignal');
+            testCase.verifyEqual(Buses{1}.Description,'Sonne');
+            testCase.verifyEqual(Buses{1}.Elements(1).Name,'Rammstein');
+            testCase.verifyEqual(Buses{1}.Elements(2).Name,'Quality');
+            testCase.verifyEqual(Buses{1}.Elements(3).Name,'Activity');
+
+
+        end
             
 
     end
