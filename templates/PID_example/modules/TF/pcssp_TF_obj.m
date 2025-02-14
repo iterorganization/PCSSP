@@ -18,7 +18,7 @@ obj=obj.addtunparamstruct('pcssp_TF_tp', @()pcssp_TF_loadtp());
 
 
 %% Buses
-obj = obj.addbus('pcssp_TF_inBus', 'pcssp_TF_inBus_def' );
+obj = obj.addbus('pcssp_PID_outBus', 'pcssp_PID_outBus_def' );
 obj = obj.addbus('pcssp_TF_outBus', 'pcssp_TF_outBus_def' );
 
  % function handle that returns cell arays of buses and busnames to be registered
