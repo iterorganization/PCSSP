@@ -8,8 +8,8 @@ classdef pcssp_top_class
         status        (1,:)    char    % Assessment development status
         loadverbose   (1,1)    int32   % Verbosity level of the loading (currently 0 or 1)
         name(1,:)      char % top-level model name
-        moduleobjlist       % list of loaded algorithm objects with configured inits
-        modulenamelist      % List of loaded algorithm names        
+        moduleobjlist       % list of directly loaded algorithm objects with configured inits
+        modulenamelist      % List of directly loaded algorithm names        
         wrappers            % list of wrapper objects       
         ddname              % top model data dictionary name
         mainslxname         % Top-level SLX name
@@ -19,12 +19,8 @@ classdef pcssp_top_class
     properties (Access = private)
         algonameprefix char % algorithms name prefix
         ddpath              % main expcode data dictionary save path
-        exportedtps         % list of tunable parameters variable to be exported
-        fpinits             % list of standard inits scripts
         moduleddlist        % list of data dictionaries at algorithm level
         wrapperddlist       % list of data dictionaries at wrapper level
-        directobjlist       % list of module objects that are directly 
-                            % referenced in the top model (without wrapper)
     end
     
     methods
@@ -41,8 +37,6 @@ classdef pcssp_top_class
             obj.moduleddlist    = {};
             obj.wrapperddlist = {};
             obj.wrappers        = [];
-            obj.exportedtps   = [];
-            obj.directobjlist = {};
             
             mainslxpath = fileparts(which(obj.mainslxname));
             assert(~isempty(mainslxpath),'%s.slx not found?',obj.mainslxname)
@@ -78,7 +72,7 @@ classdef pcssp_top_class
             Simulink.data.dictionary.closeAll('-discard')
 
             % check if anything to be done
-            if isempty(obj.moduleobjlist)
+            if isempty(obj.moduleobjlist) && isempty(obj.wrappers)
                 fprintf(' no inits to run, done ***\n'); return;
             end
 
@@ -96,9 +90,8 @@ classdef pcssp_top_class
 
           % Carry out any init tasks of directly referenced algorithms (not
           % via wrapper)
-          obj = obj.modules_to_init();
-            for ii=1:numel(obj.directobjlist)
-                obj.directobjlist{ii}.init();
+            for ii=1:numel(obj.moduleobjlist)
+                obj.moduleobjlist{ii}.init();
 
                 opendds = Simulink.data.dictionary.getOpenDictionaryPaths;
                 % check that .sldd is not opened by some algorithm init
@@ -123,13 +116,15 @@ classdef pcssp_top_class
             % obj.setup
             %% inputs
             % none
+
+            % Put configuration settings for Top models in base WS
+            SCDconf_setConf('pcssp_Simulation','configurations_container_pcssp.sldd','configurationSettingsTop');
             
             fprintf('Setting up top model ''%s'', configuring data dictionaries ...\n',obj.name);
             
             obj.createmaindd;
             obj.setupwrapperdd;
-            obj.setupmaindd;
-            
+            obj.setupmaindd;            
 
             % run setups for all wrappers
             for jj=1:numel(obj.wrappers)
@@ -137,14 +132,10 @@ classdef pcssp_top_class
             end
 
             % run setups for directly referenced modules
-            obj = obj.modules_to_init();
-
-            for ii=1:numel(obj.directobjlist)
-                obj.directobjlist{ii}.setup();
+            for ii=1:numel(obj.moduleobjlist)
+                obj.moduleobjlist{ii}.setup();
             end
             
-            % Set configuration settings sldd
-            SCDconf_setConf('pcssp_Simulation','configurations_container_pcssp.sldd','configurationSettingsTop');
             
         end
         
@@ -207,18 +198,16 @@ classdef pcssp_top_class
                     obj.wrappers{ii}.wrapperobj.name,obj.name)
             end
             
-            mywrapper.wrapperobj = wrapperObj;
-            
-            for imodule = 1:numel(wrapperObj.algos)
-                algoObj = wrapperObj.algos(imodule);
-                obj = process_pcssp_module(obj,algoObj);
-            end
+            mywrapper.wrapperobj = wrapperObj;   
             
             % add wrapper to obj
             obj.wrappers{end+1}  = mywrapper;
 
             % add sldd to topmodel
             obj = obj.process_pcssp_wrapper(wrapperObj);
+
+            % update modules to init list
+            obj = obj.modules_to_init();
         end
         
         % module
@@ -238,6 +227,9 @@ classdef pcssp_top_class
             assert(nargout==1,'must assign output for addmodule method')
             
             obj = obj.process_pcssp_module(module);
+
+            % update modules to init list
+            obj = obj.modules_to_init();
         end
 
         %% misc helper functions
@@ -346,9 +338,17 @@ classdef pcssp_top_class
           dd = Simulink.data.dictionary.open(obj.ddname);
 
           % link data dictionaries for active PCSSP modules
-          for ii=1:length(obj.moduleddlist)
+          for ii=1:length(obj.moduleobjlist)
 
               mydatasource = obj.moduleddlist{ii};
+              fprintf('adding data source %s to %s\n',mydatasource,obj.ddname)
+              dd.addDataSource(mydatasource);
+          end
+
+          % link data dictionaries for wrappers
+          for ii=1:length(obj.wrappers)
+
+              mydatasource = obj.wrapperddlist{ii};
               fprintf('adding data source %s to %s\n',mydatasource,obj.ddname)
               dd.addDataSource(mydatasource);
           end
@@ -416,12 +416,14 @@ classdef pcssp_top_class
                 module_names_wrps =  vertcat(module_names_wrps,...
                         arrayfun(@(module) string(module.getname),algos));
             end
-            
-            if isempty(module_names_wrps)
-                obj.directobjlist = obj.moduleobjlist;
-            else
+
+            % if a module is already in a wrapper, remove it from the
+            % directly referenced module list
+            if ~isempty(module_names_wrps)
                 k = contains(obj.modulenamelist,module_names_wrps);
-                obj.directobjlist = obj.moduleobjlist(~k);
+                obj.moduleobjlist = obj.moduleobjlist(~k);
+                obj.moduleddlist = obj.moduleddlist(~k);
+                obj.modulenamelist = obj.modulenamelist(~k);
             end
 
         end
@@ -436,18 +438,6 @@ classdef pcssp_top_class
                 return
             end
             
-            % Importing exported tunable parameters
-            
-            algoexptps=moduleObj.getexportedtps;
-            if numel(algoexptps)>0
-                for ii=1:numel(algoexptps)
-                    if ~ismember(algoexptps{ii},obj.exportedtps)
-                        obj.exportedtps{end+1}=algoexptps{ii};
-                    else
-                        fprintf('exported tunparams sctruct ''%s'' already present, ignoring',algoexptps{ii})
-                    end
-                end
-            end
             
             % Importing algorithms data dictionary, only those with proper name
             moduledd=moduleObj.getdatadictionary;
@@ -459,32 +449,7 @@ classdef pcssp_top_class
                 end
             else
                 error('attempting to add algorithm data dictionary not starting with ''%s''', obj.algonameprefix)
-            end
-            
-            
-            % Importing fixed parameter inits
-            [stdinitstmp,fpinitstmp]=moduleObj.getinits;
-            if numel(fpinitstmp)>0
-                toadd = ones(numel(fpinitstmp),1);
-                for ii=1:numel(fpinitstmp)
-                    if ~isempty(obj.fpinits)
-                        for jj=1:numel(obj.fpinits)
-                            for kk=1:numel(obj.fpinits{jj}{2})
-                                if(strcmp(char(obj.fpinits{jj}{2}{kk}),fpinitstmp{ii}{2}))
-                                    warning('pcssp_top_class_class:addalgorithm','An init driving the structure %s has already been added, ignoring this init',char(fpinitstmp{ii}{2}))
-                                    toadd(ii)=0;
-                                end
-                            end
-                        end
-                    end
-                    if toadd(ii)
-                        temp=cell(10,1);
-                        temp{1}=fpinitstmp{ii}{1};
-                        temp{2}=fpinitstmp{ii}{2};
-                        obj.fpinits{end+1}=temp;
-                    end
-                end
-            end
+            end      
             
         end
         

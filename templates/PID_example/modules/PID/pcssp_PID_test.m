@@ -17,12 +17,12 @@ classdef pcssp_PID_test < pcssp_module_test
 
             pcssp_PID1_tp = obj.get_nominal_param_value('pcssp_PID_tp');
 
-            obj.set_model_argument(pcssp_PID1_tp,'tp');
+            obj.set_model_argument(Simulink.Parameter(pcssp_PID1_tp),'tp');
 
             % check that trying to overwrite an existing variable in the
             % model WS with a different class throws an error
             
-            testCase.verifyError(@() obj.set_model_argument(Simulink.Parameter(pcssp_PID1_tp),'tp'),?MException)
+            testCase.verifyError(@() obj.set_model_argument(pcssp_PID1_tp,'tp'),?MException)
 
             % clear the model WS
             obj.clear_model_ws('tp');
