@@ -93,7 +93,7 @@ plot(h2,simout.time,simout.e);
 legend(h2,'erreur')
 
 h3 = nexttile;
-plot(h3,simout.time,simout.controlCmd);
+plot(out.logsout.getElement('controlCmd').Values.controlCmd,'Parent',h3,'LineWidth',2);
 legend(h3,'controller command');
 
 h.XLabel.String = 't (s)';

@@ -10,6 +10,15 @@ classdef pcssp_module < SCDDSclass_algo
     
     methods
   
+
+        function init(obj)
+            % overwrite the SCDDS configurationSettings with PCSSP
+
+            init@SCDDSclass_algo(obj);
+
+            SCDconf_setConf('pcssp_Simulation','configurations_container_pcssp.sldd');
+
+        end
         
         %% Model parameterization helper functions
         function set_model_argument(obj,param,param_name)
