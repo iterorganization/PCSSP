@@ -12,7 +12,17 @@ classdef pcssp_module < SCDDSclass_algo
   
 
         function init(obj)
-            % overwrite the SCDDS configurationSettings with PCSSP
+            % initializes this pcssp module. During initialization, the
+            % following steps are performed:
+            % - put a SimulinkConfiguration set in the base WS that can be
+            % referred to in the model slx (needs to be linked manually)
+            % - create a fresh new sldd
+            % - call the parameter and bus init fcns and stick their nominal
+            % values in the freshly created sldd
+            % 
+            % This method should be called before obj.setup 
+            %% syntax
+            % obj.init
 
             init@SCDDSclass_algo(obj);
 
