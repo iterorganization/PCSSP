@@ -1,7 +1,3 @@
-.. PCSSP documentation master file, created by
-   sphinx-quickstart on Thu Feb 20 14:19:39 2025.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
 PCSSP documentation
 ===================
@@ -17,14 +13,12 @@ Simulink software is incredibly powerful to simulate controllers in conjunction 
 
 * PCSSP Top Model. The highest level of PCSSP, capable of combining many modules and wrappers in one integrated simulation.
 
-API documentation 
------------------------
-.. automodule:: src
-	:members:
+.. toctree::
+	:maxdepth: 2
 
-.. autosummary::
-   :toctree: _autosummary
-   :recursive:
+	modules
+	modules-api
+
 		
 
 
