@@ -21,20 +21,21 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
       end
   
       function build(obj,build_target)
-            % method to generate C/C++ from a PCSSP wrapper. The method
+            % Generates C/C++ from a PCSSP wrapper. The method
             % first grabs the required SimulinkConfiguration settings, sets
             % them as configurationSettings in the base WS, and then calls
             % rtwbuild. Optionally, a build target can be provided ('rtf' 
             % or 'auto'). Select auto to automatically detect an installed
-            % toolchain on your machine and use use the hardcore RTF
+            % toolchain on your machine or use 'rtf' for the hardcore RTF
             % settings.
-            %% Syntax
-            % obj.build or obj.build('rtf')
-            %% inputs
-            % build_target optional target for C code generation. Current
+            %
+            % Syntax: obj.build or obj.build('rtf')
+            %
+            % Arguments:
+            %   build_target: (optional) target for C code generation. Current
             % options are 'rtf' or 'auto' to automatically select an
             % installed toolchain.
-            % function 
+
             arguments
                 obj
                 build_target {mustBeMember(build_target,{'rtf','auto'})} = 'rtf';
@@ -61,11 +62,13 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
 
 
       function compile(obj)
-          % method to compile a PCSSP wrapper (equivalent to ctrl+D in the Simulink model)
-          %% Syntax
-          % obj.compile
-          %% Inputs
-          % none
+          % compiles a PCSSP wrapper (equivalent to ctrl+D in the Simulink model)
+          %
+          % Syntax: obj.compile
+          %
+          % Arguments:
+          %     none
+          %
 
          try
            eval(sprintf('%s([],[],[],''compile'')',obj.name));
@@ -81,13 +84,15 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
 
 
       function test_harness(obj)
-          % method to run the attached wrapper harness model for testing
+          % runs the attached wrapper harness model for testing
           % purposes. Requires the existence of a m-script called
           % <module_name>_harness_run.m to set up the simulation.
-          %% Syntax
-          % obj.test_harness
-          %% Inputs
-          % none
+          %
+          % Syntax: obj.test_harness
+          %
+          % Arguments:
+          %     none
+          %
 
          harnessname = sprintf('%s_harness_run',obj.name);
          if ~exist(harnessname,'file')
@@ -110,19 +115,21 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
       end
 
       function set_model_argument_value(obj,model_path,var_name,value)  
-            % Function to set the model argument (or model instance
+            % Sets the model argument (or model instance
             % parameters) in a referenced model. This is useful to inject
             % parameters from the wrapper in a parametrized pcssp module     
             % before calling this function, the referenced model needs to
             % have model arguments defined. Call the set_model_argument
             % method of the pcssp_module class for this purpose
-            %% Syntax
+            %
+            % Syntax:
+            %
             % obj.set_model_argument_value('<top_model_name/referenced_mode_namel>','var_name','value')
-            %% inputs
-            % model_path : string to point to the referenced model in the
-            % top model hierarchy. For example 'closed_loop_model/PID_controller'
-            % var_name : name of the model argument
-            % value : value of the to-be-injected model argument
+            %
+            % Arguments:
+            %   model_path: string to point to the referenced model
+            %   var_name: name of the model argument
+            %   value: value of the to-be-injected model argument
             
             if ~bdIsLoaded(obj.name)
                 load_system(obj.name);
@@ -140,13 +147,14 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
 
 
       function obj = set_wrapper_description(obj,description_string)
-            % this method adds a descriptive text to the module obj property
+            % adds a descriptive text to the module obj property
             % obj.description, and sets it in the description of the
             % attached slx model. 
-            %% syntax
-            % obj = set_module_description('some piece of text');
-            %% inputs
-            % description_string : char array containing the description
+            %
+            % syntax: obj = set_module_description('some piece of text');
+            %
+            % Arguments:
+            %   description_string : char array containing the description
 
 
             arguments
@@ -165,8 +173,8 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
       end
 
       function write_XML(obj,function_block_alias)
-            % Method to automatically generate an XML description of this
-            % PCSSP wrapper to act as RTF FunctionBlock description. This
+            % Automatically generates an XML description of this
+            % PCSSP module to act as RTF FunctionBlock description. This
             % XML works together with the generated code to form an RTF FB.
             % You can use the optional Bus and Simulink.Parameter
             % description field to describe your signal/parameter, which
@@ -174,11 +182,11 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
             %
             % this function uses the matlab writestruct fcn to mimick this
             % XML structure for RTF applications.
-            %% syntax
-            % obj.write_RTF_xml('FUN-CTRL-MAG-01');
-            %% inputs
-            % functionblock_alias : Alias linking to the PCSDB, for example
-            % FUN-CTRL-MAG-01
+            %
+            % syntax: obj.write_RTF_xml('FUN-CTRL-MAG-01');
+            %
+            % Arguments:
+            %   functionblock_alias: Alias linking to the PCSDB
 
             arguments
                 obj

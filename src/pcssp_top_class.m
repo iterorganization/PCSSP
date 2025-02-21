@@ -47,11 +47,13 @@ classdef pcssp_top_class
         %% top level class methods
         
         function open(obj)
-            % this method physically opens the top-level slx model
-            %% syntax
-            % obj.open
-            %% inputs
-            % none
+            % Physically opens the top-level slx model
+            %
+            % syntax: obj.open
+            %
+            % Arguments:
+            %   none
+
             openslx = obj.mainslxname;
             fprintf('Opening %s\n',openslx)
             open_system(openslx);
@@ -59,14 +61,15 @@ classdef pcssp_top_class
         
         
         function obj = init(obj)
-            % Method to initialize the top model by calling inits of all
+            % Initializes the top model by calling inits of all
             % children, both wrappers and modules. It sorts the referenced
             % modules to make sure they are initialized in the correct
             % order
-            %% syntax
-            % obj.init
-            %% Inputs
-            % none
+            %
+            % syntax: obj.init
+            %
+            % Arguments:
+            %   none
 
             % close all data dictionaries
             Simulink.data.dictionary.closeAll('-discard')
@@ -107,15 +110,16 @@ classdef pcssp_top_class
 
 
         function setup(obj)
-            % This method sets up the top-level Simulink model
+            % Sets up the top-level Simulink model
             % to prepare simulation of the model. It creates an sldd and
             % calls the setups for all attached modules. For wrappers, it
             % only calls the bus definition scripts to prevent parameter
             % clashes.
-            %% syntax
-            % obj.setup
-            %% inputs
-            % none
+            %
+            % syntax: obj.setup
+            %
+            %% Arguments
+            %   none
 
             % Put configuration settings for Top models in base WS
             SCDconf_setConf('pcssp_Simulation','configurations_container_pcssp.sldd','configurationSettingsTop');
@@ -140,12 +144,13 @@ classdef pcssp_top_class
         end
         
         function compile(obj)
-            % method to compile the top model attached to this class
+            % Compiles the top model attached to this class
             % (equivalent to ctrl+D in Simulink)
-            %% Syntax
-            % obj.compile
-            %% inputs
-            % none
+            %
+            % Syntax: obj.compile
+            %
+            % Arguments:
+            %   none
 
             if ~bdIsLoaded(obj.name)
                 load_system(obj.name);
@@ -155,11 +160,14 @@ classdef pcssp_top_class
         end
         
         function simout = sim(obj)
-            % method to simulate the top model
-            %% syntax
-            % obj.sim
-            %% inputs
-            % none
+            % Simulates the top model, assuming all input data is
+            % self-contained in the model. Simulation data injection is not
+            % yet supported
+            %
+            % syntax: obj.sim
+            %
+            % Arguments:
+            %   none
 
             % set the correct Simulink Settings
             sourcedd = 'configurations_container_pcssp.sldd';
@@ -172,13 +180,13 @@ classdef pcssp_top_class
         %% adders
         % wrapper
         function obj = addwrapper(obj,wrapperObj)
-            % method to add a wrapper instance to the top model
-            % add wrapper to top model. This wrapper must be an instance of
-            % the pcssp wrapper class
-            %% Syntax
-            % topm_obj = topm_obj.addwrapper(wrapper_obj)
-            %% inputs
-            % wrapperObj : instance of the wrapper class to be attached to
+            % Adds a wrapper instance to the top model. This wrapper must be
+            % an instance of the pcssp wrapper class
+            %
+            % Syntax: topm_obj = topm_obj.addwrapper(wrapper_obj)
+            %
+            % Arguments:
+            %   wrapperObj : instance of the wrapper class to be attached to
             % the top model
             
             arguments
@@ -212,11 +220,12 @@ classdef pcssp_top_class
         
         % module
         function obj = addmodule(obj,module)
-            % method to add a pcssp module object to the top-model
-            %% syntax
-            % topm_obj = topm_obj.addmodule(pcssp_module_obj)
-            %% input
-            % module : instance of pcssp module class to be attached to top
+            % Adds a pcssp module object to the top-model class instance.
+            % 
+            % syntax: topm_obj = topm_obj.addmodule(pcssp_module_obj)
+            %
+            % Arguments:
+            %   module : instance of pcssp module class to be attached to top
             % model
 
             arguments
@@ -247,20 +256,22 @@ classdef pcssp_top_class
         end
         
         function set_model_argument_value(obj,model_path,var_name,value)
-            % Function to set the model argument (or model instance
-            % parameters) in a referenced model. This is useful to inject
-            % parameters from the top model in a parametrized model
-            % reference.            
-            % before calling this function, the referenced model needs to
-            % have model arguments defined. Call the set_model_argument
-            % method of the pcssp_module class.
-            %% syntax
+            % Sets the model argument (or model instance parameters) in a
+            % referenced model. This is useful to inject parameters from
+            % the top model in a parametrized model reference. Before
+            % calling this function the referenced model needs to have
+            % model arguments defined. You may call the set_model_argument
+            % method of the pcssp_module class for this purpose.
+            %
+            % syntax:
+            %
             % obj.set_model_argument_value('path_to_model_in_hierarchy','var_name','var_value')
-            %% inputs
-            % model_path (string) : path to model in the hierarchy of the top model
-            % var_name (string) : name of the to-be-injected variable in
+            %
+            % Arguments:
+            %   model_path : (string) path to model in the hierarchy of the top model
+            %   var_name : (string) name of the to-be-injected variable in
             % the model mask
-            % value : value of the to-be-injected variable
+            %   value : value of the to-be-injected variable
             
             arguments
                 obj
@@ -283,12 +294,13 @@ classdef pcssp_top_class
         end
         
         function print_model_arguments(obj,model_path)
-            % helper function to print the model arguments associated with
-            % a model reference in the top model
-            %% syntax
-            % obj.prin_model_arguments('path_to_model')
-            %% inputs
-            % model_path : relative path to the referenced model in the top model hierarchy
+            % prints the model arguments associated with a model reference
+            % in the top model
+            %
+            % syntax: obj.prin_model_arguments('path_to_model')
+            %
+            % Arguments:
+            %   model_path: relative path to the referenced model in the top model hierarchy
 
             arguments
                 obj
