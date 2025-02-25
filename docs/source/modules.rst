@@ -37,7 +37,7 @@ The cartoon below schematically puts these elements into context.
 
 .. figure:: images/pcssp_module.png
 
-	Basic elements of a PCSSP module. An slx-model is connected to various .m scripts containing definitions and a pcssp-	module object. 
+	Basic elements of a PCSSP module. An slx-model is connected to various .m scripts containing definitions and a pcssp-module object. 
 
 
 

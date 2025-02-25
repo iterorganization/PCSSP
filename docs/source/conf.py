@@ -38,6 +38,5 @@ html_theme_options = {
     'github_banner': 'true',
     'description': 'The Simulink-based Plasma Control System Simulation Platform',
     'page_width': '85%',
-    'sidebar_width': '20%'
 }
 html_static_path = ['_static']

@@ -13,16 +13,40 @@ Simulink software is powerful to simulate controllers in conjunction with models
 
 * PCSSP Top Model. The highest level of PCSSP, capable of combining many modules and wrappers in one integrated simulation.
 
+Table of contents
+------------------
+
 .. toctree::
+	:caption: PCSSP classes
 	:maxdepth: 2
 
 	modules
 	wrappers
 	topmodels
+
+
+.. toctree::
+	:caption: Advanced topics
+
 	parametrization
 	configurationSettings
+
+
+.. toctree::
+	:caption: Testing
+
 	module_tests
 	compliance_tests
+
+.. toctree::
+	:caption: Code generation
+
+	code_generation
+
+
+.. toctree::
+	:caption: API documentation
+
 	modules-api
 	wrapper-api
 	top-model-api
