@@ -1,11 +1,11 @@
 .. _sec-moduleDevelopment:
 
-Standalone Module development
+PCSSP Modules
 ================================
 
 This Guide shows how new object-oriented modules are developed using PCSSP and the Simulink Control Design Development Suite. Before continuing, follow the steps in the readme.md of the `PCSSP repository <https://github.com/iterorganization/PCSSP>`_ to setup the framework on your local pc.
 
-Key points in the modeling approach
+Module development
 ------------------------------------
 
 Each PCSSP module is effectively an instance of the pcssp_module class. The resulting object has useful methods to manipulate, open, or build the model. Such an object needs to be instantiated from the PCSSP framework, and needs to be constructed during the development process of the module. The construction of a new PCSSP module therefore starts with defining the following elements:
@@ -43,8 +43,8 @@ The cartoon below schematically puts these elements into context.
 
 Templates and examples for these elements can be found under ``templates/`` in the git repository. Next, we will introduce these elements one by one in the following sections.
 
-Quick guide to adapting a template
------------------------------------
+Module development quick guide
+-------------------------------
 
 The recommended approach is to copy all m-files (only the m-files, not the sldd or slx) in one of the subdirectories of the templates/ directory of the pcssp repository, and change them to fit your module's needs:
 
@@ -140,8 +140,8 @@ The ``pcssp_PowerSupplies_loadfp``  and ``loadtp`` functions simply populate str
 
 The output of which is assigned to ``PowerSupplies_tp`` in the object definition.
 
-Constraining block execution using the sample time property
------------------------------------------------------------
+Constraining block execution
+-----------------------------
 
 Real-life controller modules are typically discrete time to allow embedded execution. We can simulate this behaviour in simulink by controlling the block execution. The rate at which Simulink models exchange signals with the outside can be set using the sample time property of blocks and ports. Note that this may be different from the numerical solver time step when you use a continuous-time solver. For discrete-time solvers, the sample time is always the same as the solver time step.
 
@@ -174,8 +174,8 @@ Note that this only puts the timing information in the fixed parameter structure
 
 
 
-Initialization and setup of the module
----------------------------------------
+Module initialization and setup
+--------------------------------
 Once the parameters and buses are defined, we initialize the object to create a data-dictionary for the module, call the parameter setup scripts, and then stick their corresponding (bare, aka unfilled) structures in the freshly created data dictionary. The setup method is then subsequently called to update the tunable parameter structure with its most recent values.
 
 .. note::

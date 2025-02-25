@@ -1,5 +1,5 @@
-API documentation for PCSSP top model class instances
-======================================================
+PCSSP Top model API documentation
+=================================
 
 .. automodule:: src
 

@@ -1,5 +1,5 @@
-Parametrization of referenced models
-=====================================
+Module parameterization
+=======================
 
 .. automodule:: src
 
@@ -17,8 +17,8 @@ The scheme has to be set up from two directions:
 .. note::
 	Not all parameters in a Simulink model can be defined as model instance parameters: For example sample times or signal sizes have to be fixed across instances of the same model.
 
-Defining model instance parameters from the child
---------------------------------------------------
+Defining model instance parameters
+-----------------------------------
 
 * initialize and setup your pcssp module
 
@@ -35,8 +35,8 @@ Defining model instance parameters from the child
 * save and close the model. This is required given that the definition of model instance parameters physically changes the model 
 
 
-Injecting model instance parameters from the top model
--------------------------------------------------------
+Top-down injection of model instance parameters
+------------------------------------------------
 
 * Initialize and setup your top model
 

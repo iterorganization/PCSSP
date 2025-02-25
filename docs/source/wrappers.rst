@@ -1,5 +1,5 @@
-PCSSP wrapper layer
-====================
+PCSSP wrappers
+===============
 
 The PCSSP wrapper layer acts as an intermediate layer in the hierarchy, set between PCSSP modules (see :ref:`sec-moduleDevelopment`) and the PCSSP top model classes. The wrapper layer provides functionality to combine a small number of modules, or define a different interface to a module. The wrapper class supports the definition of new buses specifically for this purpose. Additional supporting methods, however, are much more limited compared to the top-model class. 
 

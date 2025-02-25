@@ -1,8 +1,8 @@
 
 .. _sec-configurationSettings:
 
-Guide on referencing Simulink Configuration Settings
-=====================================================
+Referencing Simulink Configurations
+====================================
 
 
 Introduction
@@ -50,8 +50,8 @@ Code generation of a PCS module may require, but is not limited to:
 
 In collaboration with the RTF team we recommended a set of Simulink Configuration settings that we have stored under configurationSettingsRTFcpp (for generating c++ code). When calling the ``obj.build('rtf')`` method these settings are stored in the base workspace.
 
-Pointing a new model to the configuration reference
-----------------------------------------------------
+Pointing to the configuration reference
+----------------------------------------
 
 Out of the box, Simulink will use generic configuration Settings that are as flexible as they can be to support a wide number of cases. These settings are implicitly stored together with the slx model in the 'Configurations' menu of the Model explorer. Instead, after saving a new model, you need to point to the pcssp configuration settings as follows:
 
@@ -69,8 +69,8 @@ Model Explorer → Configurations → Add → Configuration Reference → Point 
 
 	Step 3: activate the configuration reference
 
-Configuration References in a hierarchy of models
---------------------------------------------------
+Configuration References in a model hierarchy
+----------------------------------------------
 
 In principle, each model in a hierarchy of referenced models will have its own configuration settings when running the model in standalone mode. However, when referencing the model, Simulink typically overwrites most of these settings. In that case Simulink propagates the solver settings of the top model to all referenced models (see `here <https://nl.mathworks.com/help/simulink/ug/set-configuration-parameters-for-model-referencing-1.html>`_). Note that these settings are different from the sample time (block execution): the model is always executed at the Sample Time specified in the ports. In addition, Simulink may allow a local solver in situations where continuous dynamics of a references model are of a vastly different time scale. But this is only ever useful for some simulation proposes, since PCS modules will never contain continuous states. 
 

@@ -1,4 +1,4 @@
-API documentation for PCSSP wrapper class instances
+PCSSP wrapper API documentation
 ======================================================
 
 .. automodule:: src

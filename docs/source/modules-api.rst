@@ -1,5 +1,5 @@
-API documentation for PCSSP module class instances
-===================================================
+PCSSP module API documentation
+===============================
 
 .. automodule:: src
 

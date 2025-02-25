@@ -5,7 +5,7 @@ PCSSP documentation
 Introduction
 -------------------
 
-Simulink software is incredibly powerful to simulate controllers in conjunction with models for actuator systems and plant dynamics. The ITER Plasma Control System Simulation Platform (PCSSP) standardizes modeling in Simulink, and provides a programmatic interface to systematically interact with a complex hierarchy of many models. The PCSSP relies on standalone Simulink models that each represent a module, for example a power supply or a controller. To form an integrated simulation, these modules may be embedded into another Simulink model, known as model referencing. Currently, PCSSP supports three layers in the model hierarchy, namely:
+Simulink software is powerful to simulate controllers in conjunction with models for actuator systems and plant dynamics. The ITER Plasma Control System Simulation Platform (PCSSP) standardizes modeling in Simulink, and provides a programmatic interface to systematically interact with a complex hierarchy of many models. The PCSSP relies on standalone Simulink models that each represent a module, for example a power supply or a controller. To form an integrated simulation, these modules may be embedded into another Simulink model, known as model referencing. Currently, PCSSP supports three layers in the model hierarchy, namely:
 
 * PCSSP Module. The layer implementing individual PCSSP modules as standalone model
 
@@ -21,6 +21,8 @@ Simulink software is incredibly powerful to simulate controllers in conjunction 
 	topmodels
 	parametrization
 	configurationSettings
+	module_tests
+	compliance_tests
 	modules-api
 	wrapper-api
 	top-model-api
