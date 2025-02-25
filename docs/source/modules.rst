@@ -1,17 +1,21 @@
+.. _sec-moduleDevelopment:
+
 Standalone Module development
 ================================
 
-This Guide shows how new object-oriented modules are developed using PCSSP and the Simulink Control Design Development Suite. Before continuing, follow the steps in the readme.md of the PCSSP repository to setup the framework on your local pc.
+This Guide shows how new object-oriented modules are developed using PCSSP and the Simulink Control Design Development Suite. Before continuing, follow the steps in the readme.md of the `PCSSP repository <https://github.com/iterorganization/PCSSP>`_ to setup the framework on your local pc.
 
 Key points in the modeling approach
 ------------------------------------
 
 Each PCSSP module is effectively an instance of the pcssp_module class. The resulting object has useful methods to manipulate, open, or build the model. Such an object needs to be instantiated from the PCSSP framework, and needs to be constructed during the development process of the module. The construction of a new PCSSP module therefore starts with defining the following elements:
 
-* a new Simulink model called `pcssp_<your_module>.slx`
-* A matlab script, for example called `pcssp_<your_module>_obj.m` instantiating the module, effectively containing:
-the object definition  `obj = pcssp_module('pcssp_<your_module>')`. The name `pcssp_<your_module>` must match the .slx file name.
-definitions for fixed and tunable parameter structures for the model
+* a new Simulink model called ``pcssp_<your_module>.slx``
+* A matlab script, for example called ``pcssp_<your_module>_obj.m`` instantiating the module, effectively containing:
+
+    * the object definition  ``obj = pcssp_module('pcssp_<your_module>')``. The name ``pcssp_<your_module>`` must match the .slx file name.
+
+* definitions for fixed and tunable parameter structures for the model
 * optionally: I/O bus definitions
 * Optionally: A main script to initialize, manipulate and run simulations.
 * If required you constrain the sample time (i.e. the rate at which the module exchanges signals with the outside)  by setting the sampleTime property of the input ports (see below)
@@ -31,13 +35,13 @@ definitions for fixed and tunable parameter structures for the model
 
 The cartoon below schematically puts these elements into context.
 
-.. image:: images/pcssp_module.png
+.. figure:: images/pcssp_module.png
 
-Basic elements of a PCSSP module. An slx-model is connected to various .m scripts containing definitions and a pcssp-module object. 
+	Basic elements of a PCSSP module. An slx-model is connected to various .m scripts containing definitions and a pcssp-	module object. 
 
 
 
-Templates and examples for these elements can be found under `templates/` in the git repository. Next, we will introduce these elements one by one in the following sections.
+Templates and examples for these elements can be found under ``templates/`` in the git repository. Next, we will introduce these elements one by one in the following sections.
 
 Quick guide to adapting a template
 -----------------------------------
@@ -50,16 +54,18 @@ The recommended approach is to copy all m-files (only the m-files, not the sldd 
 * Define your object by calling obj = pcssp_<your_module>() and try calling obj.init  and subsequently obj.setup to check for any errors.
 * Add model complexity and more parameters following the guide in the remainder of this chapter. From here on, you will be simultaneously working in the slx, the parameter definition scripts, and the main obj definition script.
 * If needed, constrain the sample time of your module by setting the SampleTime property of the input ports. 
-* You can point your model to the recommended PCSSP configurationSettings (containing the time vector, solver etc. for Simulink). This object is automatically put in the base workspace when you call init or setup. A how-to is provided *here*.
+* You can point your model to the recommended PCSSP configurationSettings (containing the time vector, solver etc. for Simulink). This object is automatically put in the base workspace when you call init or setup. A how-to is provided in Section :ref:`sec-configurationSettings`.
 
 Module slx file
 --------------------
 
-.. image:: images/power_supplies.png
+.. figure:: images/power_supplies.png
+
+	example PCSSP module with input and output ports, and various Simulink blocks.
 
 An example PCSSP module is shown in the figure above. Like any Simulink model, this module contains input ports, output ports, and blocks in between. You are free to use any Simulink capability/blocks in your model, for example Matlab function blocks, rate limiters, etc. However, we will list some modeling guidelines and considerations at the end of this chapter.
 
-Generally speaking the parameters inside the model blocks should not be hardcoded: It is better to centralize the parameter values to allow their traceability and configurability. In PCSSP, the model blocks are configured using two types of structured parameters (Matlab structs) namely 1) tunable parameters, and 2) fixed parameters. So instead of writing a hardcoded '5' in the value field of a block, we would write for example pcssp_PowerSupplies_tp.rateLimit. The actual value of this parameter is taken from the data dictionary that is automatically filled and linked to your module slx.
+Generally speaking the parameters inside the model blocks should not be hardcoded: It is better to centralize the parameter values to allow their traceability and configurability. In PCSSP, the model blocks are configured using two types of structured parameters (Matlab structs) namely 1) tunable parameters, and 2) fixed parameters. So instead of writing a hardcoded ``5`` in the value field of a block, we would write for example ``pcssp_PowerSupplies_tp.rateLimit``. The actual value of this parameter is taken from the data dictionary that is automatically filled and linked to your module slx.
 
 During module development, you therefore have to simultaneously update the script that contain the parameter structure definition (i.e. pcssp_PowerSupplies_loadtp in the example below) and the Simulink model. Since parameters only appear in the data dictionary after model initialization it is best to start with a basic, working example, and extend the parameter list from there.
 
@@ -71,17 +77,19 @@ For PCSSP modules that will not run in real-time (e.g. plant models used for ass
 
 The structure containing fixed and tunable parameters is directly used/called in the underlying module, see the snippet below:
 
-.. image:: images/calling_module_params.png
+.. figure:: images/calling_module_params.png
+
+	Example of calling pcssp module parameters in the Simulink blocks.
 
  
 
 
-The name of the PS_tp and PS_fp structures, and the values therein are defined in the object definition. This is the topic of the next section. The slx model may also use PCSSP recommended configurationSettings for the solver, error handling, time vector, etc. This is discussed in a separate chapter. 
+The name of the ``PS_tp`` and ``PS_fp`` structures, and the values therein are defined in the object definition. This is the topic of the next section. The slx model may also use PCSSP recommended configurationSettings for the solver, error handling, time vector, etc. This is discussed in Section :ref:`sec-configurationSettings`. 
 
 Object definition
 ------------------
 
-The pcssp module object contains methods to manipulate and initialize the module. It inherits the pcssp_module class and sets the timing of the module execution. Then, it defines parameters, and (optionally) the module input/output buses. For this module, the latter are all grouped in a single definition script. 
+The pcssp module object contains methods to manipulate and initialize the module. It inherits the ``pcssp_module`` class and sets the timing of the module execution. Then, it defines parameters, and (optionally) the module input/output buses. For this module, the latter are all grouped in a single definition script.
 
 .. code-block :: python
 
@@ -115,7 +123,7 @@ The pcssp module object contains methods to manipulate and initialize the module
   
 
 
-The pcssp_PowerSupplies_loadfp  and loadtp functions simply populate structures with parameters, for example:
+The ``pcssp_PowerSupplies_loadfp``  and ``loadtp`` functions simply populate structures with parameters, for example:
 
 .. code-block :: python
 
@@ -130,14 +138,14 @@ The pcssp_PowerSupplies_loadfp  and loadtp functions simply populate structures 
 	end
 
 
-The output of which is assigned to `PowerSupplies_tp` in the object definition.
+The output of which is assigned to ``PowerSupplies_tp`` in the object definition.
 
 Constraining block execution using the sample time property
 -----------------------------------------------------------
 
 Real-life controller modules are typically discrete time to allow embedded execution. We can simulate this behaviour in simulink by controlling the block execution. The rate at which Simulink models exchange signals with the outside can be set using the sample time property of blocks and ports. Note that this may be different from the numerical solver time step when you use a continuous-time solver. For discrete-time solvers, the sample time is always the same as the solver time step.
 
-In Simulink, the sample time propagates throughout the model. As a consequence, setting the sample time of an input port constrains the execution of the full model. This is a useful feature to simplify your modeling, and individually setting the sample time of blocks is therefore not recommended. PCSSP modules are shipped with a obj.gettiming method which can be used to uniquely define the sample time of your module. However, this still requires access of the model to the base workspace where the module obj is stored. We therefore recommend to put the sample time in a fixed-parameter structure as follows:
+In Simulink, the sample time propagates throughout the model. As a consequence, setting the sample time of an input port **constrains the execution of the full model**. This is a useful feature to simplify your modeling, and individually setting the sample time of blocks is therefore not recommended. PCSSP modules are shipped with a obj.gettiming method which can be used to uniquely define the sample time of your module. However, this still requires access of the model to the base workspace where the module obj is stored. We therefore recommend to put the sample time in a fixed-parameter structure as follows:
 
 .. code-block :: python
 
@@ -156,9 +164,13 @@ Note that this only puts the timing information in the fixed parameter structure
 
 
 
-..image :: images/setting_port_sample_time.png
+.. figure :: images/setting_port_sample_time.png
+
+	Setting the port sample time property is sufficient to constrain the full model/block execution.
  
-Setting the sample time property in the input port of a module constrains the full block execution.
+
+.. note:
+    Setting the sample time property in the input port of a module constrains the full block execution. You do not need to set the sample time in all blocks.
 
 
 
@@ -166,10 +178,10 @@ Initialization and setup of the module
 ---------------------------------------
 Once the parameters and buses are defined, we initialize the object to create a data-dictionary for the module, call the parameter setup scripts, and then stick their corresponding (bare, aka unfilled) structures in the freshly created data dictionary. The setup method is then subsequently called to update the tunable parameter structure with its most recent values.
 
-*Important:*
+.. note::
+    setup can only be called after init, since the latter creates the data dictionary! You will get an error when you try to fill parameter values into a ``sldd`` that does not yet exist, or that is dirty.
 
-setup can only be called after init, since the latter creates the data dictionary! You will get an error when you try to fill parameter values into a `sldd` that does not yet exist, or that is dirty.
-The pcssp module is now ready to be simulated. 
+The pcssp module is now ready to be simulated.
 
 .. code-block :: python
 
@@ -199,4 +211,4 @@ Simulink modeling guidelines
 * Group I/O signals into non-virtual buses. These are more formal and constrain data type, size, etc. of the signal
 * Set the sampleTime of your module once in the input port. That constraints the sample time of the full block execution
 * Avoid grouping blocks into subsystems primarily for the purpose of saving space in the diagram. Each subsystem in the diagram should represent a unit of functionality that is required to accomplish the purpose of the model or submodel.
-* A team of aerospace and automotive engineers yearly write a modeling guide for Simulink that is endorsed by the Mathworks. You can find it *here*.
+* A team of aerospace and automotive engineers yearly write a modeling guide for Simulink that is endorsed by the Mathworks. You can find it `here <https://nl.mathworks.com/help/simulink/mab-modeling-guidelines.html?s_tid=CRUX_lftnav>`_.

@@ -16,7 +16,7 @@ release = '1'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['sphinx.ext.autodoc','sphinxcontrib.matlab','sphinx.ext.napoleon','sphinx.ext.autosummary']
+extensions = ['sphinx.ext.autodoc','sphinxcontrib.matlab','sphinx.ext.napoleon']
 sys.path.insert(0, os.path.abspath('../..'));
 this_dir = os.path.dirname(os.path.abspath(__file__))
 matlab_src_dir = os.path.abspath(os.path.join(this_dir,'..','..'))
@@ -24,7 +24,6 @@ primary_domain = 'mat'
 
 templates_path = ['_templates']
 exclude_patterns = []
-autosummary_generate = True
 
 
 

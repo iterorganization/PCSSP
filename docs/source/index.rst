@@ -17,7 +17,14 @@ Simulink software is incredibly powerful to simulate controllers in conjunction 
 	:maxdepth: 2
 
 	modules
+	wrappers
+	topmodels
+	parametrization
+	configurationSettings
 	modules-api
+	wrapper-api
+	top-model-api
+	
 
 		
 

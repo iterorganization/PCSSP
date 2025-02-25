@@ -118,7 +118,7 @@ classdef pcssp_top_class
             %
             % syntax: obj.setup
             %
-            %% Arguments
+            % Arguments:
             %   none
 
             % Put configuration settings for Top models in base WS
@@ -164,7 +164,7 @@ classdef pcssp_top_class
             % self-contained in the model. Simulation data injection is not
             % yet supported
             %
-            % syntax: obj.sim
+            % syntax: simout = obj.sim
             %
             % Arguments:
             %   none
@@ -225,8 +225,7 @@ classdef pcssp_top_class
             % syntax: topm_obj = topm_obj.addmodule(pcssp_module_obj)
             %
             % Arguments:
-            %   module : instance of pcssp module class to be attached to top
-            % model
+            %   module : instance of pcssp module class to be attached
 
             arguments
                 obj
@@ -269,8 +268,7 @@ classdef pcssp_top_class
             %
             % Arguments:
             %   model_path : (string) path to model in the hierarchy of the top model
-            %   var_name : (string) name of the to-be-injected variable in
-            % the model mask
+            %   var_name : (string) name of the to-be-injected variable
             %   value : value of the to-be-injected variable
             
             arguments

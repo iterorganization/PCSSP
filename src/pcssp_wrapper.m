@@ -32,9 +32,7 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
             % Syntax: obj.build or obj.build('rtf')
             %
             % Arguments:
-            %   build_target: (optional) target for C code generation. Current
-            % options are 'rtf' or 'auto' to automatically select an
-            % installed toolchain.
+            %   build_target: (optional) target for C code generation
 
             arguments
                 obj
