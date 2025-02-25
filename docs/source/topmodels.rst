@@ -35,8 +35,7 @@ Class inheritance and construction
 
 * Update the parent model (ctrl+D or ``topm.compile``) to see if everything works.
 
-* Simulate the model, manually in the Simulink dialog or via
-	.. automethod:: pcssp_top_class.sim
+* Simulate the model, manually in the Simulink dialog or via :meth:`pcssp_top_class.sim`
 
 Top model code example
 -----------------------
