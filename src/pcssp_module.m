@@ -14,15 +14,21 @@ classdef pcssp_module < SCDDSclass_algo
         function init(obj)
             % initializes this pcssp module. During initialization, the
             % following steps are performed:
-            % - put a SimulinkConfiguration set in the base WS that can be
+            %
+            % -put a SimulinkConfiguration set in the base WS that can be
             % referred to in the model slx (needs to be linked manually)
-            % - create a fresh new sldd
-            % - call the parameter and bus init fcns and stick their nominal
+            %
+            % -create a fresh new sldd
+            %
+            % -call the parameter and bus init fcns and stick their nominal
             % values in the freshly created sldd
             % 
             % This method should be called before obj.setup 
-            %% syntax
-            % obj.init
+            %
+            % syntax: obj.init
+            %
+            % Arguments:
+            %   none
 
             init@SCDDSclass_algo(obj);
 
@@ -32,16 +38,17 @@ classdef pcssp_module < SCDDSclass_algo
         
         %% Model parameterization helper functions
         function set_model_argument(obj,param,param_name)
-            % function to set model arguments to allow parametrization when
+            % sets model arguments to allow parametrization when
             % referencing this module from a top model. The parameter is
             % put in the model workspace and exposed as a mask parameter.
             % If the parameter already exists in the model WS it is updated
             % when needed
-            %% Syntax
-            % set_model_argument(param,param_name_in_mask)   
-            %% inputs
-            % param Simulink.Parameter or struct to become model arg
-            % param_name name of the parameter in the model WS and mask
+            %
+            % syntax: obj.set_model_arguments(param,'tp_name')
+            %
+            % Arguments:
+            %   param: Simulink.Parameter or struct to become model arg
+            %   param_name: name of the parameter in the model WS and mask
 
             arguments
             obj 
@@ -136,13 +143,14 @@ classdef pcssp_module < SCDDSclass_algo
         end
 
         function clear_model_ws(obj,variables)
-            % This method clears all or a comma-separated list of variables 
+            % Clears all or a comma-separated list of variables 
             % from the model workspace of this PCSSP module
-            %% Syntax
-            % obj.clear_model_ws
-            % obj.clear_model_ws('tp1','tp2','tp3')
-            %% Inputs
-            % none or a comma separated list of to-be-deleted parameters
+            % 
+            % Syntax: obj.clear_model_ws('tp1','tp2','tp3')
+            % or: obj.clear_model_ws
+            %
+            % Arguments:
+            %   parameters: comma separated list of to-be-deleted parameters (optional)
             
             arguments
                 obj
@@ -170,14 +178,15 @@ classdef pcssp_module < SCDDSclass_algo
         
         % helper function to grab model arguments
         function names = get_model_arguments(obj)
-            % This method grabs all model arguments that are currently
+            % Grabs all model arguments that are currently
             % defined in the model workspace of this PCSSP module. You can
             % define new model arguments using the set_model_arguments
             % method
-            %% syntax
-            % obj.get_model_arguments
-            %% inputs
-            % none
+            %
+            % syntax: obj.get_model_arguments
+            %
+            % Parameters:
+            %   none
 
             if ~bdIsLoaded(obj.modelname)
                 load_system(obj.modelname);
@@ -188,20 +197,21 @@ classdef pcssp_module < SCDDSclass_algo
 
         %% RTF/codegen functions
         function build(obj,build_target)
-            % method to generate C/C++ from a PCSSP module. The method
+            % generates C/C++ from a PCSSP module. The method
             % first grabs the required SimulinkConfiguration settings, sets
             % them as configurationSettings in the base WS, and then calls
             % rtwbuild. Optionally, a build target can be provided ('rtf' 
             % or 'auto'). Select auto to automatically detect an installed
-            % toolchain on your machine and use use the hardcore RTF
+            % toolchain on your machine or use 'rtf' to pick the hardcore RTF
             % settings.
-            %% Syntax
-            % obj.build or obj.build('rtf')
-            %% inputs
-            % build_target optional target for C code generation. Current
-            % options are 'rtf' or 'auto' to automatically select an
-            % installed toolchain.
-            % function 
+            %
+            % Syntax: obj.build or obj.build('rtf')
+            %
+            % Arguments:
+            %   build_target: optional target for C code generation.
+            % Current options are 'rtf' or 'auto' to automatically select
+            % an installed toolchain.
+
             arguments
                 obj
                 build_target {mustBeMember(build_target,{'rtf','auto'})} = 'rtf';
@@ -229,7 +239,7 @@ classdef pcssp_module < SCDDSclass_algo
 
 
         function write_XML(obj,function_block_alias)
-            % Method to automatically generate an XML description of this
+            % Automatically generates an XML description of this
             % PCSSP module to act as RTF FunctionBlock description. This
             % XML works together with the generated code to form an RTF FB.
             % You can use the optional Bus and Simulink.Parameter
@@ -238,11 +248,11 @@ classdef pcssp_module < SCDDSclass_algo
             %
             % this function uses the matlab writestruct fcn to mimick this
             % XML structure for RTF applications.
-            %% syntax
-            % obj.write_RTF_xml('FUN-CTRL-MAG-01');
-            %% inputs
-            % functionblock_alias : Alias linking to the PCSDB, for example
-            % FUN-CTRL-MAG-01
+            %
+            % syntax: obj.write_RTF_xml('FUN-CTRL-MAG-01');
+            %
+            % Arguments:
+            %   functionblock_alias: Alias linking to the PCSDB
 
             arguments
                 obj
@@ -254,13 +264,14 @@ classdef pcssp_module < SCDDSclass_algo
 
 
         function obj = set_module_description(obj,description_string)
-            % this method adds a descriptive text to the module obj property
+            % Adds a descriptive text to the module obj property
             % obj.description, and sets it in the description of the
             % attached slx model. 
-            %% syntax
-            % obj = set_module_description('some piece of text');
-            %% inputs
-            % description_string : char array containing the description
+            %
+            % syntax: obj = set_module_description('some piece of text');
+            %
+            % Arguments:
+            %   description_string: char array containing the description
 
 
             arguments
