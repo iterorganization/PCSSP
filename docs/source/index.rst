@@ -22,6 +22,11 @@ Each layer is associated with a physical Simulink model created by a module deve
 	obj_PS.setup; % call the simulinkConfiguration settings for simulation
 
 
+A large drawback of data-dictionaries is that they introduce yet another binary file in the git repository that is painful to merge outside of the Simulink environment. A key feature of PCSSP is that the data dictionary is an empty container, and is only filled upon model initialization with parameters from the setup script (via the ``init``-method), or with external parameters (the update methods). These data dictionaries are referenced in the hierarchy of the Simulink models to create a layered complexity.
+
+The class-based approach groups all interactions with the models into methods whose execution is controlled by the developer. Every model inherits such a class for its manipulation, and top models group classes for easy manipulation on the highest levels in the model hierarchy. In addition, each model in the hierarchy attached to its own data-dictionary. By linking data-dictionaries in the top-model, it will inherit the data-dictionaries of referenced models.
+
+
 Getting started
 -----------------
 
