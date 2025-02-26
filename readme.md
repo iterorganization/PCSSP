@@ -1,5 +1,8 @@
 # Introduction to the Plasma Control System Simulation Platform (PCSSP)
-PCSSP provides standardized methods for the design and assessment of modules and models for plasma control. It essentially provides you with a systematic framework to develop, test, integrate, and deploy controller and tokamak models. PCSSP relies on a git submodule called SCDDS to implement the Simulink functionality regarding data dictionaries and referenced models. Both PCSSP and SCDDS are developed under a GPL license. You are invited to contribute to both projects that ultimately will be merged into one toolbox for control development and deployment on tokamaks. 
+PCSSP provides standardized methods for the design and assessment of modules and models for plasma control. It essentially provides you with a systematic framework to develop, test, integrate, and deploy controller and tokamak models. PCSSP relies on a git submodule called SCDDS to implement the Simulink functionality regarding data dictionaries and referenced models. Both PCSSP and SCDDS are developed under a GPL license. You are invited to contribute to both projects that ultimately will be merged into one toolbox for control development and deployment on tokamaks.
+
+## Full documentation
+The full documentation of PCSSP is automatically deployed from its source code in this repository to readthedocs. You can find it [here](https://pcssp.readthedocs.io/en/latest/index.html) 
 
 ## Directory structure:
 - configurations: Simulink configuration definitions for codegen and simulation

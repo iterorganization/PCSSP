@@ -21,8 +21,6 @@ sys.path.insert(0, os.path.abspath('../..'));
 this_dir = os.path.dirname(os.path.abspath(__file__))
 matlab_src_dir = os.path.abspath(os.path.join(this_dir,'..','..'))
 primary_domain = 'mat'
-
-templates_path = ['_templates']
 exclude_patterns = []
 
 
@@ -38,4 +36,3 @@ html_theme_options = {
     'github_banner': 'true',
     'description': 'The Simulink-based Plasma Control System Simulation Platform',
 }
-html_static_path = ['_static']
