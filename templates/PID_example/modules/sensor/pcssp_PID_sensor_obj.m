@@ -1,6 +1,6 @@
 function obj = pcssp_PID_sensor_obj()
 
-%% Demonstration algorithm 2
+%% PCSSP example 'sensor' module
 
 obj = pcssp_module('pcssp_PID_sensor');
 

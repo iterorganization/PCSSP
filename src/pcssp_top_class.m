@@ -2,6 +2,13 @@ classdef pcssp_top_class
     % pcssp_top_class class implements a top model class for simulink
     % models with many layers in the hierarchy. Heavily inspired by the scdds
     % 'Expcode' class.
+
+    % PCSSP - Plasma Control System Simulation Platform
+    % Copyright ITER Organization 2025
+    % Route de Vinon-sur-Verdon, 13115, St. Paul-lez-Durance, France
+    % Distributed under the terms of the GNU Lesser General Public License,
+    % LGPL-3.0-only
+    % All rights reserved.
     
     properties (Access = public)
         % Main properties

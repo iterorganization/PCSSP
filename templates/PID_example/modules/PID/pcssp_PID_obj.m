@@ -1,10 +1,7 @@
 function obj = pcssp_PID_obj(n_input)
 
-%% Demonstration algorithm 2
-%
-%
-% [ SCDDS - Simulink Control Development & Deployment Suite ] Copyright SPC-EPFL Lausanne 2022.
-% Distributed under the terms of the GNU Lesser General Public License, LGPL-3.0-only.
+% example PCSSP module that implements a simple PID controller
+
 obj = pcssp_module('pcssp_PID');
 
 %% Timing of the algorithm

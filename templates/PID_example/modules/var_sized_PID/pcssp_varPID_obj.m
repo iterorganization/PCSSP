@@ -1,10 +1,7 @@
 function obj = pcssp_varPID_obj()
 
-%% Demonstration algorithm 2
+%% object definition for variable sized PID module
 %
-%
-% [ SCDDS - Simulink Control Development & Deployment Suite ] Copyright SPC-EPFL Lausanne 2022.
-% Distributed under the terms of the GNU Lesser General Public License, LGPL-3.0-only.
 obj = pcssp_module('pcssp_varPID');
 
 %% Timing of the algorithm

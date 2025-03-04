@@ -2,6 +2,13 @@ function results = run_tests()
 
 % main script to initialize PCSSP and run all tests in batch
 
+% PCSSP - Plasma Control System Simulation Platform
+% Copyright ITER Organization 2025
+% Route de Vinon-sur-Verdon, 13115, St. Paul-lez-Durance, France
+% Distributed under the terms of the GNU Lesser General Public License,
+% LGPL-3.0-only
+% All rights reserved.
+
 import matlab.unittest.TestRunner
 import matlab.unittest.TestSuite
 import matlab.unittest.plugins.XMLPlugin

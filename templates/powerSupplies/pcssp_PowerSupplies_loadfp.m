@@ -1,9 +1,7 @@
 function fp = pcssp_PowerSupplies_loadfp(obj)
 
 %% Load fixed parameters for PowerSupplies module in PCSSP
-%
-% [ SCDDS - Simulink Control Development & Deployment Suite ] Copyright SPC-EPFL Lausanne 2022.
-% Distributed under the terms of the GNU Lesser General Public License, LGPL-3.0-only.
+
 fp.timing = obj.gettiming;
 
 % CS/PF main converters

@@ -2,7 +2,14 @@ classdef pcssp_wrapper < SCDDSclass_wrapper
   % Inherited class for PCSSP wrapper definition and manipulation
   % To define a new instance: 
   % obj_wrapper = pcssp_wrapper('name',dt);
-  %
+
+
+  % PCSSP - Plasma Control System Simulation Platform
+  % Copyright ITER Organization 2025
+  % Route de Vinon-sur-Verdon, 13115, St. Paul-lez-Durance, France
+  % Distributed under the terms of the GNU Lesser General Public License,
+  % LGPL-3.0-only
+  % All rights reserved.
 
 
   properties

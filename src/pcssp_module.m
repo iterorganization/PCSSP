@@ -2,6 +2,14 @@ classdef pcssp_module < SCDDSclass_algo
     % derived class for PCSSP modules using the SCDDS core framework for model
     % referencing with data dictionaries.
 
+    % PCSSP - Plasma Control System Simulation Platform
+    % Copyright ITER Organization 2025
+    % Route de Vinon-sur-Verdon, 13115, St. Paul-lez-Durance, France
+    % Distributed under the terms of the GNU Lesser General Public License,
+    % LGPL-3.0-only
+    % All rights reserved.
+
+
 
     properties
         description

@@ -1,8 +1,5 @@
-% Bus object: SCDalgo_demo2_outBus 
-%
-%
-% [ SCDDS - Simulink Control Development & Deployment Suite ] Copyright SPC-EPFL Lausanne 2022.
-% Distributed under the terms of the GNU Lesser General Public License, LGPL-3.0-only.
+% PCSSP PID module output bus definition
+
 clear elems;
 elems(1) = Simulink.BusElement;
 elems(1).Name = 'controlCmd';
