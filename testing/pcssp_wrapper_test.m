@@ -1,7 +1,13 @@
 classdef pcssp_wrapper_test < SCDDSwrapper_test
 
+    % PCSSP - Plasma Control System Simulation Platform
+    % Copyright ITER Organization 2025
+    % Route de Vinon-sur-Verdon, 13115, St. Paul-lez-Durance, France
+    % Distributed under the terms of the GNU Lesser General Public License,
+    % LGPL-3.0-only
+    % All rights reserved.
 
-    properties 
+    properties
         isCodegen logical = 0; % optional property to earmark for codegen
     end
 

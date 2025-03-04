@@ -13,7 +13,7 @@ The full documentation of PCSSP is automatically deployed from its source code i
 - tools: useful functions for plotting etc.
 
 ## To clone the repository:
-`git clone git@github.com:iterorganization/pcssp.git`
+`git clone https://github.com/iterorganization/PCSSP.git`
 ### init and update scdds-core submodule
 `git submodule update --init`
 
@@ -34,12 +34,12 @@ This will tell git to use the simulink 3-way merge tool to resolve merge conflic
 Detailed documentation on how to develop your own PCSSP modules is not yet integrated in this repo, you can contact one of the lead developers below to obtain a PDF.
 
 ### License
-This code is distributed under the `LGPL-v3` license.
+This code is distributed under the `LGPL-v3` license. Copyright is retained by the ITER Organization.
 
 This license allows you to develop derivative works that use this library (for example by calling its functions, derive classes, call binaries...) without needing to share it back. For example, you can develop (components of) a tokamak control system using these tools without the need to make it publicly available.
 However, any modifications and updates to the library _itself_ must be shared under the same LGPL license. Also if you copy components of the library into other codes, that code should be shared back under the same LGPL license.
 
-The authors would greatly appreciate it if the modifications are shared back to the source repository at the ITER Organization of the EPFL, see the `Contributing` section below.
+The authors would greatly appreciate it if the modifications are shared back to the source repository at the ITER Organization or, for the SCDDS submodule the EPFL, see the `Contributing` section below.
 
 The above is a non binding summary of the legal text. The full and legally binding text is in the license file `LICENSE.md`.
 

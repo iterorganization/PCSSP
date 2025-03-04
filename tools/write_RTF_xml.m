@@ -14,6 +14,13 @@ function write_RTF_xml(obj,functionblock_alias)
 % functionblock_alias : Alias linking to the PCSDB, for example
 % FUN-CTRL-MAG-01
 
+% PCSSP - Plasma Control System Simulation Platform
+% Copyright ITER Organization 2025
+% Route de Vinon-sur-Verdon, 13115, St. Paul-lez-Durance, France
+% Distributed under the terms of the GNU Lesser General Public License,
+% LGPL-3.0-only
+% All rights reserved.
+
 arguments
     obj {mustBeA(obj,["pcssp_wrapper","pcssp_module"])}
     functionblock_alias char = '';

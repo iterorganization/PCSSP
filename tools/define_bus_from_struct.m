@@ -3,6 +3,13 @@ function [bus_name_list, Buses] = define_bus_from_struct(mdl,tp,bus_name,...
 % function to define a bus from a structure tp. The structure may be nested
 % in which case child buses are automatically created.
 
+% PCSSP - Plasma Control System Simulation Platform
+% Copyright ITER Organization 2025
+% Route de Vinon-sur-Verdon, 13115, St. Paul-lez-Durance, France
+% Distributed under the terms of the GNU Lesser General Public License,
+% LGPL-3.0-only
+% All rights reserved.
+
 % inputs:
 % - mdl                 model name
 % - tp                  structured parameter. Can be nested

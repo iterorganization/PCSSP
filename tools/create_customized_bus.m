@@ -1,5 +1,12 @@
 function MyBus = create_customized_bus(mdl,bus_name,state_name,dimension,datatype,busoptions)
 
+% PCSSP - Plasma Control System Simulation Platform
+% Copyright ITER Organization 2025
+% Route de Vinon-sur-Verdon, 13115, St. Paul-lez-Durance, France
+% Distributed under the terms of the GNU Lesser General Public License,
+% LGPL-3.0-only
+% All rights reserved.
+
 arguments
    mdl                      char
    bus_name                 char

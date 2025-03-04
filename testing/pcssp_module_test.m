@@ -1,6 +1,15 @@
 classdef (Abstract) pcssp_module_test < SCDDSalgo_test & matlab.unittest.TestCase
     % Abstract class to test pcssp modules
     % Derive from SCDDS core and common test
+    
+    % PCSSP - Plasma Control System Simulation Platform
+    % Copyright ITER Organization 2025
+    % Route de Vinon-sur-Verdon, 13115, St. Paul-lez-Durance, France
+    % Distributed under the terms of the GNU Lesser General Public License,
+    % LGPL-3.0-only
+    % All rights reserved.
+
+
     %
     % SCDDS core already does the following each module:
     % - clear all variables

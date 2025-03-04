@@ -6,7 +6,17 @@ function [out,tsout] = logsout2struct(logsout)
 % Convert logged data to structure
 
 %%
-assert(isa(logsout,'Simulink.SimulationData.Dataset'),'logsout is of wrong type');
+
+% PCSSP - Plasma Control System Simulation Platform
+% Copyright ITER Organization 2025
+% Route de Vinon-sur-Verdon, 13115, St. Paul-lez-Durance, France
+% Distributed under the terms of the GNU Lesser General Public License,
+% LGPL-3.0-only
+% All rights reserved.
+
+arguments
+    logsout Simulink.SimulationData.Dataset
+end
 
 % determine smallest common time base
 for iel = 1:logsout.numElements

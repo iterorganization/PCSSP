@@ -1,10 +1,7 @@
 function obj = pcssp_TF_obj()
 
-%% Demonstration algorithm 2
-%
-%
-% [ SCDDS - Simulink Control Development & Deployment Suite ] Copyright SPC-EPFL Lausanne 2022.
-% Distributed under the terms of the GNU Lesser General Public License, LGPL-3.0-only.
+%% PCSSP transfer function module object definition
+
 obj = pcssp_module('pcssp_TF');
 
 %% Timing of the algorithm

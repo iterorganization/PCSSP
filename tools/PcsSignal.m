@@ -3,6 +3,13 @@ function [busNames,Buses] = PcsSignal(n_input,name_of_signal,description)
 % required by the Pulse Supervisory Controller (PSC) module to describe
 % signals that contain a quality and status flag
 
+% PCSSP - Plasma Control System Simulation Platform
+% Copyright ITER Organization 2025
+% Route de Vinon-sur-Verdon, 13115, St. Paul-lez-Durance, France
+% Distributed under the terms of the GNU Lesser General Public License,
+% LGPL-3.0-only
+% All rights reserved.
+
 arguments
     n_input (1,1) double
     name_of_signal (1,:) {mustBeA(name_of_signal,["string","char"])} 

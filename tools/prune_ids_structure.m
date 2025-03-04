@@ -5,6 +5,15 @@ function var_out = prune_ids_structure(var_in)
 % Removes empty, and empty representing, values and structures from IDS 
 % structure.
 %
+
+% PCSSP - Plasma Control System Simulation Platform
+% Copyright ITER Organization 2025
+% Route de Vinon-sur-Verdon, 13115, St. Paul-lez-Durance, France
+% Distributed under the terms of the GNU Lesser General Public License,
+% LGPL-3.0-only
+% All rights reserved.
+
+
     empty_values = {-9.0000e+40, int32(-999999999), -999999999};
 
 %     disp('-----')

@@ -1,9 +1,6 @@
 function fp = pcssp_varPID_loadfp(obj)
 
-%% Load other fixed parameters
-%
-%
-% [ SCDDS - Simulink Control Development & Deployment Suite ] Copyright SPC-EPFL Lausanne 2022.
-% Distributed under the terms of the GNU Lesser General Public License, LGPL-3.0-only.
+%% Load fixed parameters for variable input size PID module
+
 fp.timing = obj.gettiming;
 end

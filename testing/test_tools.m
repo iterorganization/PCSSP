@@ -1,6 +1,11 @@
 classdef test_tools < matlab.unittest.TestCase
-    %TEST_BUS_CREATION Summary of this class goes here
-    %   Detailed explanation goes here
+    
+    % PCSSP - Plasma Control System Simulation Platform
+    % Copyright ITER Organization 2025
+    % Route de Vinon-sur-Verdon, 13115, St. Paul-lez-Durance, France
+    % Distributed under the terms of the GNU Lesser General Public License,
+    % LGPL-3.0-only
+    % All rights reserved.
     
     
     methods (TestClassSetup)

@@ -1,5 +1,13 @@
 classdef (Abstract) pcssp_topmodel_test < matlab.unittest.TestCase
     %PCSSP_TOPMODEL_TEST Class to test PCSSP top models
+
+    % PCSSP - Plasma Control System Simulation Platform
+    % Copyright ITER Organization 2025
+    % Route de Vinon-sur-Verdon, 13115, St. Paul-lez-Durance, France
+    % Distributed under the terms of the GNU Lesser General Public License,
+    % LGPL-3.0-only
+    % All rights reserved.
+
     %   This class can be used to author tests for integrated 'top models'
     %   in pcssp that combine many modules. It relies on the top_model
     %   class to initialize, setup, and manipulate the top model.
