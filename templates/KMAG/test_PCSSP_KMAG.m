@@ -63,7 +63,7 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             %% simulate
             out = sim(Simin);
             
-            out_struct = logsout2struct(out.logsout);
+            out_struct = logsout2struct(out);
             
             %% compare
             
@@ -161,7 +161,7 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             
             %% simulate
             out = sim(Simin);
-            out_struct = logsout2struct(out.logsout);
+            out_struct = logsout2struct(out);
 
             % only compare the first element of controller output u.
             % Simulink doesnt like it when you feed in more
