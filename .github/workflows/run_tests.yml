@@ -21,7 +21,7 @@ jobs:
                   Simulink_Test
                   Simulink_Coverage
                   Simulink_Check
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             release: R2024a
             products: >
                   Simulink
