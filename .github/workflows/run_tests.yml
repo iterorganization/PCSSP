@@ -14,14 +14,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: macos-latest
             release: R2024a
             products: >
                   Simulink
                   Simulink_Test
                   Simulink_Coverage
                   Simulink_Check
-          - os: macos-latest
+          - os: ubuntu-latest
             release: R2024a
             products: >
                   Simulink
