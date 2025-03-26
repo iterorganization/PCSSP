@@ -63,7 +63,7 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             %% simulate
             out = sim(Simin);
             
-            out_struct = logsout2struct(out.logsout);
+            out_struct = logsout2struct(out);
             
             %% compare
             
@@ -75,11 +75,11 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             
             for ii = 1:11
                 h1 = nexttile;
-                plot(out_struct.time,out_struct.u(ii,:)); hold on
+                plot(out_struct.time,out_struct.u(:,ii)); hold on
                 plot(ulog.Values.Time,ulog.Values.Data(:,ii));
                 
                 % validate signals 1 by 1
-                u_out = timeseries(out_struct.u(ii,:)',out_struct.time);
+                u_out = timeseries(out_struct.u(:,ii)',out_struct.time);
                 u_base = timeseries(ulog.Values.Data(:,ii),ulog.Values.Time);
                 
                 % compare signals within some tolerance
@@ -161,7 +161,7 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             
             %% simulate
             out = sim(Simin);
-            out_struct = logsout2struct(out.logsout);
+            out_struct = logsout2struct(out);
 
             % only compare the first element of controller output u.
             % Simulink doesnt like it when you feed in more

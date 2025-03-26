@@ -38,9 +38,8 @@ classdef pcssp_module < SCDDSclass_algo
             % Arguments:
             %   none
 
-            init@SCDDSclass_algo(obj);
-
-            SCDconf_setConf('pcssp_Simulation','configurations_container_pcssp.sldd');
+            init@SCDDSclass_algo(obj,'pcssp_Simulation','configurations_container_pcssp.sldd');
+            
 
         end
         

@@ -14,15 +14,15 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
-            release: latest
+          - os: macos-latest
+            release: R2024a
             products: >
                   Simulink
                   Simulink_Test
                   Simulink_Coverage
                   Simulink_Check
-          - os: macos-latest
-            release: latest
+          - os: ubuntu-22.04
+            release: R2024a
             products: >
                   Simulink
                   Simulink_Test
@@ -38,7 +38,7 @@ jobs:
       
       # Sets up MATLAB on a GitHub-hosted runner
       - name: Setup MATLAB
-        uses: matlab-actions/setup-matlab@v2.2.0
+        uses: matlab-actions/setup-matlab@v2
         with:
           # MATLAB release to set up (R2021a or later)
           release: ${{matrix.release}}

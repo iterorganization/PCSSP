@@ -78,7 +78,7 @@ pcssp_PID3_tp = struct('enable',true,'P', 0,'I',0,'D',0);
 %% Simulate top model
 out = topm.sim;
 
-simout = logsout2struct(out.logsout);
+simout = logsout2struct(out);
 
 %% plot outputs
 h = tiledlayout(3,1,'TileSpacing','compact','Padding','compact');
