@@ -20,5 +20,5 @@ out = topm.sim;
 
 logsout = logsout2struct(out);
 
-plot(logsout.time,logsout.VCSPF);
+plot(logsout.VCSPF.Time,logsout.VCSPF.Values);
 
