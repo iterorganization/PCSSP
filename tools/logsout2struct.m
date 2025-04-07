@@ -21,8 +21,6 @@ arguments
     out Simulink.SimulationOutput
 end
 
-structout.time = out.tout;
-
 %% loop over yout
 try out.yout.numElements
     for ii = 1:out.yout.numElements
@@ -35,12 +33,12 @@ try out.yout.numElements
         field_nms = fieldnames(structout_yout); %grab names of signals
         
         % write each signal as a new leaf in the struct
-        for kk = 1:length(field_nms)
-            if ~isa(structout_yout.(field_nms{kk}),'struct')
-                structout.(field_nms{kk}) = structout_yout.(field_nms{kk});
-
-            else
+        for kk = 1:length(field_nms)               
+            try
                 structout.(field_nms{kk}) = structout_yout.(field_nms{kk}).(field_nms{kk});
+
+            catch
+                structout.(field_nms{kk}) = structout_yout.(field_nms{kk});
 
             end
         end
@@ -64,19 +62,19 @@ try out.logsout.numElements
 
         for kk = 1:length(field_nms)
 
-            if ~isa(structout_logsout.(field_nms{kk}),'struct')
-                structout.(field_nms{kk}) = structout_logsout.(field_nms{kk});
-
-            else
+            try
                 structout.(field_nms{kk}) = structout_logsout.(field_nms{kk}).(field_nms{kk});
+
+            catch ME
+                structout.(field_nms{kk}) = structout_logsout.(field_nms{kk});
 
             end
 
         end
     end
 
-catch 
-    warning('no logsout found in SimulationOutput, continuing');
+catch ME
+    warning('Error detected in logsout %s. Skipping signal, continuing writing logsout. The original error was %s',myElem.Name,ME.message);
 
 end
 
@@ -93,7 +91,8 @@ if any(name=='<')
     name = strrep(strrep(ts.Name, '<' , ''), '>' , '');
 
 end
-structout.(name) = ts.Data;
+structout.(name).Time = ts.Time;
+structout.(name).Values = ts.Data;
 
 end
 
