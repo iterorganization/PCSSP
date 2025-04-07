@@ -84,16 +84,16 @@ simout = logsout2struct(out);
 h = tiledlayout(3,1,'TileSpacing','compact','Padding','compact');
 
 h1 = nexttile;
-plot(h1,simout.time,simout.yMeas,simout.time,simout.r);
+plot(h1,simout.yMeas.Time,simout.yMeas.Values,simout.r.Time,simout.r.Values);
 legend(h1,'system output','reference')
 
 h2 = nexttile;
 
-plot(h2,simout.time,simout.e);
+plot(h2,simout.e.Time,simout.e.Values);
 legend(h2,'erreur')
 
 h3 = nexttile;
-plot(out.logsout.getElement('controlCmd').Values.controlCmd,'Parent',h3,'LineWidth',2);
+plot(simout.controlCmd.Time,simout.controlCmd.Values);
 legend(h3,'controller command');
 
 h.XLabel.String = 't (s)';
