@@ -61,6 +61,7 @@ jobs:
           
       - name: Coverage Report
         uses: codecov/codecov-action@v4
+        if: success() || failure()
         with:
           file: coverageReportPCSSP.xml
 
