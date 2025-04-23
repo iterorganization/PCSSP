@@ -58,6 +58,11 @@ jobs:
           name: junit Tests            # Name of the check run which will be created
           path: ./testResults.xml     # Path to test results
           reporter: java-junit        # Format of test results
+          
+      - name: Coverage Report
+        uses: codecov/codecov-action@v4
+        with:
+          file: coverageReportPCSSP.xml
 
           
             

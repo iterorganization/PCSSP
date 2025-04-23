@@ -75,11 +75,11 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             
             for ii = 1:11
                 h1 = nexttile;
-                plot(out_struct.time,out_struct.u(:,ii)); hold on
+                plot(out_struct.u.Time,out_struct.u.Values(:,ii)); hold on
                 plot(ulog.Values.Time,ulog.Values.Data(:,ii));
                 
                 % validate signals 1 by 1
-                u_out = timeseries(out_struct.u(:,ii)',out_struct.time);
+                u_out = timeseries(out_struct.u.Values(:,ii)',out_struct.u.Time);
                 u_base = timeseries(ulog.Values.Data(:,ii),ulog.Values.Time);
                 
                 % compare signals within some tolerance
