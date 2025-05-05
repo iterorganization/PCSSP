@@ -12,6 +12,7 @@ jobs:
   runTests:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: macos-latest
@@ -56,7 +57,7 @@ jobs:
           command: run_tests
 
       - name: Test Report
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v2
         if: success() || failure()    # run this step even if previous step failed
         with:
           name: junit Tests            # Name of the check run which will be created
@@ -66,6 +67,7 @@ jobs:
 
       - name: Archive code coverage results
         uses: actions/upload-artifact@v4
+        if: success() || failure()
         with:
           name: code-coverage-report
           path: ./coverageReportPCSSP.html
