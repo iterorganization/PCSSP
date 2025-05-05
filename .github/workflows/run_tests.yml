@@ -21,6 +21,7 @@ jobs:
                   Simulink_Test
                   Simulink_Coverage
                   Simulink_Check
+                  Matlab_Coder
                   Simulink_Coder
                   Embedded_Coder
           - os: ubuntu-22.04
@@ -30,6 +31,7 @@ jobs:
                   Simulink_Test
                   Simulink_Coverage
                   Simulink_Check
+                  Matlab_Coder
                   Simulink_Coder
                   Embedded_Coder
 
