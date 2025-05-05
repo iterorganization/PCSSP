@@ -70,7 +70,7 @@ jobs:
         if: success() || failure()
         with:
           name: code-coverage-report
-          path: ./coverageReportPCSSP.html
+          path: ./coverageReportPCSSP.xml
 
           
             
