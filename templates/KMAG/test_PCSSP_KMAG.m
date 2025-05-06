@@ -105,34 +105,28 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             module.setup;
             module.load;
             
-            %% prepare wrapper
-            
-            wrapper = pcssp_wrapper('pcssp_KMAG_wrapper',module.gettiming.dt);
-            wrapper = wrapper.addalgo(module);
-            wrapper.init;
-            wrapper.setup;
             
             % shift logged signals in time to meet codegen t=0 starting
             % condition
 
             ExtFFts = KMAG_test_signals.getElement('ExtFF');
-            ExtFFts = setuniformtime(ExtFFts,'StartTime',0);
+            ExtFFts = setuniformtime(ExtFFts,'StartTime',0,'interval',0.03);
 
             yts = KMAG_test_signals.getElement('y');
-            yts = setuniformtime(yts,'StartTime',0);
+            yts = setuniformtime(yts,'StartTime',0,'interval',0.03);
 
             uts = KMAG_test_signals.getElement('u');
-            uts = setuniformtime(uts,'StartTime',0);
+            uts = setuniformtime(uts,'StartTime',0,'interval',0.03);
 
             Refts = KMAG_test_signals.getElement('Ref');
-            Refts = setuniformtime(Refts,'StartTime',0);
+            Refts = setuniformtime(Refts,'StartTime',0,'interval',0.03);
 
             
-            wrapper.build('auto');
+            % module.build('auto');
             
-            load_system(wrapper.name)
+            load_system(module.getname)
             % get an empty input Dataset from the input ports of the model
-            ds = createInputDataset(wrapper.name);
+            ds = createInputDataset(module.getname);
             
             % directly write timeseries objects to structures matching the input buses
             % of the model
@@ -144,13 +138,15 @@ classdef test_PCSSP_KMAG < pcssp_module_test
             en = timeseries(ones(length(KMAG_test_signals.getElement('ExtFF').Time),1),Refts.Time);
             ds = setElement(ds,4,en);
             
-            Simin = Simulink.SimulationInput('pcssp_KMAG_wrapper');
+            Simin = Simulink.SimulationInput(module.getname);
             Simin = Simin.setExternalInput(ds);
             
             % overwrite start/stop time to match reference simulation UMC_demo
-            Simin = Simin.setModelParameter('StartTime','0','StopTime','10');
+            Simin = Simin.setModelParameter('StartTime','0','StopTime','6');
             
             % run as SIL
+            sourcedd = 'configurations_container_pcssp.sldd'; 
+            SCDconf_setConf('configurationSettingsAutocpp',sourcedd);
             Simin = Simin.setModelParameter('SimulationMode','Software-in-the-loop (SIL)');
             Simin = Simin.setModelParameter('RootIOFormat','Structure reference');
             Simin = Simin.setModelParameter('InstructionSetExtensions','None');
@@ -162,11 +158,10 @@ classdef test_PCSSP_KMAG < pcssp_module_test
 
             % only compare the first element of controller output u.
             % Simulink doesnt like it when you feed in more
-                u_out = timeseries(out_struct.u.Values(:,ii),out_struct.u.Time);
-                ulog = KMAG_test_signals.getElement('u');
-                u_out = u_out.resample(ulog.Time);
+                u_out = timeseries(out_struct.u.Values(:,1),out_struct.u.Time);
+                u_out = u_out.resample(uts.Time);
 
-                u_base = timeseries(ulog.Data(:,1),ulog.Time);
+                u_base = timeseries(uts.Data(:,1),uts.Time);
 
                 % remove first 1s transient before comparing
                 u_out = u_out.delsample('Index',[1:20]);
