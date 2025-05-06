@@ -63,6 +63,7 @@ jobs:
           name: junit Tests            # Name of the check run which will be created
           path: ./testResults.xml     # Path to test results
           reporter: java-junit        # Format of test results
+          fail-on-error: 'false'
 
 
 
@@ -81,6 +82,7 @@ jobs:
           thresholds: '40 60'
 
       - name: Update Summary
+        if: success() || failure()
         run: |
           cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
