@@ -1,8 +1,11 @@
 name: Run PCSSP Tests
 
 # Controls when the action will run. 
-on: [push]
+on: 
   # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 env:
   MLM_LICENSE_TOKEN: ${{ secrets.ITER_ORGANIZATION_RAVENSBERGEN }}
   # Allows you to run this workflow manually from the Actions tab
@@ -63,12 +66,12 @@ jobs:
           name: junit Tests            # Name of the check run which will be created
           path: ./testResults.xml     # Path to test results
           reporter: java-junit        # Format of test results
-          fail-on-error: 'false'
+          fail-on-error: 'true'
 
 
 
       - name: Code Coverage Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
+        uses: irongut/CodeCoverageSummary@v1
         if: success() || failure()
         with:
           filename: ./coverageReportPCSSP.xml
