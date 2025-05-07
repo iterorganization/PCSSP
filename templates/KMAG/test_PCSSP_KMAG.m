@@ -10,7 +10,7 @@ classdef test_PCSSP_KMAG < pcssp_module_test
     %
     properties          % additional properties of the test class
         algoobj = @pcssp_KMAG_module_obj;
-        isCodegen = false; % strange bug in KMAG .slx. Should be true in the future
+        isCodegen = true;
     end
    
     %%%%%%%%%%%%%%%%%%%%%%%%%% Test definitions %%%%%%%%%%%%%%%%%%%%%%%%%%
