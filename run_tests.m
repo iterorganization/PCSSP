@@ -41,8 +41,11 @@ p = XMLPlugin.producingJUnitFormat(xmlFile);
 htmlFile = "testreport";
 p1 = TestReportPlugin.producingHTML(htmlFile);
 
+reportFile = 'coverageReportPCSSP.xml';
+reportFormat = matlab.unittest.plugins.codecoverage.CoberturaFormat(reportFile);
+
 % add code coverage for pcssp
-reportFormat = matlab.unittest.plugins.codecoverage.CoverageReport("coverageReportPCSSP");
+% reportFormat = matlab.unittest.plugins.codecoverage.CoverageReport("coverageReportPCSSP");
 
 % add m-files in repo, excluding scdds
 dirOut = dir('**/*.m');
