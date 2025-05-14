@@ -1,7 +1,6 @@
 C++ code generation from PCSSP
 ==============================
 
-.. automodule:: src
 
 This document describes the method and policies in generating real-time C++ code for deployment of PCSSP modules on the ITER PCS. This method is not final and is the result of heavy prototyping activities with help from both General Atomics and CREATE.
  

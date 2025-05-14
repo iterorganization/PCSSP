@@ -76,8 +76,11 @@ Table of contents
 	:maxdepth: 1
 
 	modules-api
+	scdds-algo-api
 	wrapper-api
+	scdds-wrapper-api
 	top-model-api
+	
 	
 
 		

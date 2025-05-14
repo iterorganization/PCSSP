@@ -22,6 +22,8 @@ this_dir = os.path.dirname(os.path.abspath(__file__))
 matlab_src_dir = os.path.abspath(os.path.join(this_dir,'..','..'))
 primary_domain = 'mat'
 exclude_patterns = []
+matlab_short_links = True
+autodoc_default_options = {'members': True, 'show-inheritance': True}
 
 
 

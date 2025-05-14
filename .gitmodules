@@ -1,4 +1,4 @@
-[submodule "scdds-core"]
-	path = scdds-core
+[submodule "scdds"]
+	path = scdds
 	url = https://gitlab.epfl.ch/spc/scdds/scdds-core.git
 
