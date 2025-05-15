@@ -30,6 +30,7 @@ end
 
 
 suite = TestSuite.fromFolder(pwd,'IncludingSubfolders',true,'Superclass',{'pcssp_module_test','pcssp_wrapper_test','pcssp_topmodel_test'});
+suite = [suite, TestSuite.fromFile('testing/test_tools.m')];
 
 runner = TestRunner.withNoPlugins;
 
@@ -52,7 +53,7 @@ dirOut = dir('**/*.m');
 
 codeFilepaths = string({dirOut.folder}) + filesep + string({dirOut.name});
 
-filePathsToExclude = fullfile(fileparts(mfilename('fullpath')),'scdds-core');
+filePathsToExclude = fullfile(fileparts(mfilename('fullpath')),'scdds');
 codeFilepaths(contains(codeFilepaths, filePathsToExclude)) = [];
 p2 = matlab.unittest.plugins.CodeCoveragePlugin.forFile(codeFilepaths,'Producing',reportFormat);
 
