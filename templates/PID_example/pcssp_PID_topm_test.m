@@ -8,12 +8,13 @@ classdef pcssp_PID_topm_test < pcssp_topmodel_test
 
 
         function test_param_injection(testCase)
-            obj = testCase.topm;
+            disp('in test param injection')
+            obj = testCase.topm
             
             obj.init;
             obj.setup;
 
-            obj_PID = obj.moduleobjlist{1};
+            obj_PID = obj.moduleobjlist{1}
             obj_PID.clear_model_ws;
 
             % create a mask variable for PID2 and PID3 with gains
