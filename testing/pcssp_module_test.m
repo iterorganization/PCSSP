@@ -100,7 +100,7 @@ classdef (Abstract) pcssp_module_test < SCDDSalgo_test & matlab.unittest.TestCas
                     module.init;
                     module.setup;
 
-                    module.build;
+                    module.build('auto');
 
 %                     % set SIL mode for referenced model
 %                     module.load;
