@@ -1,8 +1,6 @@
 PCSSP top models
 =================
 
-.. automodule:: src
-
 Most often, your pcssp modules and wrappers will be part of a larger integrated simulation. To this end, pcssp supports the 'referencing' of the module and wrapper ``.slx`` from a so-called *top-model*.  
 The scripts and models in ``<pcssp_root>/templates/PID_example`` show how a top model with attached class is able to inherit pcssp modules and wrappers in a complex model hierarchy. You can exploit and reproduce these capabilities via the steps below.
 
@@ -35,7 +33,7 @@ Class inheritance and construction
 
 * Update the parent model (ctrl+D or ``topm.compile``) to see if everything works.
 
-* Simulate the model, manually in the Simulink dialog or via :meth:`pcssp_top_class.sim`
+* Simulate the model, manually in the Simulink dialog or via :meth:`src.pcssp_top_class.sim`
 
 Top model code example
 -----------------------

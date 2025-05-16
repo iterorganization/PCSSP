@@ -20,7 +20,7 @@ addpath(genpath(fullfile(thispath,'tools')));
 
 addpath(thispath);
 
-corepath = fullfile(thispath,'scdds-core'  );
+corepath = fullfile(thispath,'scdds');
 run(fullfile(corepath,'scdds_core_paths'));
 
 %% Set paths for generated code and cache files

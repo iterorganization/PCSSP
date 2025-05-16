@@ -19,7 +19,7 @@ The full documentation of PCSSP is automatically deployed from its source code i
 
 ## To run:
 ### (Only required for code generation): define an environment variable SCDDS_COREPATH to point to scdds-core in your ~/.bashrc. For example, on a typical linux system the path could be:
-`export SCDDS_COREPATH="~/Documents/MATLAB/pcssp-nightly/scdds-core"`
+`export SCDDS_COREPATH="~/Documents/MATLAB/pcssp-nightly/scdds"`
 
 ### Open Matlab on your system. On the ITER SDCC cluster you can for example type the following in a new terminal window:
 `module load intel MATLAB`

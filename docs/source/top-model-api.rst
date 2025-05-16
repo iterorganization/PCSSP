@@ -1,7 +1,5 @@
 PCSSP Top model API documentation
 =================================
 
-.. automodule:: src
-
-.. autoclass:: pcssp_top_class
+.. autoclass:: src.pcssp_top_class
 	:members:

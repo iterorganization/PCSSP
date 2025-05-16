@@ -119,17 +119,35 @@ modelInfo = Simulink.MDLInfo(blockName);
 % input ports
 for jj = 1:length(modelInfo.Interface.Inports)
     signal_name = modelInfo.Interface.Inports(jj).Name;
+    dim = modelInfo.Interface.Inports(jj).DimensionsExpr;
+    DataType = modelInfo.Interface.Inports(jj).DataTypeExpr;
+    if isempty(DataType)
+        DataType = 'double';
+    end
+
     xml_out.InputPort(jj).NameAttribute = signal_name;
 
-    xml_out.InputPort(jj).SignalAttribute = [signal_name, '_bf'];
+    xml_out.InputPort(jj).SignalAttribute = [signal_name];
+    xml_out.InputPort(jj).DimensionAttribute = dim;
+    xml_out.InputPort(jj).DataTypeAttribute = DataType;
 
 end
 % output ports
 
 for kk = 1:length(modelInfo.Interface.Outports)
     output_port_name = modelInfo.Interface.Outports(kk).Name;
+    dim = modelInfo.Interface.Outports(kk).DimensionsExpr;
+    DataType = modelInfo.Interface.Outports(kk).DataTypeExpr;
+    if isempty(DataType)
+        DataType = 'double';
+    end
+
     xml_out.OutputPort(kk).NameAttribute = output_port_name;
     xml_out.OutputPort(kk).SignalAttribute = output_port_name;
+    xml_out.OutputPort(kk).DimensionAttribute = dim;
+    xml_out.OutputPort(kk).DataTypeAttribute = DataType;
+
+    
 
 end
 
