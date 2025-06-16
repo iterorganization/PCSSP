@@ -84,6 +84,16 @@ classdef (Abstract) pcssp_module_test < SCDDSalgo_test & matlab.unittest.TestCas
 
         end
 
+        function run_upgrade_advisor(testCase)
+            % To do: This test needs to be dependent on the Matlab version
+            % using TestTags
+
+            checkIDs = readcell(testCase.checkIDlist);
+            result = run_model_advisor(testCase,checkIDs,'pcssp_Simulation','configurations_container_pcssp.sldd');
+            testCase.verifyEqual(result.numFail,0);
+
+        end
+
 
         function harness_SIL_run(testCase)
             module = testCase.algoobj();

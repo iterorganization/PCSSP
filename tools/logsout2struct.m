@@ -26,9 +26,18 @@ try out.yout.numElements
     for ii = 1:out.yout.numElements
 
         myElem = out.yout.getElement(ii); % grab Signal data
+
+        % determine signal name
+        prefix_name = myElem.Name;
+        if any(prefix_name=='<') % it's a bus, name not unique. Add the blockPath
+            % prefix_name = strrep(strrep(myElem.Name, '<' , ''), '>' , '');
+            block_name = getBlock(myElem.BlockPath,1);
+            block_name = strsplit(block_name,'/'); 
+            prefix_name = [block_name{end}, '_'];
+        end
         
         % convert timeseries object to structure
-        structout_yout = Simulink.SimulationData.forEachTimeseries(@(ts)write_structout(ts),myElem.Values);
+        structout_yout = Simulink.SimulationData.forEachTimeseries(@(ts)write_structout(ts,prefix_name),myElem.Values);
 
         field_nms = fieldnames(structout_yout); %grab names of signals
         
@@ -56,7 +65,18 @@ try out.logsout.numElements
     for jj = 1:out.logsout.numElements
 
         myElem = out.logsout.getElement(jj);
-        structout_logsout = Simulink.SimulationData.forEachTimeseries(@(ts)write_structout(ts),myElem.Values);
+        
+        % determine signal name
+        prefix_name = myElem.Name;
+        if any(prefix_name=='<') % it's a bus, name not unique. Add the blockPath
+            % prefix_name = strrep(strrep(myElem.Name, '<' , ''), '>' , '');
+            block_name = getBlock(myElem.BlockPath,1);
+            block_name = strsplit(block_name,'/'); 
+            prefix_name = [block_name{end}, '_'];
+        end
+
+
+        structout_logsout = Simulink.SimulationData.forEachTimeseries(@(ts)write_structout(ts,prefix_name),myElem.Values);
 
         field_nms = fieldnames(structout_logsout);
 
@@ -82,17 +102,19 @@ end
 
 %% Helper function
 
-function structout = write_structout(ts)
+function structout = write_structout(ts,prefix_name)
 
+if any(ts.Name=='<')
+    ts_name = strrep(strrep(ts.Name, '<' , ''), '>' , '');
 
-% determine signal name
-name = ts.Name;
-if any(name=='<')
-    name = strrep(strrep(ts.Name, '<' , ''), '>' , '');
-
+else
+    ts_name = ts.Name;
+    
 end
-structout.(name).Time = ts.Time;
-structout.(name).Values = ts.Data;
+write_name = [prefix_name , ts_name];
+
+structout.(write_name).Time = ts.Time;
+structout.(write_name).Values = ts.Data;
 
 end
 
