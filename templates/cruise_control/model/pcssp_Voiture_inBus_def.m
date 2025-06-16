@@ -13,10 +13,10 @@ function [busNames, Buses] = pcssp_Voiture_inBus_def()
     elems(1).Complexity = 'real';
     elems(1).DocUnits = 'm/s^2';
 
-    pcssp_voiture_inBus = Simulink.Bus;
-    pcssp_voiture_inBus.Description = 'input acceleration for car model';
-    pcssp_voiture_inBus.DataScope = 'Auto';
-    pcssp_voiture_inBus.Elements = elems;
+    pcssp_car_inBus = Simulink.Bus;
+    pcssp_car_inBus.Description = 'input acceleration for car model';
+    pcssp_car_inBus.DataScope = 'Auto';
+    pcssp_car_inBus.Elements = elems;
     
     busNames{1} = 'pcssp_voiture_inBus';
     Buses{1} = pcssp_voiture_inBus;
