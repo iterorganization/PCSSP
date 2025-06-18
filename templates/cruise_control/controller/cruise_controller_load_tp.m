@@ -2,9 +2,6 @@ function [tp] = cruise_controller_load_tp()
 %% function to define tunable parameters for the cruise controller
 
 %% define PID parameter for PID pcssp module for velocity control
-% tp.Pvel = 6.25;
-% tp.Ivel = 8.15;
-% tp.Dvel =0.0816;
 
 tp.Pvel = 3;
 tp.Ivel  =0;
