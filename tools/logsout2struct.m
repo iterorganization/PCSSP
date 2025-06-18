@@ -28,12 +28,13 @@ try out.yout.numElements
         myElem = out.yout.getElement(ii); % grab Signal data
 
         % determine signal name
-        prefix_name = myElem.Name;
-        if any(prefix_name=='<') % it's a bus, name not unique. Add the blockPath
+        prefix_name = '';
+        if any(myElem.Name=='<') % it's a bus, name not unique. Add the blockPath
             % prefix_name = strrep(strrep(myElem.Name, '<' , ''), '>' , '');
             block_name = getBlock(myElem.BlockPath,1);
             block_name = strsplit(block_name,'/'); 
             prefix_name = [block_name{end}, '_'];
+            prefix_name = strrep(prefix_name,' ','');
         end
         
         % convert timeseries object to structure
@@ -67,12 +68,12 @@ try out.logsout.numElements
         myElem = out.logsout.getElement(jj);
         
         % determine signal name
-        prefix_name = myElem.Name;
-        if any(prefix_name=='<') % it's a bus, name not unique. Add the blockPath
-            % prefix_name = strrep(strrep(myElem.Name, '<' , ''), '>' , '');
+        prefix_name = '';
+        if any(myElem.Name=='<') % it's a bus, name not unique. Add the blockPath
             block_name = getBlock(myElem.BlockPath,1);
             block_name = strsplit(block_name,'/'); 
             prefix_name = [block_name{end}, '_'];
+            prefix_name = strrep(prefix_name,' ','_');
         end
 
 
