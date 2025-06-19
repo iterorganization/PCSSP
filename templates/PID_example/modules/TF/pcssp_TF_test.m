@@ -6,7 +6,7 @@ classdef pcssp_TF_test < pcssp_module_test
         isCodegen = false;
     end
     
-    methods
+    methods(Test)
         function bla(testCase)
             
         end
