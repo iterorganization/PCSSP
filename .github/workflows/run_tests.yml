@@ -92,7 +92,7 @@ jobs:
           # Optional. Default is 'artifact'
           name: testreport
           path: ./testreport/*
-          retention-days: 90
+          retention-days: 30
 
       - name: Update Summary
         if: success() || failure()
