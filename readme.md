@@ -1,12 +1,12 @@
 # Introduction to the Plasma Control System Simulation Platform (PCSSP)
-PCSSP provides standardized methods for the design and assessment of modules and models for plasma control. It essentially provides you with a systematic framework to develop, test, integrate, and deploy controller and tokamak models. PCSSP relies on a git submodule called SCDDS to implement the Simulink functionality regarding data dictionaries and referenced models. Both PCSSP and SCDDS are developed under a GPL license. You are invited to contribute to both projects that ultimately will be merged into one toolbox for control development and deployment on tokamaks.
+PCSSP provides standardized methods for the design and assessment of modules and models for plasma control. It essentially provides you with a systematic framework to develop, test, integrate, and deploy controller and tokamak models. PCSSP relies on a git submodule called SCDDS (Simulink-based Control Design & Deployment Suite) to implement the Simulink functionality regarding data dictionaries and referenced models. Both PCSSP and SCDDS are developed under a LGPL license. You are invited to contribute to both projects that ultimately will be merged into one toolbox for control development and deployment on tokamaks.
 
 ## Full documentation
 The full documentation of PCSSP is automatically deployed from its source code in this repository to readthedocs. You can find it [here](https://pcssp.readthedocs.io/en/latest/index.html) 
 
 ## Directory structure:
 - configurations: Simulink configuration definitions for codegen and simulation
-- scdds-core: git submodule (!) to handle data-dictionaries and module references in Simulink
+- scdds: git submodule (!) to handle data-dictionaries and module references in Simulink
 - src: inherited PCSSP classes
 - testing: inherited PCSSP classes for testing modules
 - templates: pcssp examples
@@ -19,7 +19,7 @@ The full documentation of PCSSP is automatically deployed from its source code i
 
 ## To run:
 ### (Only required for code generation): define an environment variable SCDDS_COREPATH to point to scdds-core in your ~/.bashrc. For example, on a typical linux system the path could be:
-`export SCDDS_COREPATH="~/Documents/MATLAB/pcssp-nightly/scdds"`
+`export SCDDS_COREPATH="~/Documents/MATLAB/pcssp/scdds"`
 
 ### Open Matlab on your system. On the ITER SDCC cluster you can for example type the following in a new terminal window:
 `module load intel MATLAB`
@@ -31,7 +31,7 @@ The full documentation of PCSSP is automatically deployed from its source code i
 This will tell git to use the simulink 3-way merge tool to resolve merge conflicts in binary slx files. 
 
 ### Navigate to the templates/ directory, and open one of the provided examples
-Detailed documentation on how to develop your own PCSSP modules is not yet integrated in this repo, you can contact one of the lead developers below to obtain a PDF.
+Detailed documentation on how to develop your own PCSSP modules is available on the [readthedocs](https://pcssp.readthedocs.io/en/latest/index.html) 
 
 ### License
 This code is distributed under the `LGPL-v3` license. Copyright is retained by the ITER Organization.
@@ -43,7 +43,7 @@ The authors would greatly appreciate it if the modifications are shared back to 
 
 The above is a non binding summary of the legal text. The full and legally binding text is in the license file `LICENSE.md`.
 
-Note that this software requires Matlab/Simulink, including toolboxes needed for C code generation (typically Embedded coder) and Simulink Test. Users must obtain their own licenses from Mathworks.
+Note that this software requires Matlab/Simulink, including toolboxes needed for C code generation (typically Embedded coder) and Simulink Check, Test, Coder. Users must obtain their own licenses from Mathworks.
 
 ### Contributing
 The code is hosted on [https://github.com/iterorganization/pcssp](https://github.com/iterorganization/pcssp) and can be freely cloned. The Git submodule is hosted on [https://gitlab.epfl.ch/spc/scdds/scdds-core](https://gitlab.epfl.ch/spc/scdds/scdds-core) 
