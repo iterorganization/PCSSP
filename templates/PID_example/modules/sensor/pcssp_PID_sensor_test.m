@@ -7,10 +7,7 @@ classdef pcssp_PID_sensor_test < pcssp_module_test
         isCodegen = 0; % flag to trigger module tests for codeGen
     end  
     
-    methods
-        function bla(testCase)
-            
-        end
+    methods(Test)
         
     end
         

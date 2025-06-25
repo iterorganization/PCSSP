@@ -29,7 +29,7 @@ classdef (Abstract) pcssp_module_test < SCDDSalgo_test & matlab.unittest.TestCas
     end
 
     properties
-        
+        doUpgradeAdvisor
     end
 
     methods(TestClassSetup)
@@ -40,7 +40,16 @@ classdef (Abstract) pcssp_module_test < SCDDSalgo_test & matlab.unittest.TestCas
         end
 
         function define_testIDs(testCase)
-            testCase.checkIDlist = 'UpgradeAdvisorR2024a.txt';
+            % grab current matlab release
+            matlab_version = matlabRelease().Release;
+            file_name = ['UpgradeAdvisor',char(matlab_version),'.txt'];
+            if exist(file_name,'file') == 2  % checkIDs are saved for this release
+            testCase.checkIDlist = file_name;
+            testCase.doUpgradeAdvisor = 1;
+            else
+                testCase.checkIDlist = '';
+                testCase.doUpgradeAdvisor = 0;
+            end
 
         end
     end
@@ -48,8 +57,7 @@ classdef (Abstract) pcssp_module_test < SCDDSalgo_test & matlab.unittest.TestCas
     methods(TestMethodSetup)
         % empty for now
         function clear_workspaces_and_sldds(~)
-            disp('clearing workspace, models, and sldds');
-            clear;
+            disp('clearing models and sldds');
             bdclose all;
             Simulink.data.dictionary.closeAll('-discard')
         end
@@ -85,12 +93,16 @@ classdef (Abstract) pcssp_module_test < SCDDSalgo_test & matlab.unittest.TestCas
         end
 
         function run_upgrade_advisor(testCase)
-            % To do: This test needs to be dependent on the Matlab version
-            % using TestTags
 
-            checkIDs = readcell(testCase.checkIDlist);
-            result = run_model_advisor(testCase,checkIDs,'pcssp_Simulation','configurations_container_pcssp.sldd');
-            testCase.verifyEqual(result.numFail,0);
+            if testCase.doUpgradeAdvisor
+                fprintf('Running Upgrade Advisor checks for model %s\n', func2str(testCase.algoobj))
+                checkIDs = readcell(testCase.checkIDlist);
+                result = run_model_advisor(testCase,checkIDs,'pcssp_Simulation','configurations_container_pcssp.sldd');
+                testCase.verifyEqual(result.numFail,0);
+
+            else
+                warning('No CheckIDs found, skipping Upgrade Advisor tests')
+            end
 
         end
 

@@ -1,4 +1,8 @@
-function results = run_tests()
+function results = run_tests(release)
+
+arguments
+    release char = 'R2024a'
+end
 
 % main script to initialize PCSSP and run all tests in batch
 
