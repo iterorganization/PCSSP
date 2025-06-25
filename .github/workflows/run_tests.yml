@@ -17,25 +17,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-22.04]
+        release: [R2024a, R2025a]
         include:
-          #- os: macos-latest
-          #  release: R2024a
-          #  products: >
-          #        Simulink
-          #        Simulink_Test
-          #        Simulink_Coverage
-          #        Simulink_Check
-          #        Simulink_Coder
-          #        Embedded_Coder
-          - os: ubuntu-22.04
-            release: [R2024a, R2025a]
-            products: >
+        - release: ${{matrix.release}}
+          products: >
                   Simulink
                   Simulink_Test
                   Simulink_Coverage
                   Simulink_Check
                   Simulink_Coder
                   Embedded_Coder
+                  
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
