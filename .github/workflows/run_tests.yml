@@ -81,7 +81,7 @@ jobs:
         with:
           # Name of the artifact to upload.
           # Optional. Default is 'artifact'
-          name: testreport
+          name: testreport${{matrix.release}}
           path: ./testreport/*
           retention-days: 30
 
