@@ -28,7 +28,7 @@ jobs:
           #        Simulink_Coder
           #        Embedded_Coder
           - os: ubuntu-22.04
-            release: R2024a
+            release: [R2024a, R2025a]
             products: >
                   Simulink
                   Simulink_Test
@@ -57,7 +57,7 @@ jobs:
       - name: Run script
         uses: matlab-actions/run-command@v2
         with:
-          command: run_tests(${{matrix.release}})
+          command: run_tests
 
       - name: Test Report
         uses: dorny/test-reporter@v2
