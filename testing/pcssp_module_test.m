@@ -71,7 +71,7 @@ classdef (Abstract) pcssp_module_test < SCDDSalgo_test & matlab.unittest.TestCas
             % module
 
             if testCase.isCodegen
-                checkIDs = readcell(testCase.checkIDlist);
+                checkIDs = readcell("checkinstanceIDs.txt");
                 result = run_model_advisor(testCase,checkIDs,'configurationSettingsAutocpp','configurations_container_pcssp.sldd');
                 % Print error flag to output
                 testCase.verifyEqual(result.numFail,0);
