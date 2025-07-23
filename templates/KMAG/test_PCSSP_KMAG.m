@@ -78,9 +78,9 @@ classdef test_PCSSP_KMAG < pcssp_module_test
 
                 u_base = timeseries(ulog.Data(:,ii),ulog.Time);
 
-                % remove first 1s transient before comparing
-                u_out = u_out.delsample('Index',[1:20]);
-                u_base = u_base.delsample('Index',[1:20]);
+                % % remove first 1s transient before comparing
+                % u_out = u_out.delsample('Index',[1:20]);
+                % u_base = u_base.delsample('Index',[1:20]);
 
                 plot(u_out); hold on; plot(u_base);
                        

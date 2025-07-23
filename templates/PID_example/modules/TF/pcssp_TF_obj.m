@@ -18,11 +18,12 @@ obj=obj.addtunparamstruct('pcssp_TF_tp', @()pcssp_TF_loadtp());
 obj = obj.addbus('pcssp_PID_outBus', 'pcssp_PID_outBus_def' );
 obj = obj.addbus('pcssp_TF_outBus', 'pcssp_TF_outBus_def' );
 
+%% link PID refdd for shared bus
+
+% obj = obj.addrefdd('pcssp_PID.sldd');
+
 
 %% Tasks
-
-%% Print (optional)
-obj.printinfo;
 
 end
 
