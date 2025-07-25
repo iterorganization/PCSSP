@@ -84,7 +84,7 @@ simout = logsout2struct(out);
 h = tiledlayout(3,1,'TileSpacing','compact','Padding','compact');
 
 h1 = nexttile;
-plot(h1,simout.yMeas.Time,simout.yMeas.Values,simout.r.Time,simout.r.Values);
+plot(h1,simout.Bus_Selector_yMeas.Time,simout.Bus_Selector_yMeas.Values,simout.r.Time,simout.r.Values);
 legend(h1,'system output','reference')
 
 h2 = nexttile;
