@@ -24,7 +24,6 @@ classdef pcssp_top_class
     end
 
     properties (Access = private)
-        algonameprefix char % algorithms name prefix
         ddpath              % main expcode data dictionary save path
         moduleddlist        % list of data dictionaries at algorithm level
         wrapperddlist       % list of data dictionaries at wrapper level
@@ -39,7 +38,6 @@ classdef pcssp_top_class
             obj.status        = 'debug';
             obj.mainslxname   = [name '.slx'];
             obj.ddname        = [obj.name,'.sldd'];
-            obj.algonameprefix = 'pcssp';
             obj.modulenamelist  = {};
             obj.moduleddlist    = {};
             obj.wrapperddlist = {};
@@ -134,7 +132,6 @@ classdef pcssp_top_class
             fprintf('Setting up top model ''%s'', configuring data dictionaries ...\n',obj.name);
             
             obj.createmaindd;
-            obj.setupwrapperdd;
             obj.setupmaindd;            
 
             % run setups for all wrappers
@@ -373,17 +370,7 @@ classdef pcssp_top_class
           dd.saveChanges;
 
         end
-        
-        function setupwrapperdd(obj)
-          % Set up the wrapper data dictionary links
-          
-            for ii=1:numel(obj.wrappers)
-              wrapperObj = obj.wrappers{ii}.wrapperobj;
-              % link to algorithms contained in the wrappers
-              wrapperObj.linkalgodd(obj.algonameprefix);
-            end
-          
-        end
+       
         
         %% module init helper functions
         
@@ -458,15 +445,12 @@ classdef pcssp_top_class
             
             % Importing algorithms data dictionary, only those with proper name
             moduledd=moduleObj.getdatadictionary;
-            if(strcmp(moduledd(1:numel(obj.algonameprefix)),obj.algonameprefix))
-                if(~ismember(moduledd,obj.moduleddlist))
-                    obj.moduleddlist{end+1}=moduledd;
-                else
-                    warning('pcssp_top_class_class:addalgorithm','algorithm data dictionary ''%s'' already present, ignoring', moduledd);
-                end
+
+            if(~ismember(moduledd,obj.moduleddlist))
+                obj.moduleddlist{end+1}=moduledd;
             else
-                error('attempting to add algorithm data dictionary not starting with ''%s''', obj.algonameprefix)
-            end      
+                warning('pcssp_top_class_class:addalgorithm','algorithm data dictionary ''%s'' already present, ignoring', moduledd);
+            end
             
         end
         
