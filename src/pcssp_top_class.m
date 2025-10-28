@@ -444,7 +444,7 @@ classdef pcssp_top_class
             
             
             % Importing algorithms data dictionary, only those with proper name
-            moduledd=moduleObj.getdatadictionary;
+            moduledd=moduleObj.ddHdl.name_sldd;
 
             if(~ismember(moduledd,obj.moduleddlist))
                 obj.moduleddlist{end+1}=moduledd;
@@ -460,7 +460,7 @@ classdef pcssp_top_class
         % Importing algorithms data dictionary, only those with proper name
 
         function obj = process_pcssp_wrapper(obj,wrapperObj)
-            wrapperdd=wrapperObj.ddname;
+            wrapperdd=wrapperObj.ddHdl.name_sldd;
             if(~ismember(wrapperdd,obj.wrapperddlist))
                 obj.wrapperddlist{end+1}=wrapperdd;
             else
