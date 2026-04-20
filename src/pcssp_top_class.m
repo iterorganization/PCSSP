@@ -325,6 +325,36 @@ classdef pcssp_top_class
        
         end
 
+
+        function ind = grab_module_ind(obj,module_name)
+            % returns the index of the module 'module_name' in the list of
+            % modules attached to this top model class. Useful function
+            % when accessing module class methods such as
+            % topm.moduleobjlist{topm.grab_module_ind('KCURR')}
+
+            % This method is case insensitive and works on patters too
+            %
+            % syntax: topm.grab_module_ind('module_name')
+            %
+            % Arguments:
+            %   module_name: (string) name of the module 
+
+            arguments
+                obj
+                module_name (1,:) char
+            end
+
+            ind = find(contains(obj.modulenamelist,module_name,'IgnoreCase',true));
+
+            if length(ind)>1
+                warning('found %d modules containing the name %s',length(ind),module_name)
+            elseif length(ind) < 1
+                error('topClass:ModuleNotFound','no modules named %s found in top model %s',module_name,obj.name);
+            end
+
+
+        end
+
     end
 
 

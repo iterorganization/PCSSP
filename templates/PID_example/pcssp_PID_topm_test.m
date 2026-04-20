@@ -46,6 +46,20 @@ classdef pcssp_PID_topm_test < pcssp_topmodel_test
 
             
         end
+
+        function testModuleNameGrabbing(testCase)
+            % Create an instance of the top model
+            obj = testCase.topm();
+            obj.init; obj.setup;
+            
+            ind = obj.grab_module_ind('pcssp_PID');
+
+            testCase.verifyEqual(ind,1);
+            testCase.verifyError(@() obj.grab_module_ind('pcsp'),"topClass:ModuleNotFound")
+
+        end
+
+        
     end
     
 
