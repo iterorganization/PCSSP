@@ -3,19 +3,11 @@ classdef pcssp_PowerSupplies_top_test < pcssp_topmodel_test
     % powersupplies top model
     
     properties
-        topm = @()pcssp_PowerSupplies_obj()
+        topm = @pcssp_PowerSupplies_top
     end
     
     methods(Test)
-        function obj = pcssp_PowerSupplies_top_test
-            %PCSSP_POWERSUPPLIES_TOP_TEST Construct an instance of this class
-            topm = pcssp_top_class('PS_top');
-
-            obj_PS = pcssp_PowerSupplies_obj();
-            topm = topm.addmodule(obj_PS);
-            obj.topm = topm;
-        end
-
+    
         function testModuleUpdateParam(testCase)
             obj = testCase.topm();
             obj.init; obj.setup;
@@ -36,6 +28,7 @@ classdef pcssp_PowerSupplies_top_test < pcssp_topmodel_test
             
             Simin = Simulink.SimulationInput(obj.name);
             out = sim(Simin);
+            testCase.verifyEmpty(out.ErrorMessage);
 
 
         end
