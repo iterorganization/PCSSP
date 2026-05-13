@@ -107,38 +107,14 @@ classdef (Abstract) pcssp_module_test < SCDDSalgo_test & matlab.unittest.TestCas
         end
 
 
-        function harness_SIL_run(testCase)
+        function build_module(testCase)
             module = testCase.algoobj();
 
-            if testCase.isCodegen
-                harnessname = sprintf('%s_harness_run',module.modelname);
-
-                if ~exist(harnessname,'file')
-                    warning('no harness %s found, skipping test',harnessname);
-                    return
-
-                else
+            if testCase.isCodegen   
 
                     module.init;
                     module.setup;
-
                     module.build('auto');
-
-%                     % set SIL mode for referenced model
-%                     module.load;
-%                     modelInfo = Simulink.MDLInfo([module.modelname, '_harness']);
-% 
-%                     modelrefname = split(modelInfo.Interface.ModelReferences{1},'|');
-% 
-% 
-%                     set_param(modelrefname{1},'SimulationMode','Software-in-the-loop (SIL)');
-% 
-%                     
-% 
-%                     sim();
-
-
-                end
 
             end
 
