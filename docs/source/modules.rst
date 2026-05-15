@@ -51,7 +51,7 @@ The recommended approach is to copy all m-files (only the m-files, not the sldd 
 * Create a fresh, new slx model and save it under pcssp_<your_module>.slx. The model slx filename needs to match the class name in  obj = pcssp_module('pcssp_<your_module>')
 * The slx-object and parameter definition scripts need modifying to match your values. Start simple with one dummy value to see if the parameter gets loaded in the data dictionary
 * You do not need to copy the Simulink data dictionary file (extension .sldd) since it is created by the framework. The sldd will also be automatically linked to your slx model.
-* Define your object by calling obj = pcssp_<your_module>() and try calling obj.init  and subsequently obj.setup to check for any errors.
+* Define your object by calling obj = pcssp_<your_module>_obj() and try calling obj.init  and subsequently obj.setup to check for any errors.
 * Add model complexity and more parameters following the guide in the remainder of this chapter. From here on, you will be simultaneously working in the slx, the parameter definition scripts, and the main obj definition script.
 * If needed, constrain the sample time of your module by setting the SampleTime property of the input ports. 
 * You can point your model to the recommended PCSSP configurationSettings (containing the time vector, solver etc. for Simulink). This object is automatically put in the base workspace when you call init or setup. A how-to is provided in Section :ref:`sec-configurationSettings`.
